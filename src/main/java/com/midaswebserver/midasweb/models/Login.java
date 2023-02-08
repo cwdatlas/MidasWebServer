@@ -1,28 +1,33 @@
 package com.midaswebserver.midasweb.models;
 
+import com.midaswebserver.midasweb.services.LoginServiceImp;
 import jakarta.persistence.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "USER_DATA")
+@Table(name = "userdata")
 public class Login {
-    private static final long serialVersionUID = 1L;
+    private static final Logger log = LoggerFactory.getLogger(Login.class);
+    private static final long serialVersionUID = 1L;//this is what identifies the data
     public Login() {
     }
 
     public Login(String username, String rawPassword) {
         this.username = username;
         setRawPassword(rawPassword);
+
     }
     public void setRawPassword(String rawPassword) {
         // XXX - This should *NEVER* be done in a real project
         this.hashedPassword = Integer.toString(rawPassword.hashCode());// im going to assume the negetive part of this action is hashing
         //with the java hash and doing it in a way that isnt salted
     }
-    @Id
+    @Id//primary key!! this is what makes it primary! (can be composite)
     @GeneratedValue
-    private Integer id;
+    private Long id;//must be an Integer so the ID isnt 0 if the object hasnt been set (should use Long)
 
     @Column(name = "username", nullable = false, unique = true)//these parts on the end are for data verification
     private String username;
@@ -30,11 +35,11 @@ public class Login {
     @Column(name = "password", nullable = false)
     private String hashedPassword;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

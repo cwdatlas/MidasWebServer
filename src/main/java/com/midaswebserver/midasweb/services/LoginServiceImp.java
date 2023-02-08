@@ -43,7 +43,7 @@ public class LoginServiceImp implements LoginService {
         Login u = users.get(0);
         // XXX - Using Java's hashCode is wrong on SO many levels, but is good enough for demonstration purposes.
         // NEVER EVER do this in production code!
-        final String userProvidedHash = Integer.toString(loginForm.getPassword().hashCode());
+        final String userProvidedHash = Integer.toString(loginForm.getPassword().hashCode());//blowfish is a 8-9 so do that
         if (!u.getHashedPassword().equals(userProvidedHash)) {
             log.debug("validateUser: password !match");
             return false;
