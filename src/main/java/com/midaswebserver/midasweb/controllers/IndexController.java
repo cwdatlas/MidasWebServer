@@ -2,6 +2,7 @@ package com.midaswebserver.midasweb.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class IndexController {
@@ -11,8 +12,12 @@ public class IndexController {
     }
 
     @GetMapping("/linktest")
-    public String linkTetst() {
+    public String linkTest() {
         return "linktest";
     }
 
+    @PostMapping("/postTest")
+    public String postTest(){
+        return null;
+    }
 }
