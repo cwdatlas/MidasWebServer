@@ -22,16 +22,19 @@ public class LoginControllerTest {
     // Get  /loginSuccess
     @Test
     public void ValidateLogin() throws Exception {//this needs to be a more dynamic unit test
-        mockMvc.perform(get("/login")).andDo(print());
+        mockMvc.perform(get("/login")).andDo(print())
+                .andExpect(status().isOk());
 
     }
     @Test
     public void ValidateLoginFailure() throws Exception{
-        mockMvc.perform(get("/loginFailure")).andDo(print());
+        mockMvc.perform(get("/loginFailure")).andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
     public void ValidateLoginSuccess() throws Exception{
-        mockMvc.perform(get("/loginSuccess")).andDo(print());
+        mockMvc.perform(get("/loginSuccess")).andDo(print())
+                .andExpect(status().isOk());
     }
 }
