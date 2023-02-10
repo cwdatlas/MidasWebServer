@@ -16,13 +16,16 @@ public class Login {
     }
 
     public Login(String username, String rawPassword) {
+        log.info("User Object has been created with name of {}", username);
         this.username = username;
         setRawPassword(rawPassword);
 
     }
     public void setRawPassword(String rawPassword) {
         // XXX - This should *NEVER* be done in a real project
+
         this.hashedPassword = Integer.toString(rawPassword.hashCode());// im going to assume the negetive part of this action is hashing
+        log.info("Password has been hashed {}", this.hashedPassword!=null);// I would like to create a service that hashes passwords
         //with the java hash and doing it in a way that isnt salted
     }
     @Id//primary key!! this is what makes it primary! (can be composite)

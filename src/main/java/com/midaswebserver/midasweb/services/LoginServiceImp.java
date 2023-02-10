@@ -45,12 +45,12 @@ public class LoginServiceImp implements LoginService {
         // NEVER EVER do this in production code!
         final String userProvidedHash = Integer.toString(loginForm.getPassword().hashCode());//blowfish is a 8-9 so do that
         if (!u.getHashedPassword().equals(userProvidedHash)) {
-            log.debug("validateUser: password !match");
+            log.info("validateUser: password !match");
             return false;
         }
 
         // User exists, and the provided password matches the hashed password in the database.
-        log.debug("validateUser: successful login");
+        log.info("validateUser: successful login");
         return true;
     }
 }
