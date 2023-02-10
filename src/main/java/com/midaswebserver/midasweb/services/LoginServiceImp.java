@@ -4,7 +4,7 @@ import com.midaswebserver.midasweb.forms.LoginForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.midaswebserver.midasweb.repositories.LoginRepository;
-import com.midaswebserver.midasweb.models.Login;
+import com.midaswebserver.midasweb.models.User;
 
 import org.springframework.stereotype.Service;
 
@@ -33,14 +33,14 @@ public class LoginServiceImp implements LoginService {
     public boolean validateUser(LoginForm loginForm) {
         log.info("validateUser: user '{}' attempted login", loginForm.getUsername());
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
-        List<Login> users = loginRepo.findByUsernameIgnoreCase(loginForm.getUsername());
+        List<User> users = loginRepo.findByUsernameIgnoreCase(loginForm.getUsername());
 
         // We expect 0 or 1, so if we get more than 1, bail out as this is an error we don't deal with properly.
         if (users.size() != 1) {
             log.debug("validateUser: found {} users", users.size());
             return false;
         }
-        Login u = users.get(0);
+        User u = users.get(0);
         // XXX - Using Java's hashCode is wrong on SO many levels, but is good enough for demonstration purposes.
         // NEVER EVER do this in production code!
         final String userProvidedHash = Integer.toString(loginForm.getPassword().hashCode());//blowfish is a 8-9 so do that

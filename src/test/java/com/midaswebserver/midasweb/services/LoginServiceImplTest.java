@@ -2,7 +2,7 @@ package com.midaswebserver.midasweb.services;
 
 
 import com.midaswebserver.midasweb.forms.LoginForm;
-import com.midaswebserver.midasweb.models.Login;
+import com.midaswebserver.midasweb.models.User;
 import com.midaswebserver.midasweb.repositories.LoginRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class LoginServiceImplTest {
     @Autowired
     private LoginRepository loginRepo;
 
-    private final Login fakeUser = new Login(username, password);//login (the name) might want to be changed as it is a little confusing
+    private final User fakeUser = new User(username, password);//login (the name) might want to be changed as it is a little confusing
 
     @BeforeEach//cool annotation that we have the environment set up and ready for each test
     public void beforeTest() {
@@ -33,7 +33,7 @@ public class LoginServiceImplTest {
         assertNotNull("loginService must be injected", loginService);
 
         // Ensure dummy record is in the DB
-        final List<Login> users =
+        final List<User> users =
                 loginRepo.findByUsernameIgnoreCase(username);
         if (users.isEmpty())
             loginRepo.save(fakeUser);

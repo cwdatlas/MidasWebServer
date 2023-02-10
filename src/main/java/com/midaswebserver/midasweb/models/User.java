@@ -1,6 +1,5 @@
 package com.midaswebserver.midasweb.models;
 
-import com.midaswebserver.midasweb.services.LoginServiceImp;
 import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,14 +7,14 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 
 @Entity
-@Table(name = "userdata")
-public class Login {
-    private static final Logger log = LoggerFactory.getLogger(Login.class);
+@Table(name = "user")
+public class User {
+    private static final Logger log = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = 1L;//this is what identifies the data
-    public Login() {
+    public User() {
     }
 
-    public Login(String username, String rawPassword) {
+    public User(String username, String rawPassword) {
         log.info("User Object has been created with name of {}", username);
         this.username = username;
         setRawPassword(rawPassword);
@@ -82,7 +81,7 @@ public class Login {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        final Login login = (Login)o;
+        final User login = (User)o;
         return username.equals(login.username) && hashedPassword.equals(login.hashedPassword);
     }
 
