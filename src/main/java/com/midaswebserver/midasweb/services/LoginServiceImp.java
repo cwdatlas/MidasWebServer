@@ -3,7 +3,7 @@ package com.midaswebserver.midasweb.services;
 import com.midaswebserver.midasweb.forms.LoginForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.midaswebserver.midasweb.repositories.LoginRepository;
+import com.midaswebserver.midasweb.repositories.UserRepository;
 import com.midaswebserver.midasweb.models.User;
 
 import org.springframework.stereotype.Service;
@@ -17,9 +17,9 @@ public class LoginServiceImp implements LoginService {
     private static final Logger log = LoggerFactory.getLogger(LoginServiceImp.class);
     //im not sure what this is all about. it looks like the list is made out of logins
     //but it has a constructor of (String username), which im confused about
-    private final LoginRepository loginRepo;
+    private final UserRepository loginRepo;
 
-    public LoginServiceImp(LoginRepository loginRepo) {
+    public LoginServiceImp(UserRepository loginRepo) {
         this.loginRepo = loginRepo;
     }
 

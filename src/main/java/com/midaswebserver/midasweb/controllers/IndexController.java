@@ -1,6 +1,5 @@
 package com.midaswebserver.midasweb.controllers;
 
-import com.midaswebserver.midasweb.services.LoginServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

@@ -37,6 +37,11 @@ public class User {
     @Column(name = "password", nullable = false)
     private String hashedPassword;
 
+    @Column(name = "email", nullable = false)
+    private String email;
+    @Column(name = "phonenumber", nullable = true)
+    private String phoneNumber;
+
     public Long getId() {
         return id;
     }

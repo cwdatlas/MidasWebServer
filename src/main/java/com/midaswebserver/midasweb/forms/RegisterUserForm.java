@@ -1,19 +1,24 @@
 package com.midaswebserver.midasweb.forms;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LoginForm {
+public class RegisterUserForm {
+
     private static final Logger log = LoggerFactory.getLogger(LoginForm.class);
-    public LoginForm() {
+    public RegisterUserForm() {
     }
     //this is a bean used for validating incoming data
-    public LoginForm(String username, String password) {
+    public RegisterUserForm(String username, String password, String email, String phoneNumber) {
         this.username = username;
         this.password = password;
-        log.info("Created LoginForm for {}", username);
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        log.info("Created RegisterUserForm for {}", username);
     }
     @NotNull//validation code
     @Size(min = 6, message = "Username must be at least 6 characters long")
@@ -22,6 +27,15 @@ public class LoginForm {
     @NotNull
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
+
+    @NotNull(message = "Must include a valid email")
+    @Email
+    private String email;
+
+    @NotNull
+    @Size(min = 10, message = "Must use a valid phone number")
+    private String phoneNumber;
+
 
     public String getUsername() {
         return username;
@@ -38,5 +52,21 @@ public class LoginForm {
     public void setPassword(String password) {
         this.password = password;
     }
-}
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+}
