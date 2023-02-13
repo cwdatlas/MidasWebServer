@@ -1,5 +1,6 @@
 package com.midaswebserver.midasweb.models;
 
+import com.midaswebserver.midasweb.forms.RegisterUserForm;
 import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,13 @@ public class User {
     private static final Logger log = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = 1L;//this is what identifies the data
     public User() {
+    }
+    public User(RegisterUserForm userForm){
+        log.info("User Object created with RegForm");
+        this.username = userForm.getUsername();
+        setRawPassword(userForm.getPassword());
+        this.email = userForm.getEmail();
+        this.phoneNumber = userForm.getPhoneNumber();
     }
 
     public User(String username, String rawPassword) {

@@ -23,25 +23,33 @@ public class RegisterUserController {
 
     public RegisterUserController(RegisterUserService registerUserService) {this.regUserService = registerUserService;}
 
-    @GetMapping("/register")
-    public String registerGet(Model model) {
+    @GetMapping("/register") //map to register
+    public String registerGet(Model model) {//still dont know what model is in this case
         model.addAttribute("registerForm", new RegisterUserForm());
-        return "/register";
+        return "/register";//adds the form to the model and returns it
     }
 
     @PostMapping("/register")
     public String registerPost(@Valid @ModelAttribute RegisterUserForm regForm, BindingResult result, RedirectAttributes attrs) {
         if (result.hasErrors()) {
-            log.debug("{} has submitted a form which has errors", regForm.getUsername());
+            log.debug("{} errors in form", regForm.getUsername());
             return "/register";
         }
         if (!regUserService.validateUser(regForm)) {
-            result.addError(new ObjectError("globalError", "Username and password do not match known users"));
+            result.addError(new ObjectError("globalError", "Data not valid"));
             log.info("{} failed validation", regForm.getUsername());
             return "/register";
         }
+        if (!regUserService.validateUniqueUsername(regForm.getUsername())){
+            result.addError(new ObjectError("globalError", "User already Registered"));
+            log.info("{} already registered", regForm.getUsername());
+        }
+        if (!regUserService.validatePasswords(regForm.getPassword(), regForm.getConfirmPass())){
+            result.addError(new ObjectError("globalError", "Passwords do not match"));
+            log.info("{} passwords don't match", regForm.getUsername());//this could result in inacurrate logs
+        }
         attrs.addAttribute("username", regForm.getUsername());
-        log.info("{} has successfully logged in", regForm.getUsername());//adding a time to this could be useful, or a more global logging system
+        log.info("{} been registered", regForm.getUsername());//adding a time to this could be useful, or a more global logging system
         return "redirect:/registerSuccess";
     }
 

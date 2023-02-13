@@ -3,21 +3,21 @@ package com.midaswebserver.midasweb.forms;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.UniqueElements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RegisterUserForm {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginForm.class);
+    private static final Logger log = LoggerFactory.getLogger(RegisterUserForm.class);
     public RegisterUserForm() {
     }
     //this is a bean used for validating incoming data
-    public RegisterUserForm(String username, String password, String email, String phoneNumber) {
+    public RegisterUserForm(String username, String password, String confirmPass, String email, String phoneNumber) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.confirmPass = confirmPass;
         log.info("Created RegisterUserForm for {}", username);
     }
     @NotNull//validation code
@@ -28,6 +28,9 @@ public class RegisterUserForm {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
+    @NotNull
+    @Size(min = 8, message = "Passwords must be the same")
+    private String confirmPass;
     @NotNull(message = "Must include a valid email")
     @Email
     private String email;
@@ -36,6 +39,13 @@ public class RegisterUserForm {
     @Size(min = 10, message = "Must use a valid phone number")
     private String phoneNumber;
 
+    public String getConfirmPass() {
+        return confirmPass;
+    }
+
+    public void setConfirmPass(String confirmPass) {
+        this.confirmPass = confirmPass;
+    }
 
     public String getUsername() {
         return username;
