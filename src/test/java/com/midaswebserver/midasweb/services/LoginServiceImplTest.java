@@ -27,9 +27,9 @@ public class LoginServiceImplTest {
 
     private final User fakeUser = new User(username, password);//login (the name) might want to be changed as it is a little confusing
 
-    @BeforeEach//cool annotation that we have the environment set up and ready for each test
+    @BeforeEach
     public void beforeTest() {
-        assertNotNull("loginRepository must be injected", loginRepo);
+        assertNotNull("UserRepository must be injected", loginRepo);
         assertNotNull("loginService must be injected", loginService);
 
         // Ensure dummy record is in the DB

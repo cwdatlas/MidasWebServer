@@ -1,8 +1,6 @@
 package com.midaswebserver.midasweb.controllers;
 
-import com.midaswebserver.midasweb.forms.LoginForm;
 import com.midaswebserver.midasweb.forms.RegisterUserForm;
-import com.midaswebserver.midasweb.services.LoginService;
 import com.midaswebserver.midasweb.services.RegisterUserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -24,7 +22,7 @@ public class RegisterUserController {
     public RegisterUserController(RegisterUserService registerUserService) {this.regUserService = registerUserService;}
 
     @GetMapping("/register") //map to register
-    public String registerGet(Model model) {//still dont know what model is in this case
+    public String registerGet(Model model) {//still don't know what model is in this case
         model.addAttribute("registerForm", new RegisterUserForm());
         return "/register";//adds the form to the model and returns it
     }
@@ -46,7 +44,7 @@ public class RegisterUserController {
         }
         if (!regUserService.validatePasswords(regForm.getPassword(), regForm.getConfirmPass())){
             result.addError(new ObjectError("globalError", "Passwords do not match"));
-            log.info("{} passwords don't match", regForm.getUsername());//this could result in inacurrate logs
+            log.info("{} passwords don't match", regForm.getUsername());//this could result in inaccurate logs
         }
         attrs.addAttribute("username", regForm.getUsername());
         log.info("{} been registered", regForm.getUsername());//adding a time to this could be useful, or a more global logging system

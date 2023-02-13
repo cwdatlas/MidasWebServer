@@ -26,6 +26,14 @@ public class User {
         log.info("User Object has been created with name of {}", username);
         this.username = username;
         setRawPassword(rawPassword);
+    }
+
+    public User(String username, String rawPassword, String email, String phoneNumber) {
+        log.info("User Object has been created with name of {}", username);
+        this.username = username;
+        setRawPassword(rawPassword);
+        this.email = email;
+        this.phoneNumber = phoneNumber;
 
     }
     public void setRawPassword(String rawPassword) {
@@ -45,7 +53,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String hashedPassword;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = true)
     private String email;
     @Column(name = "phonenumber", nullable = true)
     private String phoneNumber;
