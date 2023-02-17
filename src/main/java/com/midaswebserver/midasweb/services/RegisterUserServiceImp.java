@@ -23,13 +23,12 @@ public class RegisterUserServiceImp implements RegisterUserService {
     @Override
     public boolean registerUser(RegisterUserForm userForm) {
         log.info("{} verified", userForm.getUsername());
-        return true;
-    }
-
-    @Override
-    public boolean validateUser(RegisterUserForm userForm) {
-        userRepo.save(new User(userForm));
-        log.info("{} registered", userForm.getUsername());
+        if (!validateUniqueUsername(userForm.getUsername())){
+            return false;
+        }
+        if (!validatePasswords(userForm.getPassword(), userForm.getConfirmPass())){
+            return false;
+        }
         return true;
     }
 
@@ -40,7 +39,7 @@ public class RegisterUserServiceImp implements RegisterUserService {
         List<User> users = userRepo.findByUsernameIgnoreCase(username);
 
         // We expect 0 or 1, so if we get more than 1, bail out as this is an error we don't deal with properly.
-        if (users.size() != 1) {
+        if (users.size() != 0) {
             log.debug("validateUser: found {} users", users.size());
             return false;
         }

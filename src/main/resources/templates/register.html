@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>User Registration</title>
@@ -14,8 +14,8 @@
     <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span><br/>
     <input type="confirmPass" th:field="*{confirmPass}" placeholder="Confirm Password"/>
     <span th:if="${#fields.hasErrors('confirmPass')}" th:errors="*{confirmPass}">Confirm Password error</span><br/>
-    <input type="phonenumber" th:field="*{phoneNumber}" placeholder="Phonenumber"/>
-    <span th:if="${#fields.hasErrors('phonenumber')}" th:errors="*{phoneNumber}">Phone Number error</span><br/>
+    <input type="phonenumber" th:field="*{phoneNumber}" placeholder="Phone number"/>
+    <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Phone Number error</span><br/>
     <input type="email" th:field="*{email}" placeholder="Email"/>
     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Password error</span><br/>
     <button type="submit">Register Account</button>

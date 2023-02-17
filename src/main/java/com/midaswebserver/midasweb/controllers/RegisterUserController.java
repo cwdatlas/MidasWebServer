@@ -30,31 +30,28 @@ public class RegisterUserController {
     @PostMapping("/register")
     public String registerPost(@Valid @ModelAttribute RegisterUserForm regForm, BindingResult result, RedirectAttributes attrs) {
         if (result.hasErrors()) {
-            log.debug("{} errors in form", regForm.getUsername());
-            return "/register";
-        }
-        if (!regUserService.validateUser(regForm)) {
-            result.addError(new ObjectError("globalError", "Data not valid"));
-            log.info("{} failed validation", regForm.getUsername());
-            return "/register";
+            log.debug("Errors in form", regForm.getUsername());
+            return "register";
         }
         if (!regUserService.validateUniqueUsername(regForm.getUsername())){
             result.addError(new ObjectError("globalError", "User already Registered"));
             log.info("{} already registered", regForm.getUsername());
+            return "register";
         }
         if (!regUserService.validatePasswords(regForm.getPassword(), regForm.getConfirmPass())){
             result.addError(new ObjectError("globalError", "Passwords do not match"));
             log.info("{} passwords don't match", regForm.getUsername());//this could result in inaccurate logs
+            return "register";
         }
         attrs.addAttribute("username", regForm.getUsername());
         log.info("{} been registered", regForm.getUsername());//adding a time to this could be useful, or a more global logging system
-        return "redirect:/registerSuccess";
+        return "redirect:registerSuccess";
     }
 
     @GetMapping("/registerSuccess")
     public String loginSuccess(String username, Model model) {
         model.addAttribute("username", username);
         log.info("{} logged in", username);
-        return "/login";
+        return "login";
     }
 }
