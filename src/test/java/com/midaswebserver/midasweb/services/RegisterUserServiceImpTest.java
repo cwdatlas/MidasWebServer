@@ -1,14 +1,12 @@
 package com.midaswebserver.midasweb.services;
 
-import com.midaswebserver.midasweb.forms.RegisterUserForm;
+import com.midaswebserver.midasweb.forms.RegisterForm;
 import com.midaswebserver.midasweb.models.User;
 import com.midaswebserver.midasweb.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 import static org.springframework.test.util.AssertionErrors.*;
 
@@ -18,8 +16,8 @@ public class RegisterUserServiceImpTest {
     private UserRepository userRepo; //We need a test repo for unit tests. we cant run unit tests on the real database
     @Autowired
     private RegisterUserService registerUserService;
-    private final RegisterUserForm registerForm =
-            new RegisterUserForm("CabbageMan", "password",
+    private final RegisterForm registerForm =
+            new RegisterForm("CabbageMan", "password",
                     "password", "friendly@whoareyou.com", "4065556666");
     private final User testUser = new User(registerForm);
     private final String falsePass = "notTheSamePass";

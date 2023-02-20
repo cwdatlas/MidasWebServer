@@ -1,6 +1,6 @@
 package com.midaswebserver.midasweb.controllers;
 
-import com.midaswebserver.midasweb.forms.RegisterUserForm;
+import com.midaswebserver.midasweb.forms.RegisterForm;
 import com.midaswebserver.midasweb.services.RegisterUserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -23,14 +23,14 @@ public class RegisterUserController {
 
     @GetMapping("/register") //map to register
     public String registerGet(Model model) {//still don't know what model is in this case
-        model.addAttribute("registerForm", new RegisterUserForm());
-        return "/register";//adds the form to the model and returns it
+        model.addAttribute("registerForm", new RegisterForm());
+        return "register";//adds the form to the model and returns it
     }
 
     @PostMapping("/register")
-    public String registerPost(@Valid @ModelAttribute RegisterUserForm regForm, BindingResult result, RedirectAttributes attrs) {
+    public String registerPost(@Valid @ModelAttribute RegisterForm regForm, BindingResult result, RedirectAttributes attrs) {
         if (result.hasErrors()) {
-            log.debug("Errors in form", regForm.getUsername());
+            log.debug("{} Errors in form", regForm.getUsername());
             return "register";
         }
         if (!regUserService.validateUniqueUsername(regForm.getUsername())){
@@ -45,6 +45,7 @@ public class RegisterUserController {
         }
         attrs.addAttribute("username", regForm.getUsername());
         log.info("{} been registered", regForm.getUsername());//adding a time to this could be useful, or a more global logging system
+        regUserService.registerUser(regForm);
         return "redirect:registerSuccess";
     }
 
@@ -52,6 +53,6 @@ public class RegisterUserController {
     public String loginSuccess(String username, Model model) {
         model.addAttribute("username", username);
         log.info("{} logged in", username);
-        return "login";
+        return "registerSuccess";
     }
 }

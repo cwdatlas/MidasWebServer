@@ -6,19 +6,19 @@ import jakarta.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RegisterUserForm {
+public class RegisterForm {
 
-    private static final Logger log = LoggerFactory.getLogger(RegisterUserForm.class);
-    public RegisterUserForm() {
+    private static final Logger log = LoggerFactory.getLogger(RegisterForm.class);
+    public RegisterForm() {
     }
     //this is a bean used for validating incoming data
-    public RegisterUserForm(String username, String password, String confirmPass, String email, String phoneNumber) {
+    public RegisterForm(String username, String password, String confirmPass, String email, String phoneNumber) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.confirmPass = confirmPass;
-        log.info("Created RegisterUserForm for {}", username);
+        log.info("Created RegisterForm for {}", username);
     }
     @NotNull//validation code
     @Size(min = 6, message = "Username must be at least 6 characters long")

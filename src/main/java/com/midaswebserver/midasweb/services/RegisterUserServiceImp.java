@@ -1,6 +1,6 @@
 package com.midaswebserver.midasweb.services;
 
-import com.midaswebserver.midasweb.forms.RegisterUserForm;
+import com.midaswebserver.midasweb.forms.RegisterForm;
 import com.midaswebserver.midasweb.models.User;
 import com.midaswebserver.midasweb.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class RegisterUserServiceImp implements RegisterUserService {
         log.info("User Repository initialized in RegisterUserService");
     }
     @Override
-    public boolean registerUser(RegisterUserForm userForm) {
+    public boolean registerUser(RegisterForm userForm) {
         log.info("{} verified", userForm.getUsername());
         if (!validateUniqueUsername(userForm.getUsername())){
             return false;
@@ -29,6 +29,7 @@ public class RegisterUserServiceImp implements RegisterUserService {
         if (!validatePasswords(userForm.getPassword(), userForm.getConfirmPass())){
             return false;
         }
+        userRepo.save(new User(userForm));
         return true;
     }
 
@@ -48,11 +49,11 @@ public class RegisterUserServiceImp implements RegisterUserService {
 
     @Override
     public boolean validatePasswords(String password, String confirmPass) {
-        if(password != confirmPass){
-            log.info("User's passwords are different");
+        if(!password.equals(confirmPass)){
+            log.debug("User's passwords are different");
             return false;
         }
-        log.info("Passwords are the same");
+        log.debug("Passwords are the same");
         return true;
     }
 }
