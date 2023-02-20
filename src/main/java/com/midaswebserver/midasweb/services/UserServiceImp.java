@@ -20,7 +20,7 @@ public class UserServiceImp implements UserService {
         log.info("User Repository initialized in UserService");
     }
     @Override
-    public boolean registerUser(User user) {
+    public boolean add(User user) {
         userRepo.save(user);
         log.info("{} verified", user.getUsername());
         return true;
@@ -38,6 +38,22 @@ public class UserServiceImp implements UserService {
             return false;
         }
         return true;//i see this everywhere in Nates code, so i need to ask if its ok, or something we should do
+    }
+
+    @Override
+    public boolean delete(User user) {
+        if (user == null)
+            return false;
+        userRepo.delete(user);
+        return true;
+    }
+
+    @Override
+    public boolean deleteAll() {
+        userRepo.deleteAll();
+        if(userRepo.count()>0)
+            return false;
+        return true;
     }
 
 }

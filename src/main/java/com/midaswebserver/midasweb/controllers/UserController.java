@@ -52,7 +52,7 @@ public class UserController {
         user.setRawPassword(regForm.getPassword());
         user.setEmail(regForm.getEmail());
         user.setPhoneNumber(regForm.getPhoneNumber());
-        userService.registerUser(user);
+        userService.add(user);
 
         log.info("{} been registered", regForm.getUsername());//adding a time to this could be useful, or a more global logging system
         return "redirect:registerSuccess";
