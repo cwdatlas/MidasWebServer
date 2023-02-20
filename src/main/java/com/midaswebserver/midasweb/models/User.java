@@ -12,29 +12,31 @@ import java.util.Objects;
 public class User {
     private static final Logger log = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = 1L;//this is what identifies the data
+    @Id//primary key!! this is what makes it primary! (can be composite)
+    @GeneratedValue
+    private Long id;//must be an Integer so the ID isnt 0 if the object hasnt been set (should use Long)
+    @Column(name = "username", nullable = false, unique = true)//these parts on the end are for data verification
+    private String username;
+    @Column(name = "password", nullable = false)
+    private String hashedPassword;
+    @Column(name = "email", nullable = true)
+    private String email;
+    @Column(name = "phonenumber", nullable = true)
+    private String phoneNumber;
+
     public User() {
     }
-    public User(RegisterForm userForm){
-        log.info("User Object created with RegForm");
-        this.username = userForm.getUsername();
-        setRawPassword(userForm.getPassword());
-        this.email = userForm.getEmail();
-        this.phoneNumber = userForm.getPhoneNumber();
-    }
-
     public User(String username, String rawPassword) {
         log.info("User Object has been created with name of {}", username);
         this.username = username;
         setRawPassword(rawPassword);
     }
-
     public User(String username, String rawPassword, String email, String phoneNumber) {
         log.info("User Object has been created with name of {}", username);
         this.username = username;
         setRawPassword(rawPassword);
         this.email = email;
         this.phoneNumber = phoneNumber;
-
     }
     public void setRawPassword(String rawPassword) {
         // XXX - This should *NEVER* be done in a real project
@@ -43,21 +45,19 @@ public class User {
         log.info("Password has been hashed {}", this.hashedPassword!=null);// I would like to create a service that hashes passwords
         //with the java hash and doing it in a way that isnt salted
     }
-    @Id//primary key!! this is what makes it primary! (can be composite)
-    @GeneratedValue
-    private Long id;//must be an Integer so the ID isnt 0 if the object hasnt been set (should use Long)
 
-    @Column(name = "username", nullable = false, unique = true)//these parts on the end are for data verification
-    private String username;
-
-    @Column(name = "password", nullable = false)
-    private String hashedPassword;
-
-    @Column(name = "email", nullable = true)
-    private String email;
-    @Column(name = "phonenumber", nullable = true)
-    private String phoneNumber;
-
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public Long getId() {
         return id;
     }

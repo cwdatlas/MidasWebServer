@@ -2,6 +2,7 @@ package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.forms.RegisterForm;
 import com.midaswebserver.midasweb.services.RegisterUserService;
+import com.midaswebserver.midasweb.models.User;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +39,22 @@ public class RegisterUserController {
             log.info("{} already registered", regForm.getUsername());
             return "register";
         }
-        if (!regUserService.validatePasswords(regForm.getPassword(), regForm.getConfirmPass())){
+        //Checks if passwords are the same, if not, then user will be returned to register
+        if (!regForm.getPassword().equals(regForm.getConfirmPass())){
             result.addError(new ObjectError("globalError", "Passwords do not match"));
             log.info("{} passwords don't match", regForm.getUsername());//this could result in inaccurate logs
             return "register";
         }
-        attrs.addAttribute("username", regForm.getUsername());
+        attrs.addAttribute("username", regForm.getUsername()); //im not sure why this is used
+        //mapping results from form to user
+        User user = new User();
+        user.setUsername(regForm.getUsername());
+        user.setRawPassword(regForm.getPassword());
+        user.setEmail(regForm.getEmail());
+        user.setPhoneNumber(regForm.getPhoneNumber());
+        regUserService.registerUser(user);
+
         log.info("{} been registered", regForm.getUsername());//adding a time to this could be useful, or a more global logging system
-        regUserService.registerUser(regForm);
         return "redirect:registerSuccess";
     }
 

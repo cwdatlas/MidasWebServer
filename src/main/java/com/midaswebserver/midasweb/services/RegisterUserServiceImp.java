@@ -21,15 +21,9 @@ public class RegisterUserServiceImp implements RegisterUserService {
         log.info("User Repository initialized in RegisterUserService");
     }
     @Override
-    public boolean registerUser(RegisterForm userForm) {
-        log.info("{} verified", userForm.getUsername());
-        if (!validateUniqueUsername(userForm.getUsername())){
-            return false;
-        }
-        if (!validatePasswords(userForm.getPassword(), userForm.getConfirmPass())){
-            return false;
-        }
-        userRepo.save(new User(userForm));
+    public boolean registerUser(User user) {
+        userRepo.save(user);
+        log.info("{} verified", user.getUsername());
         return true;
     }
 
@@ -47,13 +41,4 @@ public class RegisterUserServiceImp implements RegisterUserService {
         return true;//i see this everywhere in Nates code, so i need to ask if its ok, or something we should do
     }
 
-    @Override
-    public boolean validatePasswords(String password, String confirmPass) {
-        if(!password.equals(confirmPass)){
-            log.debug("User's passwords are different");
-            return false;
-        }
-        log.debug("Passwords are the same");
-        return true;
-    }
 }

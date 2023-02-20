@@ -1,10 +1,10 @@
 package com.midaswebserver.midasweb.services;
 import com.midaswebserver.midasweb.forms.RegisterForm;
+import com.midaswebserver.midasweb.models.User;
 
 public interface RegisterUserService {
 
-    public boolean registerUser (RegisterForm userForm);
+    public boolean registerUser (User user);
 
     public boolean validateUniqueUsername (String username);
-    public boolean validatePasswords (String password, String confirmPass);
 }

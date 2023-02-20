@@ -21,22 +21,22 @@ public class RegisterForm {
         log.info("Created RegisterForm for {}", username);
     }
     @NotNull//validation code
-    @Size(min = 6, message = "Username must be at least 6 characters long")
+    @Size(min = 6, max = 20, message = "Username must be at least 6 characters long")
     private String username;
 
     @NotNull
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Size(min = 8, max = 30, message = "Password must be at least 8 characters long")
     private String password;
 
     @NotNull
-    @Size(min = 8, message = "Passwords must be the same")
+    @Size(min = 8, max = 30, message = "Passwords must be the same")
     private String confirmPass;
     @NotNull(message = "Must include a valid email")
-    @Email
+    @Email //I will leave validation to this annotation
     private String email;
 
     @NotNull
-    @Size(min = 10, message = "Must use a valid phone number")
+    @Size(min = 10, max = 15, message = "Must use a valid phone number")
     private String phoneNumber;
 
     public String getConfirmPass() {
