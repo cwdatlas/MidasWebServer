@@ -1,6 +1,5 @@
 package com.midaswebserver.midasweb.models;
 
-import com.midaswebserver.midasweb.forms.RegisterForm;
 import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

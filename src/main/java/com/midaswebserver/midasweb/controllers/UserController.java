@@ -1,7 +1,7 @@
 package com.midaswebserver.midasweb.controllers;
 
-import com.midaswebserver.midasweb.forms.RegisterForm;
-import com.midaswebserver.midasweb.services.RegisterUserService;
+import com.midaswebserver.midasweb.forms.UserForm;
+import com.midaswebserver.midasweb.services.UserService;
 import com.midaswebserver.midasweb.models.User;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -16,25 +16,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class RegisterUserController {
-    private static final Logger log = LoggerFactory.getLogger(RegisterUserController.class);
-    private final RegisterUserService regUserService;
+public class UserController {
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private final UserService userService;
 
-    public RegisterUserController(RegisterUserService registerUserService) {this.regUserService = registerUserService;}
+    public UserController(UserService userService) {this.userService = userService;}
 
     @GetMapping("/register") //map to register
     public String registerGet(Model model) {//still don't know what model is in this case
-        model.addAttribute("registerForm", new RegisterForm());
+        model.addAttribute("registerForm", new UserForm());
         return "register";//adds the form to the model and returns it
     }
 
     @PostMapping("/register")
-    public String registerPost(@Valid @ModelAttribute RegisterForm regForm, BindingResult result, RedirectAttributes attrs) {
+    public String registerPost(@Valid @ModelAttribute UserForm regForm, BindingResult result, RedirectAttributes attrs) {
         if (result.hasErrors()) {
             log.debug("{} Errors in form", regForm.getUsername());
             return "register";
         }
-        if (!regUserService.validateUniqueUsername(regForm.getUsername())){
+        if (!userService.validateUniqueUsername(regForm.getUsername())){
             result.addError(new ObjectError("globalError", "User already Registered"));
             log.info("{} already registered", regForm.getUsername());
             return "register";
@@ -52,7 +52,7 @@ public class RegisterUserController {
         user.setRawPassword(regForm.getPassword());
         user.setEmail(regForm.getEmail());
         user.setPhoneNumber(regForm.getPhoneNumber());
-        regUserService.registerUser(user);
+        userService.registerUser(user);
 
         log.info("{} been registered", regForm.getUsername());//adding a time to this could be useful, or a more global logging system
         return "redirect:registerSuccess";

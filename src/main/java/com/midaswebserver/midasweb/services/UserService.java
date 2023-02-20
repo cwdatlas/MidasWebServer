@@ -1,8 +1,7 @@
 package com.midaswebserver.midasweb.services;
-import com.midaswebserver.midasweb.forms.RegisterForm;
 import com.midaswebserver.midasweb.models.User;
 
-public interface RegisterUserService {
+public interface UserService {
 
     public boolean registerUser (User user);
 
