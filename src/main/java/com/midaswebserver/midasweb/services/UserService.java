@@ -3,10 +3,10 @@ import com.midaswebserver.midasweb.models.User;
 
 public interface UserService {
 
-    public boolean add(User user);
+    boolean add(User user);
 
-    public boolean validateUniqueUsername (String username);
+    boolean validateUniqueUsername (String username);
 
-    public boolean delete(User user);
-    public boolean deleteAll();
+    boolean delete(User user);
+    boolean deleteAll();
 }
