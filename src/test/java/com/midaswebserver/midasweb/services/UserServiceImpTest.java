@@ -14,7 +14,7 @@ public class UserServiceImpTest {
     @Autowired
     private UserService userService;
     private final User testUser = new User
-                    ("CabbageMan", "password", "friendly@whoareyou.com", "4065556666");
+                    ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
     private final String falsePass = "notTheSamePass";
     @BeforeEach//preparing unit tests with a fresh database and varifying the database can be interacted with
     public void beforeTest() {

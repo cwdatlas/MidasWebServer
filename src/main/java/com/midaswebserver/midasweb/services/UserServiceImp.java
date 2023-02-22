@@ -21,14 +21,17 @@ public class UserServiceImp implements UserService {
     }
     @Override
     public boolean add(User user) {
+        if(!validateUniqueUsername(user.getUsername())) {
+            log.error("{} has the same name in database", user.getUsername());
+            return false;
+        }
         userRepo.save(user);
-        log.info("{} verified", user.getUsername());
         return true;
     }
 
     @Override
     public boolean validateUniqueUsername(String username) {
-        log.info("validateUser: user '{}' attempted login", username);
+        log.debug("validateUser: user '{}' attempted login", username);
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = userRepo.findByUsernameIgnoreCase(username);
 
@@ -51,6 +54,7 @@ public class UserServiceImp implements UserService {
     @Override
     public boolean deleteAll() {
         userRepo.deleteAll();
+        log.warn("all users have been deleted");
         if(userRepo.count()>0)
             return false;
         return true;
