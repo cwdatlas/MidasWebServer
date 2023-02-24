@@ -14,15 +14,13 @@ public class Ticker {
     private String ticker;
 
     public Ticker(){
-        }
-
-        public String getTicker() {
-            return ticker;
-        }
-
-        public void setTicker(String ticker) {
-            this.ticker = ticker;
-        }
+    }
+    public String getTicker() {
+        return ticker;
+    }
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -30,7 +28,6 @@ public class Ticker {
         if (!(o instanceof Ticker ticker1)) return false;
         return Objects.equals(ID, ticker1.ID) && Objects.equals(getTicker(), ticker1.getTicker());
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(ID, getTicker());
