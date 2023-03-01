@@ -7,20 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class IndexController {
-    private static final Logger log = LoggerFactory.getLogger(IndexController.class);
+public class NavigationController {
+    private static final Logger log = LoggerFactory.getLogger(NavigationController.class);
     @GetMapping("/")
     public String index() {
         return "index";
     }
 
-    @GetMapping("/linktest")
-    public String linkTest() {
-        return "linktest";
-    }
+    @GetMapping("/user/home")
+    public String home() { return "home"; }
 
-    @PostMapping("/postTest")
-    public String postTest(){
-        return null;
-    }
+
 }
