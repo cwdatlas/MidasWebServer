@@ -37,7 +37,12 @@ public class TickerServiceImp implements TickerService{
                 .outputSize(outputSize)
                 .fetchSync();
         Ticker ticker = convertToInternalObject(timeSeries);
+        if(!(timeSeries.getErrorMessage() == null)){
+            log.info("Stock Query Error '{}'", timeSeries.getErrorMessage());
+            ticker = null;
+        }
         if(!validateTicker(ticker)){
+            log.debug("Stock Query Data Invalad");
             ticker = null;
         }
         return ticker;
@@ -48,6 +53,7 @@ public class TickerServiceImp implements TickerService{
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Ticker>> violations = validator.validate(ticker);
         if (!violations.isEmpty()) {
+            log.debug("Violation in ticker");
             return false;
             //throw new ConstraintViolationException(violations);
         }
