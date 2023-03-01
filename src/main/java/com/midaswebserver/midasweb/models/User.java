@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * User is the model object holding basic user data
+ */
 @Entity
 @Table(name = "user")
 public class User {
