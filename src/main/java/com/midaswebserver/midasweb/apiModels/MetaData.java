@@ -4,10 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * MetaData is used to store symbol and other information from a stock query
+ */
 public class MetaData{
 
     @NotNull
     private String information;
+    /**
+     * an alias symbol is ticker, which can be seen elsewhere in the application
+     */
     @NotNull
     private String symbol;
     @NotNull
@@ -20,6 +26,16 @@ public class MetaData{
     private String outputSize;
 
     public MetaData(){}
+
+    /**
+     * SetData is used to convert a 3rd party object to a native object that can be validated
+     * @param information
+     * @param symbol
+     * @param lastRefreshed
+     * @param timeZone
+     * @param interval
+     * @param outputSize
+     */
 
     public void setData(String information, String symbol, String lastRefreshed, String timeZone, String interval, String outputSize){
         this.information = information;

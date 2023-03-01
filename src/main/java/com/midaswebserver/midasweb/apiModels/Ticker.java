@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Ticker is the object used to house all the information from a ticker query
+ * see TickerServiceImp to see how Ticker is set and used
+ */
 public class Ticker {
-    public Ticker() {
-    }
 
     @NotNull
     private MetaData metaData;
@@ -28,10 +30,15 @@ public class Ticker {
         return timeSeries;
     }
 
+    /**
+     * setTimeSeries takes a list of foreign objects and sets it to an internal value
+     * @param timeSeries
+     */
     public void setTimeSeries(List<StockUnit> timeSeries) {
         this.timeSeries = timeSeries;
     }
-
+    public Ticker() {
+    }
     @Override
     public String toString() {
         return "Ticker{" +
