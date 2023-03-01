@@ -1,10 +1,12 @@
 package com.midaswebserver.midasweb.controllers;
 
+import com.midaswebserver.midasweb.forms.StockDataRequestForm;
+import org.springframework.ui.Model;
+import com.midaswebserver.midasweb.forms.UserForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class NavigationController {
@@ -15,7 +17,9 @@ public class NavigationController {
     }
 
     @GetMapping("/user/home")
-    public String home() { return "home"; }
+    public String home(Model model) {
+        model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
+        return "home"; }
 
 
 }
