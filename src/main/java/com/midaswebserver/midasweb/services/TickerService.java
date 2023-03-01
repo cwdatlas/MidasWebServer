@@ -8,4 +8,5 @@ import com.midaswebserver.midasweb.apiModels.Ticker;
 public interface TickerService{
     Ticker getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize);
 
+
 }
