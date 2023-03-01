@@ -14,11 +14,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-
+/**
+ * TickerController will work with stock data and related forms like the StockDataRequestForm
+ */
 @Controller
 public class TickerController {
     private static final Logger log = LoggerFactory.getLogger(TickerController.class);
     private TickerService tickerService = new TickerServiceImp();
+
+    /**
+     * GetTickerData takes a StockDataRequestForm and returns the equivalent stock data
+     * will return a null value if anything went wrong.
+     * TODO errors should be returned rather than a null value, the client should understand what went wrong
+     * @param stockDataRequestForm
+     * @param result
+     * @return json of converted ticker object
+     */
     @GetMapping("/ticker/data")
     public ResponseEntity getTickerData(@Valid @ModelAttribute StockDataRequestForm stockDataRequestForm, BindingResult result){
         if(result.hasErrors()){

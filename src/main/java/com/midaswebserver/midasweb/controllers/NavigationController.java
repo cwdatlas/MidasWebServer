@@ -8,9 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * NavigationController manages the endpoints for general locations
+ * this includes the index page and the user/home page
+ */
 @Controller
 public class NavigationController {
-    private static final Logger log = LoggerFactory.getLogger(NavigationController.class);
     @GetMapping("/")
     public String index() {
         return "index";
