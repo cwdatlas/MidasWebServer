@@ -1,21 +1,20 @@
 package com.midaswebserver.midasweb.apiModels;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.crazzyghost.alphavantage.timeseries.response.StockUnit;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Ticker {
-    @JsonIgnoreProperties(ignoreUnknown = true)
     public Ticker() {
     }
 
     @NotNull
-    @JsonProperty("Meta Data")
     private MetaData metaData;
 
     @NotNull
-    @JsonProperty("Time Series (5min)")
-    private TimeSeries timeSeries;
+    private List<StockUnit> timeSeries = new ArrayList<StockUnit>();
 
     public MetaData getMetaData() {
         return metaData;
@@ -25,12 +24,20 @@ public class Ticker {
         this.metaData = metaData;
     }
 
-    public TimeSeries getTimeSeries() {
+    public List<StockUnit> getTimeSeries() {
         return timeSeries;
     }
 
-    public void setTimeSeries(TimeSeries timeSeries) {
+    public void setTimeSeries(List<StockUnit> timeSeries) {
         this.timeSeries = timeSeries;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticker{" +
+                "metaData=" + metaData +
+                ", timeSeries=" + timeSeries +
+                '}';
     }
 }
 

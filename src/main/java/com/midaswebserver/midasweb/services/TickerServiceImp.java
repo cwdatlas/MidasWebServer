@@ -5,12 +5,13 @@ import com.crazzyghost.alphavantage.Config;
 import com.crazzyghost.alphavantage.parameters.Interval;
 import com.crazzyghost.alphavantage.parameters.OutputSize;
 import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
+import com.midaswebserver.midasweb.apiModels.MetaData;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 import jakarta.validation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.Set;
 
 @Service
@@ -25,26 +26,42 @@ public class TickerServiceImp implements TickerService{
                 .build();
         AlphaVantage.api().init(cfg);
     }
+    //Will return null if data is invalid
     @Override
-    public TimeSeriesResponse getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize) {
-        TimeSeriesResponse response = AlphaVantage.api()
+    public Ticker getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize) {
+        TimeSeriesResponse timeSeries = AlphaVantage.api()
                 .timeSeries()
                 .intraday()
                 .forSymbol(symbol)
                 .interval(interval)
                 .outputSize(outputSize)
                 .fetchSync();
-        return response;
+        Ticker ticker = convertToInternalObject(timeSeries);
+        if(!validateTicker(ticker)){
+            ticker = null;
+        }
+        return ticker;
     }
 
 
-//    private boolean validateData(@Valid @RequestBody Object[] tickerform) {
-//        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-//        Set<ConstraintViolation<Object[]>> violations = validator.validate(tickerform);
-//        if (!violations.isEmpty()) {
-//            return false;
-//            //throw new ConstraintViolationException(violations);
-//        }
-//        return true;
-//    }
+    private boolean validateTicker(Ticker ticker) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Ticker>> violations = validator.validate(ticker);
+        if (!violations.isEmpty()) {
+            return false;
+            //throw new ConstraintViolationException(violations);
+        }
+        return true;
+    }
+    private Ticker convertToInternalObject(TimeSeriesResponse timeSeries){
+        Ticker ticker = new Ticker();
+        MetaData metaData = new MetaData();
+        ticker.setTimeSeries(timeSeries.getStockUnits());
+        com.crazzyghost.alphavantage.timeseries.response.MetaData responseMetaData = timeSeries.getMetaData();
+        metaData.setData(responseMetaData.getInformation(), responseMetaData.getSymbol(),
+                responseMetaData.getLastRefreshed(), responseMetaData.getTimeZone(),
+                responseMetaData.getInterval(), responseMetaData.getOutputSize());
+        ticker.setMetaData(metaData);
+        return ticker;
+    }
 }

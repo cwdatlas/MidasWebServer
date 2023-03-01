@@ -6,6 +6,6 @@ import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 
 public interface TickerService{
-    TimeSeriesResponse getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize);
+    Ticker getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize);
 
 }

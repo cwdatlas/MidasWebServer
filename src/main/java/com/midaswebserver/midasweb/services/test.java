@@ -5,6 +5,7 @@ import com.crazzyghost.alphavantage.Config;
 import com.crazzyghost.alphavantage.parameters.Interval;
 import com.crazzyghost.alphavantage.parameters.OutputSize;
 import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
+import com.midaswebserver.midasweb.apiModels.MetaData;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 
 public class test {
@@ -30,8 +31,14 @@ private static Ticker getTimeSeriesInfo() {
             .outputSize(OutputSize.COMPACT)
             .fetchSync();
     Ticker ticker = new Ticker();
+    MetaData metaData = new MetaData();
     ticker.setTimeSeries(timeSeries.getStockUnits());
-    return null;
+    com.crazzyghost.alphavantage.timeseries.response.MetaData responseMetaData = timeSeries.getMetaData();
+    metaData.setData(responseMetaData.getInformation(), responseMetaData.getSymbol(),
+                    responseMetaData.getLastRefreshed(), responseMetaData.getTimeZone(),
+                    responseMetaData.getInterval(), responseMetaData.getOutputSize());
+    ticker.setMetaData(metaData);
+    return ticker;
     }
 }
 

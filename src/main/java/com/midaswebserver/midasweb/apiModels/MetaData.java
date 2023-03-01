@@ -5,40 +5,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
 public class MetaData{
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    MetaData(){
-    }
 
     @NotNull
-    @JsonProperty("1. Information")
-    private String info;
-
+    private String information;
     @NotNull
-    @JsonProperty("2. Symbol")
     private String symbol;
-
     @NotNull
-    @JsonProperty("3. Last Refreshed")
     private String lastRefreshed;
-
     @NotNull
-    @JsonProperty("4. Interval")
+    private String timeZone;
+    @NotNull
     private String interval;
-
     @NotNull
-    @JsonProperty("5. Output Size")
     private String outputSize;
 
-    @NotNull
-    @JsonProperty("6. Time Zone")
-    private String timeZone;
+    public MetaData(){}
 
-    public String getInfo() {
-        return info;
+    public void setData(String information, String symbol, String lastRefreshed, String timeZone, String interval, String outputSize){
+        this.information = information;
+        this.symbol = symbol;
+        this.lastRefreshed = lastRefreshed;
+        this.timeZone = timeZone;
+        this.interval = interval;
+        this.outputSize = outputSize;
+    }
+    public String getInformation() {
+        return information;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setInformation(String information) {
+        this.information = information;
     }
 
     public String getSymbol() {
@@ -57,6 +53,14 @@ public class MetaData{
         this.lastRefreshed = lastRefreshed;
     }
 
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
     public String getInterval() {
         return interval;
     }
@@ -73,24 +77,18 @@ public class MetaData{
         this.outputSize = outputSize;
     }
 
-    public String getTimeZone() {
-        return timeZone;
-    }
-
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-    }
-
     @Override
     public String toString() {
-        return "MetaData{" +
-                "info='" + info + '\'' +
-                ", symbol='" + symbol + '\'' +
-                ", lastRefreshed='" + lastRefreshed + '\'' +
-                ", interval='" + interval + '\'' +
-                ", outputSize='" + outputSize + '\'' +
-                ", timeZone='" + timeZone + '\'' +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("MetaData{");
+        sb.append("information=" + information);
+        sb.append("symbol=" + symbol);
+        sb.append("lastRefreshed=" + lastRefreshed);
+        sb.append("timeZone=" + timeZone);
+        if(interval != null) sb.append("interval=" + interval);
+        if(outputSize != null) sb.append("outputSize=" + outputSize);
+        sb.append("}");
+        return sb.toString();
     }
 }
 
