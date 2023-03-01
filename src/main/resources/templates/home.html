@@ -8,12 +8,12 @@
     <div>
         <p>Welcome To your home! this will be based on your personal data in the future</p>
     </div>
-    <p>Please type in a stock ticker, and set a time interval</p>
-    <form action="#" th:action="@{/home}" th:object="${stockDataRequestForm}" method="post">
+    <p>Please type in a stock ticker, and set a time interval (SIXTY_MIN)</p>
+    <form action="#" th:action="@{/ticker/data}" th:object="${stockDataRequestForm}" method="get">
         <span th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>
         <input type="text" th:field="*{ticker}" placeholder="Ticker"/>
         <span th:if="${#fields.hasErrors('ticker')}" th:errors="*{ticker}">Ticker error</span><br/>
-        <input type="text" th:field="*{interval}" placeholder="Password"/>
+        <input type="text" th:field="*{interval}" placeholder="Interval"/>
         <span th:if="${#fields.hasErrors('interval')}" th:errors="*{interval}">Interval error</span><br/>
         <button type="submit">Request Data</button>
     </form>
