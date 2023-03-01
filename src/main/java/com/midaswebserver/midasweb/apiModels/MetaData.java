@@ -1,4 +1,4 @@
-package com.midaswebserver.midasweb.forms;
+package com.midaswebserver.midasweb.apiModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

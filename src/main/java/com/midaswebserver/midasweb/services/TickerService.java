@@ -1,7 +1,11 @@
 package com.midaswebserver.midasweb.services;
 
-import com.midaswebserver.midasweb.models.Ticker;
+import com.crazzyghost.alphavantage.parameters.Interval;
+import com.crazzyghost.alphavantage.parameters.OutputSize;
+import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
+import com.midaswebserver.midasweb.apiModels.Ticker;
+
 public interface TickerService{
-    Ticker getTickerInfo(String symbol);
+    TimeSeriesResponse getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize);
 
 }

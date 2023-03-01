@@ -1,12 +1,10 @@
-package com.midaswebserver.midasweb.forms;
+package com.midaswebserver.midasweb.apiModels;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
-public class TimeSeries {
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    TimeSeries(){
+public class TimeEntry {
+    public TimeEntry(){
 
     }
     @NotNull
@@ -71,7 +69,7 @@ public class TimeSeries {
 
     @Override
     public String toString() {
-        return "TimeSeries{" +
+        return "TimeEntry{" +
                 "open=" + open +
                 ", high=" + high +
                 ", low=" + low +
