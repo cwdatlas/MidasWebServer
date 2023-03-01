@@ -6,20 +6,13 @@ import jakarta.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * UserForm contains user from the client
+ */
 public class UserForm {
 
     private static final Logger log = LoggerFactory.getLogger(UserForm.class);
-    public UserForm() {
-    }
-    //this is a bean used for validating incoming data
-    public UserForm(String username, String password, String confirmPass, String email, String phoneNumber) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.confirmPass = confirmPass;
-        log.info("Created UserForm for {}", username);
-    }
+
     @NotNull//validation code
     @Size(min = 6, max = 20, message = "Username must be at least 6 characters long")
     private String username;
@@ -38,6 +31,18 @@ public class UserForm {
     @NotNull
     @Size(min = 10, max = 15, message = "Must use a valid phone number")
     private String phoneNumber;
+
+    public UserForm() {
+    }
+    //this is a bean used for validating incoming data
+    public UserForm(String username, String password, String confirmPass, String email, String phoneNumber) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.confirmPass = confirmPass;
+        log.info("Created UserForm for {}", username);
+    }
 
     public String getConfirmPass() {
         return confirmPass;
