@@ -2,12 +2,15 @@ package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.forms.LoginForm;
 import com.midaswebserver.midasweb.services.LoginService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -60,13 +63,21 @@ public class LoginController {
     }
 
     /**
-     * logs a successful login attempt
+     * adds or updates persistent cookie
      * @param username
      * @param model
      * @return the "loginSuccess" template
      */
     @GetMapping("/loginSuccess")
-    public String loginSuccess(String username, Model model){
+    public String loginSuccess(@CookieValue(value="username", defaultValue="Atta")String cookieResult,
+                               String username, Model model, HttpServletResponse response){
+        if(cookieResult.isBlank()) {
+            response.addCookie(new Cookie("username", username)); //TODO rather than adding only username, add object that holds all of whats important
+            log.debug("cookie added to '{}' browser", username);
+        }
+        if(cookieResult != username){
+
+        }
         model.addAttribute("username", username);
         log.info("/loginSuccess has been connected to");
         return "loginSuccess";

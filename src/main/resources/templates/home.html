@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>User Home</title>
 </head>
 <body>
     <div>
-        <p>Welcome To your home! this will be based on your personal data in the future</p>
+        <p>Welcome home <a th:text="${username}"></a>!</p>
     </div>
     <p>Please type in a stock ticker, and set a time interval (SIXTY_MIN)</p>
     <form action="#" th:action="@{/ticker/data}" th:object="${stockDataRequestForm}" method="get">

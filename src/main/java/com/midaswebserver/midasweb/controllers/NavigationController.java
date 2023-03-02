@@ -1,11 +1,14 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.ui.Model;
 import com.midaswebserver.midasweb.forms.UserForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
@@ -20,9 +23,9 @@ public class NavigationController {
     }
 
     @GetMapping("/user/home")
-    public String home(Model model) {
+    public String home(@CookieValue(value = "username") String username,  Model model) {
+        model.addAttribute("username", username);
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
-        return "home"; }
-
-
+        return "home";
+    }
 }
