@@ -64,22 +64,22 @@ public class LoginController {
 
     /**
      * adds or updates persistent cookie
+     * TODO rather than adding only username, add object that holds all of whats important
+     * TODO much of this needs to be moved to a separate cookie class. We need a centralized location to work with cookies
      * @param username
      * @param model
      * @return the "loginSuccess" template
      */
     @GetMapping("/loginSuccess")
-    public String loginSuccess(@CookieValue(value="username", defaultValue="Atta")String cookieResult,
-                               String username, Model model, HttpServletResponse response){
-        if(cookieResult.isBlank()) {
-            response.addCookie(new Cookie("username", username)); //TODO rather than adding only username, add object that holds all of whats important
-            log.debug("cookie added to '{}' browser", username);
-        }
-        if(cookieResult != username){
-
-        }
+    public String loginSuccess(String username, Model model, HttpServletResponse response){
+        Cookie cookie = new Cookie("username", username);
+        cookie.setMaxAge(1 * 24 * 60 *60);
+        cookie.setHttpOnly(true);
+        cookie.setDomain("localhost:8080");
+        response.addCookie(cookie);
+        log.debug("cookie added or replaced on '{}' browser", username);
+        log.debug("/loginSuccess has been connected to");
         model.addAttribute("username", username);
-        log.info("/loginSuccess has been connected to");
         return "loginSuccess";
     }
 
