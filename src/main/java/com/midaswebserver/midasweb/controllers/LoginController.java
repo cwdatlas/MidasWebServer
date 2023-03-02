@@ -75,7 +75,6 @@ public class LoginController {
         Cookie cookie = new Cookie("username", username);
         cookie.setMaxAge(1 * 24 * 60 *60);
         cookie.setHttpOnly(true);
-        cookie.setDomain("localhost:8080");
         response.addCookie(cookie);
         log.debug("cookie added or replaced on '{}' browser", username);
         log.debug("/loginSuccess has been connected to");
