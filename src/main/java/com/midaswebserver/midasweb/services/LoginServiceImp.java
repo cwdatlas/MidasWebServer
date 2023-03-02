@@ -10,15 +10,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * LoginServiceImp validates user data relating to login
+ * TODO consolidate loginService and UserService methods
+ */
 @Service
 public class LoginServiceImp implements LoginService {
-    //Creates logging object which we can use to log what happens in this class. this information will
-    //be channeled in accordance to the logback-spring.xml file
     private static final Logger log = LoggerFactory.getLogger(LoginServiceImp.class);
-    //im not sure what this is all about. it looks like the list is made out of logins
-    //but it has a constructor of (String username), which im confused about
     private final UserRepository loginRepo;
-
     public LoginServiceImp(UserRepository loginRepo) {
         this.loginRepo = loginRepo;
     }

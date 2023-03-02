@@ -8,17 +8,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * UserServiceImp is the CRUD service for Users. the majority of user logic goes through the
+ * UserServiceImp
+ */
 @Service
 public class UserServiceImp implements UserService {
-
     private static final Logger log = LoggerFactory.getLogger(UserServiceImp.class);
-
     private final UserRepository userRepo;
 
     public UserServiceImp(UserRepository userRepo) {
         this.userRepo = userRepo;
-        log.info("User Repository initialized in UserService");
+        log.debug("User Repository initialized in UserService");
     }
+
+    /**
+     * Adds user to the database
+     * @param user
+     * @return true TODO this needs to say true or false depending on success
+     */
     @Override
     public boolean add(User user) {
         if(!validateUniqueUsername(user.getUsername())) {
@@ -29,6 +37,11 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
+    /**
+     * ValidateUniqueUsername checks to see if there is another person in the database with the same username
+     * @param username
+     * @return boolean
+     */
     @Override
     public boolean validateUniqueUsername(String username) {
         log.debug("validateUser: user '{}' attempted login", username);
@@ -40,9 +53,15 @@ public class UserServiceImp implements UserService {
             log.debug("validateUser: found {} users", users.size());
             return false;
         }
-        return true;//i see this everywhere in Nates code, so i need to ask if its ok, or something we should do
+        return true;
     }
 
+    /**
+     * delete deletes a user from the database
+     * TODO make sure the process succeeded
+     * @param user
+     * @return boolean
+     */
     @Override
     public boolean delete(User user) {
         if (user == null)
@@ -51,6 +70,10 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
+    /**
+     * deleteALL deletes all users in database
+     * @return boolean
+     */
     @Override
     public boolean deleteAll() {
         userRepo.deleteAll();
