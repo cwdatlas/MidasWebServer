@@ -4,6 +4,7 @@ import com.midaswebserver.midasweb.forms.LoginForm;
 import com.midaswebserver.midasweb.services.LoginService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,7 @@ public class LoginController {
      * @return the "loginSuccess" template
      */
     @GetMapping("/loginSuccess")
-    public String loginSuccess(String username, Model model, HttpServletResponse response){
+    public String loginSuccess(String username, Model model, HttpServletResponse response, HttpSession session){
         Cookie cookie = new Cookie("username", username);
         cookie.setMaxAge(1 * 24 * 60 *60);
         cookie.setHttpOnly(true);

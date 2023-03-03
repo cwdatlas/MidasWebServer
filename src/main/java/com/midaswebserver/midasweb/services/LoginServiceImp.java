@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.midaswebserver.midasweb.repositories.UserRepository;
 import com.midaswebserver.midasweb.models.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,19 +19,19 @@ import java.util.List;
 public class LoginServiceImp implements LoginService {
     private static final Logger log = LoggerFactory.getLogger(LoginServiceImp.class);
     private final UserRepository loginRepo;
+    @Autowired
+    private HashService hashService;
     public LoginServiceImp(UserRepository loginRepo) {
         this.loginRepo = loginRepo;
     }
-
     /**
      * Given a loginForm, determine if the information provided is valid, and the user exists in the system.
-     *
      * @param loginForm - Data containing user login information, such as username and password.
      * @return true if data exists and matches what's on record, false otherwise
      */
     @Override
     public boolean validateUser(LoginForm loginForm) {
-        log.info("validateUser: user '{}' attempted login", loginForm.getUsername());
+        log.debug("validateUser: user '{}' attempted login", loginForm.getUsername());
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = loginRepo.findByUsernameIgnoreCase(loginForm.getUsername());
 
@@ -40,16 +41,14 @@ public class LoginServiceImp implements LoginService {
             return false;
         }
         User u = users.get(0);
-        // XXX - Using Java's hashCode is wrong on SO many levels, but is good enough for demonstration purposes.
-        // NEVER EVER do this in production code!
-        final String userProvidedHash = Integer.toString(loginForm.getPassword().hashCode());//blowfish is a 8-9 so do that
+        final String userProvidedHash = hashService.getHash(loginForm.getPassword());//blowfish is a 8-9 so do that
         if (!u.getHashedPassword().equals(userProvidedHash)) {
-            log.info("validateUser: password !match");
+            log.debug("validateUser: password !match");
             return false;
         }
 
         // User exists, and the provided password matches the hashed password in the database.
-        log.info("validateUser: successful login");
+        log.debug("validateUser: successful login");
         return true;
     }
 }

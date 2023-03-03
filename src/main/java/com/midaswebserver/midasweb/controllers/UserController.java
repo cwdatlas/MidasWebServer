@@ -1,11 +1,13 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.forms.UserForm;
+import com.midaswebserver.midasweb.services.HashService;
 import com.midaswebserver.midasweb.services.UserService;
 import com.midaswebserver.midasweb.models.User;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -22,7 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    @Autowired
     private final UserService userService;
+    @Autowired
+    private HashService hashService;
 
     public UserController(UserService userService) {this.userService = userService;}
 
@@ -66,7 +71,7 @@ public class UserController {
         //mapping results from form to user
         User user = new User();
         user.setUsername(userForm.getUsername());
-        user.setRawPassword(userForm.getPassword());
+        user.setHashedPassword(hashService.getHash(userForm.getPassword()));
         user.setEmail(userForm.getEmail());
         user.setPhoneNumber(userForm.getPhoneNumber());
         userService.add(user);

@@ -28,25 +28,25 @@ public class User {
 
     public User() {
     }
-    public User(String username, String rawPassword) {
+    public User(String username, String hashedPassword) {
         log.info("User Object has been created with name of {}", username);
         this.username = username;
-        setRawPassword(rawPassword);
+        this.hashedPassword = hashedPassword;
     }
-    public User(String username, String rawPassword, String email, String phoneNumber) {
+    public User(String username, String hashedPassword, String email, String phoneNumber) {
         log.info("User Object has been created with name of {}", username);
         this.username = username;
-        setRawPassword(rawPassword);
+        this.hashedPassword = hashedPassword;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
-    public void setRawPassword(String rawPassword) {
-        // XXX - This should *NEVER* be done in a real project
-
-        this.hashedPassword = Integer.toString(rawPassword.hashCode());// im going to assume the negetive part of this action is hashing
-        log.info("Password has been hashed {}", this.hashedPassword!=null);// I would like to create a service that hashes passwords
-        //with the java hash and doing it in a way that isnt salted
-    }
+//    public void setRawPassword(String rawPassword) {
+//        // XXX - This should *NEVER* be done in a real project
+//
+//        this.hashedPassword = hashService.getHash(rawPassword);// im going to assume the negetive part of this action is hashing
+//        log.info("Password has been hashed {}", this.hashedPassword!=null);// I would like to create a service that hashes passwords
+//        //with the java hash and doing it in a way that isnt salted
+//    }
 
     public String getPhoneNumber() {
         return phoneNumber;
