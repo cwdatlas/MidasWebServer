@@ -102,10 +102,8 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public String logout(@CookieValue(value = "JSESSIONID", defaultValue = "Atta") String uuid) {
-        Cookie delCookie = new Cookie("JSESSIONID", uuid);
-        delCookie.setMaxAge(0);
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "index";
     }
-
 }
