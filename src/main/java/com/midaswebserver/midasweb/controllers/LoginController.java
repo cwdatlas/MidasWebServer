@@ -14,6 +14,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,15 +34,19 @@ public class LoginController {
     private final LoginService loginService;
     @Autowired
     private UserService userService;
-    public LoginController(LoginService loginService) {this.loginService = loginService;}
+
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
+    }
 
     /**
      * loginGet sends the loginForm with the model to the client
+     *
      * @param model
      * @return "login" template
      */
     @GetMapping("/login")
-    public String logingGet(Model model){
+    public String logingGet(Model model) {
         model.addAttribute("loginForm", new LoginForm());
         log.info("A user has attempted to sign in"); //how can I make this better? add to a counter?
         return "login";
@@ -49,18 +54,19 @@ public class LoginController {
 
     /**
      * loginPost takes the completed form for login, validates, and copies data to a User object
+     *
      * @param loginForm
      * @param result
      * @param attrs
      * @return either "loginsuccess" or "login"
      */
     @PostMapping("/login")
-    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs){
-        if (result.hasErrors()){
+    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs) {
+        if (result.hasErrors()) {
             log.debug("{} has submitted a form which has errors", loginForm.getUsername());
             return "login";
         }
-        if(!loginService.validateUser(loginForm)){
+        if (!loginService.validateUser(loginForm)) {
             result.addError(new ObjectError("globalError", "Username and password do not match known users"));
             log.info("{} was used for a login attempt that failed validation", loginForm.getUsername());
             return "/login";
@@ -74,12 +80,13 @@ public class LoginController {
      * adds or updates persistent cookie
      * TODO rather than adding only username, add object that holds all of whats important
      * TODO much of this needs to be moved to a separate cookie class. We need a centralized location to work with cookies
+     *
      * @param username
      * @param model
      * @return the "loginSuccess" template
      */
     @GetMapping("/loginSuccess")
-    public String loginSuccess( HttpSession session, Model model, String username){
+    public String loginSuccess(HttpSession session, Model model, String username) {
         log.debug("User has ID of '{}'", userService.getIDByUser(username));
         session.setAttribute("UserId", userService.getIDByUser(username));
         model.addAttribute("username", username);
@@ -90,6 +97,15 @@ public class LoginController {
      * @return the "loginFailure" template
      */
     @GetMapping("/loginFailure")
-    public String loginFailure(){return "loginFailure";}
+    public String loginFailure() {
+        return "loginFailure";
+    }
+
+    @GetMapping("/logout")
+    public String logout(@CookieValue(value = "JSESSIONID", defaultValue = "Atta") String uuid) {
+        Cookie delCookie = new Cookie("JSESSIONID", uuid);
+        delCookie.setMaxAge(0);
+        return "index";
+    }
 
 }
