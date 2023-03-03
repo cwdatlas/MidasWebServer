@@ -2,6 +2,7 @@ package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.forms.LoginForm;
 import com.midaswebserver.midasweb.services.LoginService;
+import com.midaswebserver.midasweb.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -30,6 +31,8 @@ import java.util.*;
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
     private final LoginService loginService;
+    @Autowired
+    private UserService userService;
     public LoginController(LoginService loginService) {this.loginService = loginService;}
 
     /**
@@ -76,14 +79,9 @@ public class LoginController {
      * @return the "loginSuccess" template
      */
     @GetMapping("/loginSuccess")
-    public String loginSuccess(String username, Model model, HttpServletResponse response, HttpSession session){
-        session.getId();
-        Cookie cookie = new Cookie("username", username);
-        cookie.setMaxAge(1 * 24 * 60 *60);
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
-        log.debug("cookie added or replaced on '{}' browser", username);
-        log.debug("/loginSuccess has been connected to");
+    public String loginSuccess( HttpSession session, Model model, String username){
+        log.debug("User has ID of '{}'", userService.getIDByUser(username));
+        session.setAttribute("UserId", userService.getIDByUser(username));
         model.addAttribute("username", username);
         return "loginSuccess";
     }
@@ -94,23 +92,4 @@ public class LoginController {
     @GetMapping("/loginFailure")
     public String loginFailure(){return "loginFailure";}
 
-
-    public static final String INDEX_TEMPLATE_VIEW_NAME = "index";
-
-    private final Set<String> sessionIds = Collections.synchronizedSet(new HashSet<>());
-    @GetMapping("/session")
-    public ModelAndView sessionRequestCounts(HttpSession session) {
-
-        this.sessionIds.add(session.getId());
-
-
-        Map<String, Object> model = new HashMap<>();
-
-        model.put("sessionType", session.getClass().getName());
-        log.debug("sessionType: '{}'", session.getClass().getName());
-        log.debug("Session ID is '{}'",session.getId());
-        model.put("sessionCount", this.sessionIds.size());
-
-        return new ModelAndView(INDEX_TEMPLATE_VIEW_NAME, model);
-    }
 }

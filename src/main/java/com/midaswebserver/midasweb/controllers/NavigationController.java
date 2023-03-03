@@ -1,8 +1,12 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
+import com.midaswebserver.midasweb.models.User;
+import com.midaswebserver.midasweb.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import com.midaswebserver.midasweb.forms.UserForm;
 import org.slf4j.Logger;
@@ -17,8 +21,21 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class NavigationController {
+    private static final Logger log = LoggerFactory.getLogger(NavigationController.class);
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/")
-    public String index() {
+    public String index(Model model, HttpSession session) {
+        String username = "New User";
+        if(!session.isNew()){
+            log.debug("Logged User has id of: '{}'", session.getAttribute("UserId").toString());
+            User user = userService.getUserByID(Long.parseLong(session.getAttribute("UserId").toString()));
+            log.debug("'{}' has accessed Index page", user.getUsername());
+            username = user.getUsername();
+        }
+        model.addAttribute("username", username);
+
         return "index";
     }
 

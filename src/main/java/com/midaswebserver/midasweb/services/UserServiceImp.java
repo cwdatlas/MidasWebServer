@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * UserServiceImp is the CRUD service for Users. the majority of user logic goes through the
@@ -81,6 +82,28 @@ public class UserServiceImp implements UserService {
         if(userRepo.count()>0)
             return false;
         return true;
+    }
+
+    /**
+     * Gets User by Id
+     *TODO have validation and safe and expected returns
+     * @param ID
+     * @return
+     */
+    @Override
+    public User getUserByID(Long ID) {
+        return userRepo.findById(ID).get();
+    }
+
+    /**
+     * Gets Id by username
+     * @param username
+     * @return
+     */
+    @Override
+    public Long getIDByUser(String username) {
+        Long userId = userRepo.findByUsernameIgnoreCase(username).get(0).getId();
+        return userId;
     }
 
 }
