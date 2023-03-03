@@ -40,8 +40,9 @@ public class NavigationController {
     }
 
     @GetMapping("/user/home")
-    public String home(@CookieValue(value = "username", defaultValue = "defaultUsername") String username,  Model model) {
-        model.addAttribute("username", username);
+    public String home(HttpSession session,  Model model) {
+        User user = userService.getUserByID(Long.parseLong(session.getAttribute("UserId").toString()));
+        model.addAttribute("username", user.getUsername());
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         return "home";
     }
