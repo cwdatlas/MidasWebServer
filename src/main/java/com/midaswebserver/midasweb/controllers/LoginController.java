@@ -8,15 +8,19 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.*;
 
 /**
  * The LoginController works with all interactions by the client regarding logging in
@@ -73,6 +77,7 @@ public class LoginController {
      */
     @GetMapping("/loginSuccess")
     public String loginSuccess(String username, Model model, HttpServletResponse response, HttpSession session){
+        session.getId();
         Cookie cookie = new Cookie("username", username);
         cookie.setMaxAge(1 * 24 * 60 *60);
         cookie.setHttpOnly(true);
@@ -89,4 +94,23 @@ public class LoginController {
     @GetMapping("/loginFailure")
     public String loginFailure(){return "loginFailure";}
 
+
+    public static final String INDEX_TEMPLATE_VIEW_NAME = "index";
+
+    private final Set<String> sessionIds = Collections.synchronizedSet(new HashSet<>());
+    @GetMapping("/session")
+    public ModelAndView sessionRequestCounts(HttpSession session) {
+
+        this.sessionIds.add(session.getId());
+
+
+        Map<String, Object> model = new HashMap<>();
+
+        model.put("sessionType", session.getClass().getName());
+        log.debug("sessionType: '{}'", session.getClass().getName());
+        log.debug("Session ID is '{}'",session.getId());
+        model.put("sessionCount", this.sessionIds.size());
+
+        return new ModelAndView(INDEX_TEMPLATE_VIEW_NAME, model);
+    }
 }
