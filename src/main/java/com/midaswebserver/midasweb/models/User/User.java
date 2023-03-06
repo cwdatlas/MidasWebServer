@@ -43,14 +43,13 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
-//    public void setRawPassword(String rawPassword) {
-//        // XXX - This should *NEVER* be done in a real project
-//
-//        this.hashedPassword = hashService.getHash(rawPassword);// im going to assume the negetive part of this action is hashing
-//        log.info("Password has been hashed {}", this.hashedPassword!=null);// I would like to create a service that hashes passwords
-//        //with the java hash and doing it in a way that isnt salted
-//    }
 
+    public Settings getSettings() {
+        return settings;
+    }
+    public void setSettings(Settings settings) {
+        this.settings = settings;
+    }
     public String getPhoneNumber() {
         return phoneNumber;
     }
