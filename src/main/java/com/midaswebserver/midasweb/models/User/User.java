@@ -25,6 +25,9 @@ public class User {
     private String email;
     @Column(name = "phonenumber", nullable = true)
     private String phoneNumber;
+    @OneToOne(mappedBy = "user")
+    @PrimaryKeyJoinColumn
+    private Settings settings;
 
     public User() {
     }
