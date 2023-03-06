@@ -1,4 +1,4 @@
-package com.midaswebserver.midasweb.models;
+package com.midaswebserver.midasweb.models.User;
 
 import jakarta.persistence.*;
 import org.slf4j.Logger;

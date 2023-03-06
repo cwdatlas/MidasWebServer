@@ -54,7 +54,6 @@ public class LoginController {
 
     /**
      * loginPost takes the completed form for login, validates, and copies data to a User object
-     *
      * @param loginForm
      * @param result
      * @param attrs
@@ -80,9 +79,9 @@ public class LoginController {
      * adds or updates persistent cookie
      * TODO rather than adding only username, add object that holds all of whats important
      * TODO much of this needs to be moved to a separate cookie class. We need a centralized location to work with cookies
-     *
-     * @param username
+     * @param session
      * @param model
+     * @param username
      * @return the "loginSuccess" template
      */
     @GetMapping("/loginSuccess")
@@ -95,6 +94,7 @@ public class LoginController {
 
     /**
      * @return the "loginFailure" template
+     * TODO find a solution to this, delete this or replace its functionality as there isnt a loginFailure template
      */
     @GetMapping("/loginFailure")
     public String loginFailure() {

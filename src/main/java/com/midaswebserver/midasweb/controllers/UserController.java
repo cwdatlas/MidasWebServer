@@ -3,7 +3,7 @@ package com.midaswebserver.midasweb.controllers;
 import com.midaswebserver.midasweb.forms.UserForm;
 import com.midaswebserver.midasweb.services.HashService;
 import com.midaswebserver.midasweb.services.UserService;
-import com.midaswebserver.midasweb.models.User;
+import com.midaswebserver.midasweb.models.User.User;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

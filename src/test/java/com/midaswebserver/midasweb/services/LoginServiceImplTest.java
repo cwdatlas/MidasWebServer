@@ -2,7 +2,7 @@ package com.midaswebserver.midasweb.services;
 
 
 import com.midaswebserver.midasweb.forms.LoginForm;
-import com.midaswebserver.midasweb.models.User;
+import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

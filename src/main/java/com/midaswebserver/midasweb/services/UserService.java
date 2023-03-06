@@ -1,8 +1,5 @@
 package com.midaswebserver.midasweb.services;
-import com.midaswebserver.midasweb.models.User;
-
-import java.util.List;
-import java.util.Optional;
+import com.midaswebserver.midasweb.models.User.User;
 
 public interface UserService {
 

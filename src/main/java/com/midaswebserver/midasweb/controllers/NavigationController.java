@@ -1,18 +1,14 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
-import com.midaswebserver.midasweb.models.User;
+import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.services.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import com.midaswebserver.midasweb.forms.UserForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**

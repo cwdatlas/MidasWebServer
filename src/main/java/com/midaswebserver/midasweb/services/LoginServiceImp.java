@@ -4,7 +4,7 @@ import com.midaswebserver.midasweb.forms.LoginForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.midaswebserver.midasweb.repositories.UserRepository;
-import com.midaswebserver.midasweb.models.User;
+import com.midaswebserver.midasweb.models.User.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
