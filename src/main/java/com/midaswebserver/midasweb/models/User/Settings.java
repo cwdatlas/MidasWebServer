@@ -1,15 +1,10 @@
 package com.midaswebserver.midasweb.models.User;
 
-import com.crazzyghost.alphavantage.timeseries.response.StockUnit;
-import com.midaswebserver.midasweb.controllers.NavigationController;
 import jakarta.persistence.*;
-import org.hibernate.internal.util.collections.Stack;
-import org.hibernate.internal.util.collections.StandardStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 @Entity
 @Table(name = "user_settings")
@@ -20,8 +15,8 @@ public class Settings {
     private Long id;
     @OneToOne
     @MapsId
-    @JoinColumn(name = "id")
-    private User userId;
+    @JoinColumn(name = "user_id")
+    private User user;
     @Column(name = "searched_tickers", nullable = true)
     private String tickers;
 
@@ -38,11 +33,11 @@ public class Settings {
     }
 
     public User getUserId() {
-        return userId;
+        return user;
     }
 
     public void setUserId(User userId) {
-        this.userId = userId;
+        this.user = userId;
     }
 
     /**
@@ -51,10 +46,12 @@ public class Settings {
      */
     public Stack<String> getTickers() {
         String[] tickerArray = tickers.split(",");
-        Stack<String> tickerStack = new StandardStack<>();
+        Stack<String> tickerStack = new Stack<>();
         int length = tickerArray.length;
-        for(int i = length; i == 0; i--)
+        log.debug("Length of ticker array: '{}'", length);
+        for(int i = 0; i < length; i++) {
             tickerStack.push(tickerArray[i]);
+        }
         log.debug("tickers: '{}' have been returned from Settings", tickerStack.toString());
         return tickerStack;
     }
@@ -65,6 +62,10 @@ public class Settings {
      */
     public void setTickers(Stack<String> tickers) {
         log.debug("Ticker Stack: '{}' has been saved", tickers.toString());
-        this.tickers = tickers.toString();
+        String localTickers = tickers.toString();
+        localTickers = localTickers.replace("[", "");
+        localTickers = localTickers.replace("]", "");
+        localTickers = localTickers.replace(" ", "");
+        this.tickers = localTickers;
     }
 }
