@@ -54,6 +54,7 @@ public class TickerController {
             tickerStack.push(ticker.getMetaData().getSymbol());
             settings.setTickers(tickerStack);
             user.setSettings(settings);
+            userService.add(user);
         }
         return ResponseEntity.ok(ticker);
     }
