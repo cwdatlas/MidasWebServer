@@ -3,7 +3,7 @@ package com.midaswebserver.midasweb.controllers;
 import com.crazzyghost.alphavantage.parameters.OutputSize;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
-import com.midaswebserver.midasweb.models.User.Settings;
+import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.services.TickerService;
 import com.midaswebserver.midasweb.services.TickerServiceImp;
@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -47,14 +48,14 @@ public class TickerController {
         }
         Ticker ticker = tickerService.getTimeSeriesInfo(stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval(), OutputSize.COMPACT);
         //adds called ticker to tickers that have been called before
-        if(ticker.getMetaData().getSymbol()!=null) {
-            User user = userService.getUserByID(Long.parseLong(session.getId()));
-            Settings settings = user.getSettings();
-            Stack tickerStack = settings.getTickers();
-            tickerStack.push(ticker.getMetaData().getSymbol());
-            settings.setTickers(tickerStack);
-            user.setSettings(settings);
-            userService.add(user);
+        if(ticker.getMetaData().getSymbol()!=null && session.getAttribute("UserId")!=null) {
+            User user = userService.getUserByID((Long)(session.getAttribute("UserId")));
+            Set<Setting> setting = user.getSetting();
+            Setting newSetting = new Setting(ticker.getMetaData().getSymbol());
+            setting.add(newSetting);
+            user.setSetting(setting);
+            log.debug("Ticker in user Setting: '{}'", newSetting.getTicker());
+            userService.update(user);
         }
         return ResponseEntity.ok(ticker);
     }

@@ -1,5 +1,6 @@
 package com.midaswebserver.midasweb.services;
 
+import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,5 +40,32 @@ public class UserServiceImpTest {
         userService.add(testUser);
         assertFalse("Username was Unique", userService.validateUniqueUsername(testUser.getUsername()));
         userService.delete(testUser);
+    }
+    @Test //Test if username can be updated (good)
+    public void updateUsernameTest(){
+        userService.add(testUser);
+        //sets updates username
+        String newUsername = "MadAtlas2";
+        testUser.setUsername(newUsername);
+        userService.update(testUser);
+        //retrieving the user and seeing if the name was saved
+        User changedUser = userService.getUserByName(newUsername);
+        assertTrue("Username wasnt changed", newUsername.equals(changedUser.getUsername()));
+        userService.delete(changedUser);
+    }
+
+    @Test
+    public void updateSettingTest(){
+        userService.add(testUser);
+        //sets updates username
+        String ticker = "EUC";
+        Setting setting = new Setting(ticker);
+        setting.setUserId(testUser);
+        testUser.addSetting(setting);
+        userService.update(testUser);
+        //retrieving the user and seeing if the name was saved
+        User changedUser = userService.getUserByName(testUser.getUsername());
+        assertTrue("Username wasnt changed", ticker.equals(changedUser.getSettingAsArray()[0]));
+        userService.delete(changedUser);
     }
 }

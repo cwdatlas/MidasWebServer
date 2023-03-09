@@ -6,7 +6,8 @@
 </head>
 <body>
     <div>
-        <p>Welcome home <a th:text="${username}"></a>!</p>
+        <p>Welcome home <a th:text="${user.getUsername()}"></a>!</p>
+        <p>your previous searches have been <a th:text="${userTickers}"></a></p>
     </div>
     <p>Please type in a stock ticker, and set a time interval (SIXTY_MIN)</p>
     <form action="#" th:action="@{/ticker/data}" th:object="${stockDataRequestForm}" method="get">

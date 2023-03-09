@@ -1,10 +1,15 @@
 package com.midaswebserver.midasweb.models.User;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 
 /**
  * User is the model object holding basic user data
@@ -25,30 +30,37 @@ public class User {
     private String email;
     @Column(name = "phonenumber", nullable = true)
     private String phoneNumber;
-    @OneToOne(mappedBy = "user")
-    @PrimaryKeyJoinColumn
-    private Settings settings;
+    @OneToMany(mappedBy = "user")//this is bad practice, you WILL change it back.
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+    private Set<Setting> settings = new HashSet<>();
 
     public User() {
     }
     public User(String username, String hashedPassword) {
-        log.info("User Object has been created with name of {}", username);
         this.username = username;
         this.hashedPassword = hashedPassword;
     }
     public User(String username, String hashedPassword, String email, String phoneNumber) {
-        log.info("User Object has been created with name of {}", username);
         this.username = username;
         this.hashedPassword = hashedPassword;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
 
-    public Settings getSettings() {
+    public Set<Setting> getSetting() {
         return settings;
     }
-    public void setSettings(Settings settings) {
+    public void setSetting(Set<Setting> settings) {
         this.settings = settings;
+    }
+    public void addSetting(Setting setting){
+        this.settings.add(setting);
+    }
+    public Setting[] getSettingAsArray(){
+        return (Setting[])this.settings.toArray();
+    }
+    public void addTicker(String ticker){
+        this.settings.add(new Setting(ticker));
     }
     public String getPhoneNumber() {
         return phoneNumber;

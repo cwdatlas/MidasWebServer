@@ -38,7 +38,9 @@ public class NavigationController {
     @GetMapping("/user/home")
     public String home(HttpSession session,  Model model) {
         User user = userService.getUserByID(Long.parseLong(session.getAttribute("UserId").toString()));
-        model.addAttribute("username", user.getUsername());
+        model.addAttribute("user", user);
+        model.addAttribute("userTickers", user.getSetting());
+        log.debug("Tickers: '{}' have been added to form", user.getSetting().toString());
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         return "home";
     }
