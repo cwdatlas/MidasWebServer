@@ -166,14 +166,14 @@ public class UserServiceImpTest {
     public void badGetUserByID1() {
         userService.add(testUser1);
         User returnedUser = userService.getUserByID(userService.getIDByUser(testUser2.getUsername()));
-        assertFalse("Returned User was the same then added user", returnedUser.equals(testUser2));
+        assertFalse("Returned User was the same then added user", returnedUser != null);
     }
 
     @Test
     public void badGetUserByID2() {
         userService.add(testUser2);
         User returnedUser = userService.getUserByID(userService.getIDByUser(testUser1.getUsername()));
-        assertFalse("Returned User was the same then added user", returnedUser.equals(testUser1));
+        assertFalse("Returned User was the same then added user", returnedUser != null);
     }
 
     @Test
@@ -224,8 +224,9 @@ public class UserServiceImpTest {
         userService.add(testUser2);
         //sets updates username
         String newUsername = "MadAtlas3";
-        testUser1.setUsername(newUsername);
-        userService.update(testUser1);
+        User user = userService.getUserByName(testUser2.getUsername());
+        user.setUsername(newUsername);
+        userService.update(user);
         //retrieving the user and seeing if the name was saved
         User changedUser = userService.getUserByName(newUsername);
         assertTrue("Username wasnt changed", newUsername.equals(changedUser.getUsername()));
@@ -248,12 +249,12 @@ public class UserServiceImpTest {
         //sets updates username
         Long newId = (long)40666;
         testUser2.setId(newId);
-        assertTrue("User was updated, when they shouldn't have", userService.update(testUser2));
+        assertFalse("User was updated, when they shouldn't have", userService.update(testUser2));
     }
     @Test
     public void crazyUpdateUserTest1(){
         userService.add(testUser2);
-        assertTrue("User was updated, when null was passed", userService.update(null));
+        assertFalse("User was updated, when null was passed", userService.update(null));
     }
 
     /**
