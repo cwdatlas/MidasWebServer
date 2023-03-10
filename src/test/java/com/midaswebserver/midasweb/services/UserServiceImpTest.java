@@ -183,6 +183,25 @@ public class UserServiceImpTest {
         assertTrue("Returned User wasn't null", returnedUser == null);
     }
 
+    @Test
+    public void goodGetUserByName1(){
+        userService.add(testUser1);
+        assertTrue("User couldn't be found", null != userService.getUserByName(testUser1.getUsername()));
+    }
+    @Test
+    public void goodGetUserByName2(){
+        userService.add(testUser3);
+        assertTrue("User couldn't be found", null != userService.getUserByName(testUser3.getUsername()));
+    }
+    @Test
+    public void badGetUserByName1(){
+        assertTrue("User was found where they shouldn't have been", null == userService.getUserByName(testUser1.getUsername()));
+    }
+    @Test
+    public void crazyGetUserByName1(){
+        assertTrue("User was found with input value null", null == userService.getUserByName(null));
+    }
+
     @Test //Test if username can be updated (good)
     public void updateUsernameTest(){
         userService.add(testUser1);
