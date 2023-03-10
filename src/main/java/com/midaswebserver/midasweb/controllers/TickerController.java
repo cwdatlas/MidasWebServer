@@ -48,13 +48,11 @@ public class TickerController {
         }
         Ticker ticker = tickerService.getTimeSeriesInfo(stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval(), OutputSize.COMPACT);
         //adds called ticker to tickers that have been called before
-        if(ticker.getMetaData().getSymbol()!=null && session.getAttribute("UserId")!=null) {
+        String symbol = ticker.getMetaData().getSymbol();
+        if(symbol!=null && session.getAttribute("UserId")!=null) {
             User user = userService.getUserByID((Long)(session.getAttribute("UserId")));
-            Set<Setting> setting = user.getSetting();
-            Setting newSetting = new Setting(ticker.getMetaData().getSymbol());
-            setting.add(newSetting);
-            user.setSetting(setting);
-            log.debug("Ticker in user Setting: '{}'", newSetting.getTicker());
+            user.addTicker(symbol);
+            log.debug("Ticker in user Setting: '{}'", symbol);
             userService.update(user);
         }
         return ResponseEntity.ok(ticker);

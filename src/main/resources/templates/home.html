@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>User Home</title>
@@ -7,7 +12,12 @@
 <body>
     <div>
         <p>Welcome home <a th:text="${user.getUsername()}"></a>!</p>
-        <p>your previous searches have been <a th:text="${userTickers}"></a></p>
+        <div class="dropdown">
+            <button class="dropbtn">Dropdown</button>
+            <div class="dropdown-content" th:each="setting: ${userSettings}">
+                <a th:text="${setting.getTicker()}"></a>
+            </div>
+        </div>
     </div>
     <p>Please type in a stock ticker, and set a time interval (SIXTY_MIN)</p>
     <form action="#" th:action="@{/ticker/data}" th:object="${stockDataRequestForm}" method="get">

@@ -1,9 +1,11 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
+import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.services.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.slf4j.Logger;
@@ -35,12 +37,14 @@ public class NavigationController {
         return "index";
     }
 
+    @Transactional
     @GetMapping("/user/home")
     public String home(HttpSession session,  Model model) {
         User user = userService.getUserByID(Long.parseLong(session.getAttribute("UserId").toString()));
+        Setting[] settings = user.getSetting().toArray(new Setting[user.getSetting().size()]);
         model.addAttribute("user", user);
-        model.addAttribute("userTickers", user.getSetting());
-        log.debug("Tickers: '{}' have been added to form", user.getSetting().toString());
+        model.addAttribute("userSettings", settings);
+        log.debug("Tickers: '{}' have been added to form", settings);
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         return "home";
     }

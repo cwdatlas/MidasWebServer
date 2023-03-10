@@ -72,7 +72,7 @@ public class UserServiceImpTest {
         User changedUser = userService.getUserByName(testUser.getUsername());
         Setting[] setArray = changedUser.getSetting().toArray(new Setting[changedUser.getSetting().size()]);
         List<Setting> setList = new ArrayList<>(changedUser.getSetting());
-        assertTrue("Username wasnt changed", setList.get(0).getTicker().equals(ticker));
         userService.delete(changedUser);
+        assertTrue("Username wasnt changed", setList.get(0).getTicker().equals(ticker));
     }
 }
