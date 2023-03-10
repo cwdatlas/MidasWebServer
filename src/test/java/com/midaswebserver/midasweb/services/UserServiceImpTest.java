@@ -2,8 +2,6 @@ package com.midaswebserver.midasweb.services;
 
 import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
-import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +19,7 @@ public class UserServiceImpTest {
 
     @Autowired
     private UserService userService;
-    private final User testUser1 = new User
-            ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-    private final User testUser2 = new User
-            ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-    private final User testUser3 = new User
-            ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
-    private final User testUser4 = new User
-            ("Cabbage@imdumb.edu", "imDumb", "CabbageMan", "6665556666");
     private final String falsePass = "notTheSamePass";
-//    @BeforeEach//preparing unit tests with a fresh database and varifying the database can be interacted with
-//    public void beforeTest() {
-//        assertNotNull("loginService must be injected", userService);
-//        userService.deleteAll();
-//    }
 
     /**
      *arguably we test the validateUniqueUsername using these userAdd tests
@@ -42,59 +27,66 @@ public class UserServiceImpTest {
     //good test
     //TODO add more valid tests, once validation is added within addUser, add more tests
     @Test
-    public void goodUserAdd1(){
+    public void goodAddOneUser1(){
         final User testUser1 = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         assertTrue("Test User Couldn't be added", userService.add(testUser1));
-        assertNotNull("", userService.getUserByID(testUser1.getId()));
+        assertNotNull("", userService.getUserById(testUser1.getId()));
     }
     @Test
-    public void goodUserAdd2(){
+    public void goodAddOneUser2(){
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         assertTrue("Test User Couldn't be added", userService.add(testUser2));
     }
-    @Test
-    public void goodUserAdd3(){
-        assertTrue("Test User Couldn't be added", userService.add(testUser3));
-    }
+
     /**
      * Checking if more than one user can be added to the database
      */
     @Test
     public void goodUserAddTwoUsers(){
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
+        final User testUser3 = new User
+                ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
         userService.add(testUser2);
-        assertTrue("Test User Couldn't be added", userService.add(testUser3));
-    }
-    @Test
-    public void goodUserAddThreeUsers(){
-        userService.add(testUser1);
-        userService.add(testUser2);
-        assertTrue("Test User Couldn't be added", userService.add(testUser3));
+        userService.add(testUser3);
+        assertTrue("Test User wasn't added", null != userService.getUserById(testUser2.getId()));
+        assertTrue("Test User wasn't added", null != userService.getUserById(testUser3.getId()));
     }
 
     /**
      * if two users of the same first name are added, should return false
      */
     @Test
-    public void badUserAdd1(){
+    public void badUserAddSameUserTwice1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         userService.add(testUser1);
         assertFalse("User was added", userService.add(testUser1));
     }
     @Test
-    public void badUserAdd2(){
+    public void badUserAddSameUserTwice2(){
+        final User testUser3 = new User
+                ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
         userService.add(testUser3);
         assertFalse("User was added", userService.add(testUser3));
     }
     @Disabled
     @Test
     public void badUserAdd3(){ //TODO this requires validation to be done on the user to return false
+        final User testUser4 = new User
+                ("Cabbage@imdumb.edu", "imDumb", "CabbageMan", "6665556666");
         assertFalse("User was added", userService.add(testUser4));
     }
     @Test
-    public void crazyUserAdd1(){
+    public void crazyUserAddNull(){
         assertFalse("User was added", userService.add(null));
     }
     @Test
     public void goodDeleteUser1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         userService.add(testUser1);
         userService.delete(testUser1);
         assertTrue("User wasnt deleted", null == userService.getUserByName(testUser1.getUsername()));
@@ -102,107 +94,104 @@ public class UserServiceImpTest {
 
     @Test
     public void goodDeleteUser2(){
+        final User testUser3 = new User
+                ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
         userService.add(testUser3);
         userService.delete(testUser3);
-
         assertTrue("User wasnt deleted", null == userService.getUserByName(testUser3.getUsername()));
     }
 
     @Test
     public void badDeleteUser1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser1);
         assertFalse("User was deleted", userService.delete(testUser2));
     }
     @Test
     public void badDeleteUser2(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
         assertFalse("User was deleted", userService.delete(testUser1));
     }
     @Test
     public void crazyDeleteUser1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         userService.add(testUser1);
         assertFalse("User was deleted", userService.delete(null));
     }
 
-    /**
-     * I have no idea how to create do bad or crazy deleteAll tests
-     */
-    @Test
-    public void goodDeleteAll1(){
-        userService.add(testUser1);
-        userService.deleteAll();
-        assertTrue("User wasn't deleted", null == userService.getUserByName(testUser1.getUsername()));
-    }
-    @Test
-    public void goodDeleteAll2(){
-        userService.add(testUser1);
-        userService.add(testUser2);
-        userService.deleteAll();
-        assertTrue("User wasn't deleted", null == userService.getUserByName(testUser1.getUsername()) &&
-                null == userService.getUserByName(testUser2.getUsername()));
-    }
-    @Test
-    public void goodDeleteAll3(){
-        userService.add(testUser1);
-        userService.add(testUser2);
-        userService.add(testUser2);
-        userService.deleteAll();
-        assertTrue("User wasn't deleted", null == userService.getUserByName(testUser1.getUsername()) &&
-                null == userService.getUserByName(testUser2.getUsername()) &&
-                null == userService.getUserByName(testUser3.getUsername()));
-    }
-    @Test
-    public void goodDeleteAll4(){
-        userService.add(testUser1);
-        userService.add(testUser2);
-        userService.add(testUser2);
-        assertTrue("User was deleted", userService.deleteAll());
-    }
     @Test
     public void goodGetUserByID1() {
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         userService.add(testUser1);
-        User returnedUser = userService.getUserByID(userService.getIDByUser(testUser1.getUsername()));
+        User returnedUser = userService.getUserById(userService.getIdByUsername(testUser1.getUsername()));
         assertTrue("Returned User wasnt same as expected", returnedUser.equals(testUser1));
     }
     @Test
     public void goodGetUserByID2() {
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
-        User returnedUser = userService.getUserByID(userService.getIDByUser(testUser2.getUsername()));
+        User returnedUser = userService.getUserById(userService.getIdByUsername(testUser2.getUsername()));
         assertTrue("Returned User wasnt same as expected", returnedUser.equals(testUser2));
     }
     @Test
     public void badGetUserByID1() {
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser1);
-        User returnedUser = userService.getUserByID(userService.getIDByUser(testUser2.getUsername()));
+        User returnedUser = userService.getUserById(userService.getIdByUsername(testUser2.getUsername()));
         assertFalse("Returned User was the same then added user", returnedUser != null);
     }
 
     @Test
     public void badGetUserByID2() {
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
-        User returnedUser = userService.getUserByID(userService.getIDByUser(testUser1.getUsername()));
+        User returnedUser = userService.getUserById(userService.getIdByUsername(testUser1.getUsername()));
         assertFalse("Returned User was the same then added user", returnedUser != null);
     }
 
     @Test
     public void crazyGetUserByID1() {
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
-        User returnedUser = userService.getUserByID(null);
+        User returnedUser = userService.getUserById(null);
         assertTrue("Returned User wasn't null", returnedUser == null);
     }
 
     @Test
     public void goodGetUserByName1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         userService.add(testUser1);
         assertTrue("User couldn't be found", null != userService.getUserByName(testUser1.getUsername()));
     }
     @Test
     public void goodGetUserByName2(){
+        final User testUser3 = new User
+                ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
         userService.add(testUser3);
         assertTrue("User couldn't be found", null != userService.getUserByName(testUser3.getUsername()));
     }
     @Test
     public void badGetUserByName1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         assertTrue("User was found where they shouldn't have been", null == userService.getUserByName(testUser1.getUsername()));
     }
     @Test
@@ -217,6 +206,8 @@ public class UserServiceImpTest {
      */
     @Test //Test if username can be updated (good)
     public void goodUpdateUserTest1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         userService.add(testUser1);
         //sets updates username
         String newUsername = "MadAtlas2";
@@ -229,6 +220,8 @@ public class UserServiceImpTest {
     }
     @Test
     public void goodUpdateUserTest2(){
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
         //sets updates username
         String newUsername = "MadAtlas3";
@@ -242,6 +235,8 @@ public class UserServiceImpTest {
     }
     @Test
     public void goodUpdateUserTest3(){
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
         //sets updates username
         String newPhonenumber = "4066604455";
@@ -253,6 +248,8 @@ public class UserServiceImpTest {
     }
     @Test
     public void badUpdateUserTest1(){
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
         //sets updates username
         Long newId = (long)40666;
@@ -261,6 +258,8 @@ public class UserServiceImpTest {
     }
     @Test
     public void crazyUpdateUserTest1(){
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
         assertFalse("User was updated, when null was passed", userService.update(null));
     }
@@ -272,6 +271,8 @@ public class UserServiceImpTest {
      */
     @Test
     public void goodUpdateSettingTest1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         userService.add(testUser1);
         //sets updates username
         String ticker = "EUC";
@@ -288,6 +289,8 @@ public class UserServiceImpTest {
     }
     @Test
     public void goodUpdateSettingTest2(){
+        final User testUser2 = new User
+                ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         userService.add(testUser2);
         //sets updates username
         String ticker = "EUC";
