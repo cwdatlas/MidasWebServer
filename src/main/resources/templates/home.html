@@ -19,6 +19,9 @@
             </div>
         </div>
     </div>
+    <select name="Previously Searched Tickers" id="subject" th:each="setting: ${userSettings}">
+        <option selected="selected" th:text="${setting.getTicker()}"></option>
+    </select>
     <p>Please type in a stock ticker, and set a time interval (SIXTY_MIN)</p>
     <form action="#" th:action="@{/ticker/data}" th:object="${stockDataRequestForm}" method="get">
         <span th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>

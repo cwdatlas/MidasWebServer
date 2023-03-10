@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,6 +41,7 @@ public class TickerController {
      * @param result
      * @return json of converted ticker object
      */
+    @Transactional
     @GetMapping("/ticker/data")
     public ResponseEntity getTickerData(@Valid @ModelAttribute StockDataRequestForm stockDataRequestForm, BindingResult result, HttpSession session){
         if(result.hasErrors()){
@@ -51,7 +53,7 @@ public class TickerController {
         String symbol = ticker.getMetaData().getSymbol();
         if(symbol!=null && session.getAttribute("UserId")!=null) {
             User user = userService.getUserByID((Long)(session.getAttribute("UserId")));
-            user.addTicker(symbol);
+            user.addTicker(symbol, user);
             log.debug("Ticker in user Setting: '{}'", symbol);
             userService.update(user);
         }

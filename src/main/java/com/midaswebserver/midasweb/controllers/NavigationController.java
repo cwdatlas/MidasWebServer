@@ -5,8 +5,8 @@ import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.services.UserService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public class NavigationController {
         Setting[] settings = user.getSetting().toArray(new Setting[user.getSetting().size()]);
         model.addAttribute("user", user);
         model.addAttribute("userSettings", settings);
-        log.debug("Tickers: '{}' have been added to form", settings);
+        log.debug("Tickers: '{}' have been added to form", settings.toString());
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         return "home";
     }

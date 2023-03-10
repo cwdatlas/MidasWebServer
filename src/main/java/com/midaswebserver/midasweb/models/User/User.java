@@ -54,8 +54,10 @@ public class User {
     public void addSetting(Setting setting){
         this.settings.add(setting);
     }
-    public void addTicker(String ticker){
-        this.settings.add(new Setting(ticker));
+    public void addTicker(String ticker, User user){
+        Setting setting = new Setting(ticker);
+        setting.setUserId(user);
+        this.settings.add(setting);
     }
     public String getPhoneNumber() {
         return phoneNumber;
