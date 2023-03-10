@@ -24,7 +24,7 @@ dependencies {
 	implementation 'com.github.crazzyghost:alphavantage-java:1.6.2'
 	implementation 'org.springframework.session:spring-session-data-redis'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	//testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'com.h2database:h2'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	//runtimeOnly 'org.mariadb.jbdc:mariadb-java-client'
 

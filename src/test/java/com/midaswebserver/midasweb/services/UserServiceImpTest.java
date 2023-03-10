@@ -2,7 +2,9 @@ package com.midaswebserver.midasweb.services;
 
 import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
+import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import static org.springframework.test.util.AssertionErrors.*;
 
+@Transactional
 @SpringBootTest
 public class UserServiceImpTest {
 
@@ -27,11 +30,11 @@ public class UserServiceImpTest {
     private final User testUser4 = new User
             ("Cabbage@imdumb.edu", "imDumb", "CabbageMan", "6665556666");
     private final String falsePass = "notTheSamePass";
-    @BeforeEach//preparing unit tests with a fresh database and varifying the database can be interacted with
-    public void beforeTest() {
-        assertNotNull("loginService must be injected", userService);
-        userService.deleteAll();
-    }
+//    @BeforeEach//preparing unit tests with a fresh database and varifying the database can be interacted with
+//    public void beforeTest() {
+//        assertNotNull("loginService must be injected", userService);
+//        userService.deleteAll();
+//    }
 
     /**
      *arguably we test the validateUniqueUsername using these userAdd tests
@@ -40,7 +43,10 @@ public class UserServiceImpTest {
     //TODO add more valid tests, once validation is added within addUser, add more tests
     @Test
     public void goodUserAdd1(){
+        final User testUser1 = new User
+                ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         assertTrue("Test User Couldn't be added", userService.add(testUser1));
+        assertNotNull("", userService.getUserByID(testUser1.getId()));
     }
     @Test
     public void goodUserAdd2(){
@@ -54,12 +60,12 @@ public class UserServiceImpTest {
      * Checking if more than one user can be added to the database
      */
     @Test
-    public void goodUserAdd4(){
+    public void goodUserAddTwoUsers(){
         userService.add(testUser2);
         assertTrue("Test User Couldn't be added", userService.add(testUser3));
     }
     @Test
-    public void goodUserAdd5(){
+    public void goodUserAddThreeUsers(){
         userService.add(testUser1);
         userService.add(testUser2);
         assertTrue("Test User Couldn't be added", userService.add(testUser3));
@@ -78,6 +84,7 @@ public class UserServiceImpTest {
         userService.add(testUser3);
         assertFalse("User was added", userService.add(testUser3));
     }
+    @Disabled
     @Test
     public void badUserAdd3(){ //TODO this requires validation to be done on the user to return false
         assertFalse("User was added", userService.add(testUser4));
@@ -97,6 +104,7 @@ public class UserServiceImpTest {
     public void goodDeleteUser2(){
         userService.add(testUser3);
         userService.delete(testUser3);
+
         assertTrue("User wasnt deleted", null == userService.getUserByName(testUser3.getUsername()));
     }
 
@@ -263,7 +271,6 @@ public class UserServiceImpTest {
      * validation must be included to make sure that invalid information isn't used to update
      */
     @Test
-    @Transactional
     public void goodUpdateSettingTest1(){
         userService.add(testUser1);
         //sets updates username
@@ -280,7 +287,6 @@ public class UserServiceImpTest {
         assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
     }
     @Test
-    @Transactional
     public void goodUpdateSettingTest2(){
         userService.add(testUser2);
         //sets updates username

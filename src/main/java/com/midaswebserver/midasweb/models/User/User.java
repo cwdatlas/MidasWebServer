@@ -13,7 +13,7 @@ import java.util.Set;
  * User is the model object holding basic user data
  */
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")
 public class User {
     private static final Logger log = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = 1L;//this is what identifies the data
