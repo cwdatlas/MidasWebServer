@@ -202,8 +202,12 @@ public class UserServiceImpTest {
         assertTrue("User was found with input value null", null == userService.getUserByName(null));
     }
 
+    /**
+     * Checking if data can be updated within the database. This requires getting the object from the database with the
+     * specific Id, then changing its data, then using that updated object in the update method
+     */
     @Test //Test if username can be updated (good)
-    public void updateUsernameTest(){
+    public void goodUpdateUsernameTest1(){
         userService.add(testUser1);
         //sets updates username
         String newUsername = "MadAtlas2";
@@ -214,10 +218,46 @@ public class UserServiceImpTest {
         assertTrue("Username wasnt changed", newUsername.equals(changedUser.getUsername()));
         userService.delete(changedUser);
     }
+    @Test
+    public void goodUpdateUsernameTest2(){
+        userService.add(testUser2);
+        //sets updates username
+        String newUsername = "MadAtlas3";
+        testUser1.setUsername(newUsername);
+        userService.update(testUser1);
+        //retrieving the user and seeing if the name was saved
+        User changedUser = userService.getUserByName(newUsername);
+        assertTrue("Username wasnt changed", newUsername.equals(changedUser.getUsername()));
+        userService.delete(changedUser);
+    }
+    @Test
+    public void goodUpdateUsernameTest3(){
+        userService.add(testUser2);
+        //sets updates username
+        String newPhonenumber = "4066604455";
+        testUser2.setPhoneNumber(newPhonenumber);
+        userService.update(testUser2);
+        //retrieving the user and seeing if the name was saved
+        User changedUser = userService.getUserByName(testUser2.getUsername());
+        assertTrue("Phone number wasn't changed", newPhonenumber.equals(changedUser.getPhoneNumber()));
+    }
+    @Test
+    public void badUpdateUsernameTest1(){
+        userService.add(testUser2);
+        //sets updates username
+        Long newId = (long)40666;
+        testUser2.setId(newId);
+        assertTrue("User was updated, when they shouldn't have", userService.update(testUser2));
+    }
+    @Test
+    public void crazyUpdateUsernameTest1(){
+        userService.add(testUser2);
+        assertTrue("User was updated, when null was passed", userService.update(null));
+    }
 
     @Test
     @Transactional
-    public void updateSettingTest(){
+    public void goodUpdateSettingTest(){
         userService.add(testUser1);
         //sets updates username
         String ticker = "EUC";

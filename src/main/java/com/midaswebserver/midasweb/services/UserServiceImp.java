@@ -135,7 +135,8 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * Updates the user in database
+     * Updates the user in database, make sure that the param has the original user ID set as its ID,
+     * the function will return null if not
      * @param user
      * @return
      */
@@ -144,6 +145,10 @@ public class UserServiceImp implements UserService {
     public boolean update(User user) {
         if(user==null)
             return false;
+        if(this.getUserByID(user.getId()) == null){
+            log.warn("ID of user '{}' didn't match anything in database", user.getUsername());
+            return false;
+        }
         log.debug("User '{}' has been updated", user.getUsername());
         List<Setting> settings = new ArrayList<>(user.getSetting());
         log.debug("User's settings data is: '{}'", settings.get(0).getTicker());
