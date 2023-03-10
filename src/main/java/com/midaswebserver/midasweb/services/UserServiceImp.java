@@ -94,13 +94,21 @@ public class UserServiceImp implements UserService {
      * Gets User by Id
      *TODO have validation and safe and expected returns;
      * @param ID
-     * @return User if user excists, returns null otherwise
+     * @return User if user excists, returns null otherwise and if user passes null ID
      */
     @Override
     public User getUserByID(Long ID) {
+        if(ID == null){
+            return null;
+        }
         return userRepo.findById(ID).get();
     }
 
+    /**
+     * Gets user with the corresponding name
+     * @param userName
+     * @return user with corresponding name, or null if no user was found
+     */
     @Override
     public User getUserByName(String userName) {
         if (userName != null) {

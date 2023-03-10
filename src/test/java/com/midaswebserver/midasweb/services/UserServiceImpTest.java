@@ -150,6 +150,38 @@ public class UserServiceImpTest {
         userService.add(testUser2);
         assertTrue("User was deleted", userService.deleteAll());
     }
+    @Test
+    public void goodGetUserByID1() {
+        userService.add(testUser1);
+        User returnedUser = userService.getUserByID(userService.getIDByUser(testUser1.getUsername()));
+        assertTrue("Returned User wasnt same as expected", returnedUser.equals(testUser1));
+    }
+    @Test
+    public void goodGetUserByID2() {
+        userService.add(testUser2);
+        User returnedUser = userService.getUserByID(userService.getIDByUser(testUser2.getUsername()));
+        assertTrue("Returned User wasnt same as expected", returnedUser.equals(testUser2));
+    }
+    @Test
+    public void badGetUserByID1() {
+        userService.add(testUser1);
+        User returnedUser = userService.getUserByID(userService.getIDByUser(testUser2.getUsername()));
+        assertFalse("Returned User was the same then added user", returnedUser.equals(testUser2));
+    }
+
+    @Test
+    public void badGetUserByID2() {
+        userService.add(testUser2);
+        User returnedUser = userService.getUserByID(userService.getIDByUser(testUser1.getUsername()));
+        assertFalse("Returned User was the same then added user", returnedUser.equals(testUser1));
+    }
+
+    @Test
+    public void crazyGetUserByID1() {
+        userService.add(testUser2);
+        User returnedUser = userService.getUserByID(null);
+        assertTrue("Returned User wasn't null", returnedUser == null);
+    }
 
     @Test //Test if username can be updated (good)
     public void updateUsernameTest(){
