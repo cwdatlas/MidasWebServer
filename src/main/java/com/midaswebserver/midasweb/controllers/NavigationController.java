@@ -28,7 +28,7 @@ public class NavigationController {
         String username = "New User";
         if(!session.isNew()){
             log.debug("Logged User has id of: '{}'", session.getAttribute("UserId").toString());
-            User user = userService.getUserByID(Long.parseLong(session.getAttribute("UserId").toString()));
+            User user = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
             log.debug("'{}' has accessed Index page", user.getUsername());
             username = user.getUsername();
         }
@@ -40,7 +40,7 @@ public class NavigationController {
     @Transactional
     @GetMapping("/user/home")
     public String home(HttpSession session,  Model model) {
-        User user = userService.getUserByID(Long.parseLong(session.getAttribute("UserId").toString()));
+        User user = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
         Setting[] settings = user.getSetting().toArray(new Setting[user.getSetting().size()]);
         model.addAttribute("user", user);
         model.addAttribute("userSettings", settings);

@@ -3,7 +3,6 @@ package com.midaswebserver.midasweb.controllers;
 import com.crazzyghost.alphavantage.parameters.OutputSize;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
-import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.services.TickerService;
 import com.midaswebserver.midasweb.services.TickerServiceImp;
@@ -19,9 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
-import java.util.Set;
-import java.util.Stack;
 
 /**
  * TickerController will work with stock data and related forms like the StockDataRequestForm
@@ -52,7 +48,7 @@ public class TickerController {
         //adds called ticker to tickers that have been called before
         String symbol = ticker.getMetaData().getSymbol();
         if(symbol!=null && session.getAttribute("UserId")!=null) {
-            User user = userService.getUserByID((Long)(session.getAttribute("UserId")));
+            User user = userService.getUserById((Long)(session.getAttribute("UserId")));
             user.addTicker(symbol, user);
             log.debug("Ticker in user Setting: '{}'", symbol);
             userService.update(user);

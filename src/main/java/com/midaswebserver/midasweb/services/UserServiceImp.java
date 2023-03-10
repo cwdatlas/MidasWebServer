@@ -1,14 +1,11 @@
 package com.midaswebserver.midasweb.services;
 
-import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,18 +80,6 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-    /**
-     * deleteALL deletes all users in database
-     * @return boolean: true if users were deleted, false if they weren't
-     */
-    @Override
-    public boolean deleteAll() {
-        userRepo.deleteAll();
-        log.warn("all users have been deleted");
-        if(userRepo.count()>0)
-            return false;
-        return true;
-    }
 
     /**
      * Gets User by Id
@@ -103,7 +88,7 @@ public class UserServiceImp implements UserService {
      * @return User if user excists, returns null otherwise and if user passes null ID
      */
     @Override
-    public User getUserByID(Long ID) {
+    public User getUserById(Long ID) {
         if(ID == null){
             return null;
         }
@@ -144,7 +129,7 @@ public class UserServiceImp implements UserService {
      * @return the ID of the user or null if there isn't a user in the database with that username or if there are more than one user
      */
     @Override
-    public Long getIDByUser(String username) {
+    public Long getIdByUsername(String username) {
          List<User> users = userRepo.findByUsernameIgnoreCase(username);
          if (username == null){
             log.warn("getIDByUser: passed username was null");
@@ -168,11 +153,10 @@ public class UserServiceImp implements UserService {
      * @return
      */
     @Override
-    //@Transactional
     public boolean update(User user) {
         if(user==null)
             return false;
-        if(this.getUserByID(user.getId()) == null){
+        if(this.getUserById(user.getId()) == null){
             log.warn("ID of user '{}' didn't match anything in database", user.getUsername());
             return false;
         }
