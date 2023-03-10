@@ -205,9 +205,10 @@ public class UserServiceImpTest {
     /**
      * Checking if data can be updated within the database. This requires getting the object from the database with the
      * specific Id, then changing its data, then using that updated object in the update method
+     * TODO: once validation is added, we will have to add in many more tests to make sure invalid update data cant be passed
      */
     @Test //Test if username can be updated (good)
-    public void goodUpdateUsernameTest1(){
+    public void goodUpdateUserTest1(){
         userService.add(testUser1);
         //sets updates username
         String newUsername = "MadAtlas2";
@@ -219,7 +220,7 @@ public class UserServiceImpTest {
         userService.delete(changedUser);
     }
     @Test
-    public void goodUpdateUsernameTest2(){
+    public void goodUpdateUserTest2(){
         userService.add(testUser2);
         //sets updates username
         String newUsername = "MadAtlas3";
@@ -231,7 +232,7 @@ public class UserServiceImpTest {
         userService.delete(changedUser);
     }
     @Test
-    public void goodUpdateUsernameTest3(){
+    public void goodUpdateUserTest3(){
         userService.add(testUser2);
         //sets updates username
         String newPhonenumber = "4066604455";
@@ -242,7 +243,7 @@ public class UserServiceImpTest {
         assertTrue("Phone number wasn't changed", newPhonenumber.equals(changedUser.getPhoneNumber()));
     }
     @Test
-    public void badUpdateUsernameTest1(){
+    public void badUpdateUserTest1(){
         userService.add(testUser2);
         //sets updates username
         Long newId = (long)40666;
@@ -250,14 +251,19 @@ public class UserServiceImpTest {
         assertTrue("User was updated, when they shouldn't have", userService.update(testUser2));
     }
     @Test
-    public void crazyUpdateUsernameTest1(){
+    public void crazyUpdateUserTest1(){
         userService.add(testUser2);
         assertTrue("User was updated, when null was passed", userService.update(null));
     }
 
+    /**
+     * There are a couple bugs related to updating settings.
+     * User must be added to the setting object, this shouldn't be the case
+     * validation must be included to make sure that invalid information isn't used to update
+     */
     @Test
     @Transactional
-    public void goodUpdateSettingTest(){
+    public void goodUpdateSettingTest1(){
         userService.add(testUser1);
         //sets updates username
         String ticker = "EUC";
@@ -270,6 +276,23 @@ public class UserServiceImpTest {
         Setting[] setArray = changedUser.getSetting().toArray(new Setting[changedUser.getSetting().size()]);
         List<Setting> setList = new ArrayList<>(changedUser.getSetting());
         userService.delete(changedUser);
-        assertTrue("Username wasnt changed", setList.get(0).getTicker().equals(ticker));
+        assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
+    }
+    @Test
+    @Transactional
+    public void goodUpdateSettingTest2(){
+        userService.add(testUser2);
+        //sets updates username
+        String ticker = "EUC";
+        Setting setting = new Setting(ticker);
+        setting.setUserId(testUser2);//I shouldnt have to add the user to the setting
+        testUser2.addSetting(setting);
+        userService.update(testUser2);//<--This is the main function that we are testing
+        //retrieving the user and seeing if the name was saved
+        User changedUser = userService.getUserByName(testUser2.getUsername());
+        Setting[] setArray = changedUser.getSetting().toArray(new Setting[changedUser.getSetting().size()]);
+        List<Setting> setList = new ArrayList<>(changedUser.getSetting());
+        userService.delete(changedUser);
+        assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
     }
 }
