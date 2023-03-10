@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -31,7 +29,7 @@ public class User {
     @Column(name = "phonenumber", nullable = true)
     private String phoneNumber;
     @OneToMany(mappedBy = "user")//this is bad practice, you WILL change it back.
-    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+    @Cascade({org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
     private Set<Setting> settings = new HashSet<>();
 
     public User() {
@@ -55,9 +53,6 @@ public class User {
     }
     public void addSetting(Setting setting){
         this.settings.add(setting);
-    }
-    public Setting[] getSettingAsArray(){
-        return (Setting[])this.settings.toArray();
     }
     public void addTicker(String ticker){
         this.settings.add(new Setting(ticker));

@@ -6,6 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.util.AssertionErrors.*;
 
@@ -55,17 +59,20 @@ public class UserServiceImpTest {
     }
 
     @Test
+    @Transactional
     public void updateSettingTest(){
         userService.add(testUser);
         //sets updates username
         String ticker = "EUC";
         Setting setting = new Setting(ticker);
-        setting.setUserId(testUser);
+        setting.setUserId(testUser);//I shouldnt have to add the user to the setting
         testUser.addSetting(setting);
         userService.update(testUser);
         //retrieving the user and seeing if the name was saved
         User changedUser = userService.getUserByName(testUser.getUsername());
-        assertTrue("Username wasnt changed", ticker.equals(changedUser.getSettingAsArray()[0]));
+        Setting[] setArray = changedUser.getSetting().toArray(new Setting[changedUser.getSetting().size()]);
+        List<Setting> setList = new ArrayList<>(changedUser.getSetting());
+        assertTrue("Username wasnt changed", setList.get(0).getTicker().equals(ticker));
         userService.delete(changedUser);
     }
 }

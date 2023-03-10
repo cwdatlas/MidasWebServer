@@ -15,7 +15,7 @@ public class Setting {
     @GeneratedValue
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column(name = "searched_ticker", nullable = true)
     private String ticker;

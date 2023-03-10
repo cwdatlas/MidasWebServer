@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -126,7 +127,8 @@ public class UserServiceImp implements UserService {
         if(user==null)
             return false;
         log.debug("User '{}' has been updated", user.getUsername());
-        log.debug("User's settings data is: '{}'", user.getSetting().toString());
+        List<Setting> settings = new ArrayList<>(user.getSetting());
+        log.debug("User's settings data is: '{}'", settings.get(0).getTicker());
         userRepo.save(user);
         return true;
     }
