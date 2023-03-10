@@ -26,11 +26,16 @@ public class UserServiceImp implements UserService {
 
     /**
      * Adds user to the database
+     * If User is already in the database (same username) then the method will return false
      * @param user
-     * @return true TODO this needs to say true or false depending on success
+     * @return true if user could be added, if there was a user of the same name or user is null, false
      */
     @Override
     public boolean add(User user) {
+        if(user == null){
+            log.warn("'add': User is null");
+            return false;
+        }
         if(!validateUniqueUsername(user.getUsername())) {
             log.error("{} has the same name in database", user.getUsername());
             return false;
