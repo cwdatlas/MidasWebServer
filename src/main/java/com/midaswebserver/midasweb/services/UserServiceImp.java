@@ -79,7 +79,7 @@ public class UserServiceImp implements UserService {
 
     /**
      * deleteALL deletes all users in database
-     * @return boolean
+     * @return boolean: true if users were deleted, false if they weren't
      */
     @Override
     public boolean deleteAll() {
@@ -92,9 +92,9 @@ public class UserServiceImp implements UserService {
 
     /**
      * Gets User by Id
-     *TODO have validation and safe and expected returns
+     *TODO have validation and safe and expected returns;
      * @param ID
-     * @return
+     * @return User if user excists, returns null otherwise
      */
     @Override
     public User getUserByID(Long ID) {

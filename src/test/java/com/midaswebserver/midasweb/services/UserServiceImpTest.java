@@ -83,8 +83,72 @@ public class UserServiceImpTest {
         assertFalse("User was added", userService.add(testUser4));
     }
     @Test
-    public void badUserAdd4(){
+    public void crazyUserAdd1(){
         assertFalse("User was added", userService.add(null));
+    }
+    @Test
+    public void goodDeleteUser1(){
+        userService.add(testUser1);
+        userService.delete(testUser1);
+        assertTrue("User wasnt deleted", null == userService.getUserByName(testUser1.getUsername()));
+    }
+
+    @Test
+    public void goodDeleteUser2(){
+        userService.add(testUser3);
+        userService.delete(testUser3);
+        assertTrue("User wasnt deleted", null == userService.getUserByName(testUser3.getUsername()));
+    }
+
+    @Test
+    public void badDeleteUser1(){
+        userService.add(testUser1);
+        assertFalse("User was deleted", userService.delete(testUser2));
+    }
+    @Test
+    public void badDeleteUser2(){
+        userService.add(testUser2);
+        assertFalse("User was deleted", userService.delete(testUser1));
+    }
+    @Test
+    public void crazyDeleteUser1(){
+        userService.add(testUser1);
+        assertFalse("User was deleted", userService.delete(null));
+    }
+
+    /**
+     * I have no idea how to create do bad or crazy deleteAll tests
+     */
+    @Test
+    public void goodDeleteAll1(){
+        userService.add(testUser1);
+        userService.deleteAll();
+        assertTrue("User wasn't deleted", null == userService.getUserByName(testUser1.getUsername()));
+    }
+    @Test
+    public void goodDeleteAll2(){
+        userService.add(testUser1);
+        userService.add(testUser2);
+        userService.deleteAll();
+        assertTrue("User wasn't deleted", null == userService.getUserByName(testUser1.getUsername()) &&
+                null == userService.getUserByName(testUser2.getUsername()));
+    }
+    @Test
+    public void goodDeleteAll3(){
+        userService.add(testUser1);
+        userService.add(testUser2);
+        userService.add(testUser2);
+        userService.deleteAll();
+        assertTrue("User wasn't deleted", null == userService.getUserByName(testUser1.getUsername()) &&
+                null == userService.getUserByName(testUser2.getUsername()) &&
+                null == userService.getUserByName(testUser3.getUsername()));
+    }
+    @Test
+    public void goodDeleteAll4(){
+        userService.add(testUser1);
+        userService.add(testUser2);
+        userService.add(testUser2);
+        assertTrue("User was deleted", userService.deleteAll());
     }
 
     @Test //Test if username can be updated (good)
