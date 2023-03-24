@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * UserServiceImp is the CRUD service for Users. the majority of user logic goes through the
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
+ * UserService is the CRUD service for Users. the majority of user logic goes through the
  * UserServiceImp
  */
 @Service
@@ -22,6 +25,8 @@ public class UserServiceImp implements UserService {
     }
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * Adds user to the database
      * If User is already in the database (same username) then the method will return false
      * @param user
@@ -42,6 +47,8 @@ public class UserServiceImp implements UserService {
     }
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * ValidateUniqueUsername checks to see if there is another person in the database with the same username
      * @param username
      * @return boolean
@@ -61,6 +68,8 @@ public class UserServiceImp implements UserService {
     }
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * delete deletes a user from the database
      * TODO make sure the process succeeded
      * @param user
@@ -72,7 +81,7 @@ public class UserServiceImp implements UserService {
             log.info("Delete: null was passed to method");
             return false;
         }
-        if (this.getUserByName(user.getUsername())==null){
+        if (this.getUserByName(user.getUsername())==null) {
             log.debug("Delete: User '{}' was not found in database to delete", user.getUsername());
             return false;
         }
@@ -82,8 +91,10 @@ public class UserServiceImp implements UserService {
 
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * Gets User by Id
-     *TODO have validation and safe and expected returns;
+     * TODO have validation and safe and expected returns;
      * @param ID
      * @return User if user excists, returns null otherwise and if user passes null ID
      */
@@ -102,6 +113,8 @@ public class UserServiceImp implements UserService {
     }
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * Gets user with the corresponding name
      * @param userName
      * @return user with corresponding name, or null if no user was found
@@ -124,7 +137,9 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * Gets Id by username
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * Gets Id by corresponding username
      * @param username
      * @return the ID of the user or null if there isn't a user in the database with that username or if there are more than one user
      */
@@ -147,10 +162,12 @@ public class UserServiceImp implements UserService {
     }
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * Updates the user in database, make sure that the param has the original user ID set as its ID,
      * the function will return null if not
      * @param user
-     * @return
+     * @return boolean
      */
     @Override
     public boolean update(User user) {

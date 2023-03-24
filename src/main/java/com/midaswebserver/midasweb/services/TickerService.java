@@ -5,12 +5,17 @@ import com.crazzyghost.alphavantage.parameters.OutputSize;
 import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 /**
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
  * TickerService manages API requests to third party ticker databases.
  * Alpha Advantage is being queried
  * Webull will be queried in the future for realtime stock data
  */
 public interface TickerService{
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * getTimeSeriesInfo takes params for the stock query for the AlphaVantage api
      * @param symbol, the symbol for the stock:IBM
      * @param interval, the amount of time in between each record

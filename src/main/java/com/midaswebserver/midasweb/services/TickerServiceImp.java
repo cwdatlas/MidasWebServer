@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 /**
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
  * TickerService manages API requests to third party ticker databases.
  * Alpha Advantage is being queried
  * Webull will be queried in the future for realtime stock data
@@ -24,6 +27,8 @@ public class TickerServiceImp implements TickerService{
     private static final String apiKey = "XIHOPJON41H6MNHT"; //I think this should be secret and have some logic behind it so it isnt found
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * TickerServiceImp sets up the apiKey and timeout params in config for AlphaVantage wrapper
      * The AlphaVantage wrapper can only be called 5 times a second and 500 times a day
      */
@@ -35,6 +40,8 @@ public class TickerServiceImp implements TickerService{
         AlphaVantage.api().init(cfg);
     }
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * getTimeSeriesInfo takes params for the stock query for the AlphaVantage api
      * @param symbol, the symbol for the stock:IBM
      * @param interval, the amount of time in between each record
@@ -65,8 +72,10 @@ public class TickerServiceImp implements TickerService{
     }
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * validateTicker uses the internal spring validation to validate objects with validation annotations
-     * @param ticker
+     * @param ticker {@link Ticker}
      * @return boolean, true or false depending on validity
      */
     private boolean validateTicker(Ticker ticker) {
@@ -81,9 +90,11 @@ public class TickerServiceImp implements TickerService{
     }
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
      * convertToInternalObject changes a TimeSeriesResponse object to a native ticker
      * object that can be locally validated
-     * @param timeSeries
+     * @param timeSeries {@link TimeSeriesResponse}
      * @return ticker, newly formed by the method
      */
     private Ticker convertToInternalObject(TimeSeriesResponse timeSeries){
