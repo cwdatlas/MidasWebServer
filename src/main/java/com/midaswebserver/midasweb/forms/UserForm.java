@@ -5,7 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
  * UserForm contains user from the client
+ * TODO implement internal hashing when password is set
  */
 public class UserForm {
 
