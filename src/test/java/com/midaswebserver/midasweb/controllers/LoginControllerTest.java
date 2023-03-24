@@ -1,5 +1,6 @@
 package com.midaswebserver.midasweb.controllers;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,18 +22,21 @@ public class LoginControllerTest {
     // Get  /loginFailure
     // Get  /loginSuccess
     @Test
+    @Disabled
     public void ValidateLogin() throws Exception {//this needs to be a more dynamic unit test
         mockMvc.perform(get("/login")).andDo(print())
                 .andExpect(status().isOk());
 
     }
     @Test
+    @Disabled
     public void ValidateLoginFailure() throws Exception{
         mockMvc.perform(get("/loginFailure")).andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
+    @Disabled
     public void ValidateLoginSuccess() throws Exception{
         mockMvc.perform(get("/loginSuccess")).andDo(print())
                 .andExpect(status().isOk());

@@ -20,11 +20,12 @@ public class LoginServiceImplTest {
 //get services and other required objects to test or to aid the testing
     @Autowired
     private LoginService loginService;
-
     @Autowired
     private UserRepository loginRepo;
+    @Autowired
+    private HashService hashService;
 
-    private final User fakeUser = new User(username, password);//login (the name) might want to be changed as it is a little confusing
+    private final User fakeUser = new User(username, Integer.toString(password.hashCode()));//login (the name) might want to be changed as it is a little confusing
 
     @BeforeEach
     public void beforeTest() {
