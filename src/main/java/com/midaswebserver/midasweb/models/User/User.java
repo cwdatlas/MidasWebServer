@@ -2,8 +2,6 @@ package com.midaswebserver.midasweb.models.User;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,7 +13,6 @@ import java.util.Set;
 @Entity
 @Table(name = "app_user")
 public class User {
-    private static final Logger log = LoggerFactory.getLogger(User.class);
     private static final long serialVersionUID = 1L;//this is what identifies the data
     @Id//primary key!! this is what makes it primary! (can be composite)
     @GeneratedValue

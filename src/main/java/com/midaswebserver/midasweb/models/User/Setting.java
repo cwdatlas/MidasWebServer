@@ -9,8 +9,6 @@ import java.util.Stack;
 @Entity
 @Table(name = "user_settings")
 public class Setting {
-    private static final Logger log = LoggerFactory.getLogger(Setting.class);
-
     @Id
     @GeneratedValue
     private Long id;
