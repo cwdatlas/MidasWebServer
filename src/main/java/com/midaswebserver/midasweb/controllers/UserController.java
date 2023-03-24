@@ -20,8 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
  * UserController is the CRUD interface for users
  * this controller is built to serve users adding themselves and admin management
+ * uses {@link HashService} and {@link UserService} heavily to interact with user repository and for business logic
+ * TODO develope admin management
  */
 @Controller
 public class UserController {
@@ -34,6 +39,9 @@ public class UserController {
     public UserController(UserService userService) {this.userService = userService;}
 
     /**
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * @version 0.0.1
      * Attaching register form to the model
      * @param model
      * @return register template
@@ -45,10 +53,12 @@ public class UserController {
     }
 
     /**
-     * registerPost takes userform, validates, checks if the user already in the database,
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * registerPost takes userForm, validates, checks if the user already in the database,
      * and checks if the passwords match
-     * @param userForm
-     * @param result
+     * @param userForm {@link UserForm}
+     * @param result {@link BindingResult}
      * @param attrs
      * @return redirects user to "registerSuccess" template
      */
@@ -93,7 +103,14 @@ public class UserController {
         model.addAttribute("username", username);
         return "registerSuccess";
     }
-
+    /**
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * takes request and finds the user's Ip. Used in place of user id when logging
+     * TODO centralize getClientIp into one method {See LoginController} to see other method
+     * @param request {link HttpServletRequest} takes the servlet request received from a post method
+     * @return remote IP address
+     */
     private static String getClientIp(HttpServletRequest request) {
 
         String remoteAddr = "";

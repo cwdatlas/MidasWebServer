@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
- * TickerController will work with stock data and related forms like the StockDataRequestForm
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
+ * TickerController has endpoints that relate to requesting stock data using forms like {@link StockDataRequestForm}
  */
 @Controller
 public class TickerController {
@@ -30,11 +33,14 @@ public class TickerController {
     private UserService userService;
 
     /**
+     * @Author Aidan Scott
+     * @sinse 0.0.1
      * GetTickerData takes a StockDataRequestForm and returns the equivalent stock data
      * will return a null value if anything went wrong.
      * TODO errors should be returned rather than a null value, the client should understand what went wrong
-     * @param stockDataRequestForm
-     * @param result
+     * @param stockDataRequestForm {@link StockDataRequestForm}
+     * @param result {@link BindingResult}
+     * @param session {@link HttpSession}
      * @return json of converted ticker object
      */
     @Transactional

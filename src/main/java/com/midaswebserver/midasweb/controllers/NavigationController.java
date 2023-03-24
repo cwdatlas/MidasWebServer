@@ -14,8 +14,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
  * NavigationController manages the endpoints for general locations
- * this includes the index page and the user/home page
+ * This includes the index page and the user/home page
+ * In the future general endpoints can be split up into more specific areas (admin, management, and so on)
+ * Uses {@link UserService} heavily to get userdata used in logs and sessions
  */
 @Controller
 public class NavigationController {
@@ -23,6 +28,14 @@ public class NavigationController {
     @Autowired
     private UserService userService;
 
+    /**
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * Routs to index page
+     * @param model
+     * @param session {@link HttpSession}
+     * @return "index" template
+     */
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         String username = "New User";
@@ -36,6 +49,15 @@ public class NavigationController {
         return "index";
     }
 
+    /**
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * Routs the user to their home. Uses sessions to provide a custom experience
+     * Adds the {@link User} and {@link Setting} to the model
+     * @param session {@link HttpSession}
+     * @param model
+     * @return the "home" template
+     */
     @Transactional
     @GetMapping("/user/home")
     public String home(HttpSession session,  Model model) {

@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * The LoginController works with all interactions by the client regarding logging in
- * Sending a form to a PostMethod with the client's information is the major use
+ * @Author Aidan Scott
+ * @sinse 0.0.1
+ * @version 0.0.1
+ * The LoginController works with all interactions by the client regarding logging in, logging out
+ * uses {@link LoginService} and {@link UserService} heavily to interact with user repository and for business logic
  */
 @Controller
 public class LoginController {
@@ -35,9 +38,11 @@ public class LoginController {
     }
 
     /**
+     * @Author Aidan Scott
+     * @sinse 0.0.1
      * loginGet sends the loginForm with the model to the client
      * @param model
-     * @return "login" template
+     * @return "login" template, which houses all info needed for login
      */
     @GetMapping("/login")
     public String loginGet(Model model) {
@@ -47,11 +52,14 @@ public class LoginController {
     }
 
     /**
+     * @Author Aidan Scott
+     * @sinse 0.0.1
      * loginPost takes the completed form for login, validates, and copies data to a User object
-     * @param loginForm
-     * @param result
+     * @param loginForm {@link LoginForm} returned loginform with filled out user data
+     * @param result {@link BindingResult} if loginForm data is valid, what errors it contains
      * @param attrs
-     * @return either "loginsuccess" or "login"
+     * @param request {@link HttpServletRequest}
+     * @return either "loginsuccess" or "login" templates
      */
     @PostMapping("/login")
     public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request) {
@@ -71,11 +79,13 @@ public class LoginController {
     }
 
     /**
+     * @Author Aidan Scott
+     * @sinse 0.0.1
      * adds or updates persistent cookie
      * TODO rather than adding only username, add object that holds all of whats important
      * TODO much of this needs to be moved to a separate cookie class. We need a centralized location to work with cookies
-     * @param session
-     * @param model
+     * @param session {@link HttpSession}User session
+     * @param model {@link Model}
      * @param username
      * @return the "loginSuccess" template
      */
@@ -87,11 +97,13 @@ public class LoginController {
         return "loginSuccess";
     }
 
-    /**
-     * @return the "loginFailure" template
-     * TODO find a solution to this, delete this or replace its functionality as there isnt a loginFailure template
+    /**@Author Aidan Scott
+     * @sinse 0.0.1
+     * logs out user, invalidates session
+     * @param request {@link HttpServletRequest}
+     * @param session {@link HttpSession}
+     * @return the "index" template
      */
-
     @GetMapping("/logout")
     public String logout(HttpSession session, HttpServletRequest request) {
         log.debug("logout: User '{}', session ID '{}', location '{}', logged out",
@@ -100,6 +112,14 @@ public class LoginController {
         return "index";
     }
 
+    /**
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * takes request and finds the user's Ip. Used in place of user id when logging
+     * TODO centralize getClientIp into one method {See UserController} to see other method
+     * @param request {@link HttpServletRequest} takes the servlet request received from a post method
+     * @return remote IP address
+     */
     private static String getClientIp(HttpServletRequest request) {
 
         String remoteAddr = "";
