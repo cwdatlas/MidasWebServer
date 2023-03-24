@@ -2,7 +2,7 @@
 <configuration>
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%date - [%level] - from %logger in %thread % %n%message%n%xException%n</pattern>
+            <pattern>%date - [%level] - from %logger in %thread %n%message%n%xException%n</pattern>
         </encoder>
     </appender>
 
@@ -14,10 +14,7 @@
     <logger name="org.springframework" level="WARN" />
 
     <!-- Increase verbosity for local classes during testing -->
-    <logger name="com.midaswebserver.midasweb.sessions" level="debug" />
-
-    <!-- Increase verbosity for local classes during testing -->
-    <logger name="com.midaswebserver.midasweb.controllers" level="debug" />
+    <logger name="com.midaswebserver.midasweb" level="DEBUG" />
 
     <!-- Default level is INFO -->
     <root level="INFO">

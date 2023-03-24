@@ -1,6 +1,5 @@
 package com.midaswebserver.midasweb.services;
 
-
 import com.midaswebserver.midasweb.forms.LoginForm;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.repositories.UserRepository;
