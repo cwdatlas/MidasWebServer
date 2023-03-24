@@ -34,7 +34,7 @@ public class UserServiceImp implements UserService {
             return false;
         }
         if(!validateUniqueUsername(user.getUsername())) {
-            log.error("{} has the same name in database", user.getUsername());
+            log.error("add: '{}' has the same name in database", user.getUsername());
             return false;
         }
         userRepo.save(user);
@@ -48,7 +48,7 @@ public class UserServiceImp implements UserService {
      */
     @Override
     public boolean validateUniqueUsername(String username) {
-        log.debug("validateUser: user '{}' attempted login", username);
+        log.debug("validateUser: '{}' attempted login", getUserByName(username));
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = userRepo.findByUsernameIgnoreCase(username);
 
@@ -95,7 +95,7 @@ public class UserServiceImp implements UserService {
         try {
             return userRepo.findById(ID).get();
         }catch(Exception e){
-            log.info("getUserByID: id, '{}', didnt have correspoding user", ID);
+            log.info("getUserByID: id, '{}', didnt have corresponding user", ID);
             log.info("getUserByID: '{}' was thrown", e);
         }
         return null;

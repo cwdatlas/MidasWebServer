@@ -21,6 +21,9 @@ public class LoginServiceImp implements LoginService {
     private final UserRepository loginRepo;
     @Autowired
     private HashService hashService;
+
+    @Autowired
+    private UserService userService;
     public LoginServiceImp(UserRepository loginRepo) {
         this.loginRepo = loginRepo;
     }
@@ -31,24 +34,24 @@ public class LoginServiceImp implements LoginService {
      */
     @Override
     public boolean validateUser(LoginForm loginForm) {
-        log.debug("validateUser: user '{}' attempted login", loginForm.getUsername());
+        log.debug("validateUser:'{}' attempted login", userService.getUserByName(loginForm.getUsername()));
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = loginRepo.findByUsernameIgnoreCase(loginForm.getUsername());
 
         // We expect 0 or 1, so if we get more than 1, bail out as this is an error we don't deal with properly.
         if (users.size() != 1) {
-            log.debug("validateUser: found {} users", users.size());
+            log.debug("validateUser: Found '{}' user(s), invalid user", users.size());
             return false;
         }
         User u = users.get(0);
         final String userProvidedHash = hashService.getHash(loginForm.getPassword());//blowfish is a 8-9 so do that
         if (!u.getHashedPassword().equals(userProvidedHash)) {
-            log.debug("validateUser: password !match");
+            log.debug("validateUser: Given password doesnt match stored password");
             return false;
         }
 
         // User exists, and the provided password matches the hashed password in the database.
-        log.debug("validateUser: successful login");
+        log.debug("validateUser: User '{}', successful login", userService.getUserByName(loginForm.getUsername()));
         return true;
     }
 }

@@ -44,6 +44,7 @@ public class TickerServiceImp implements TickerService{
      */
     @Override
     public Ticker getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize) {
+        log.debug("getTimeSeriesInfo: '{}' at '{}' with '{}' output size was queried", symbol, interval, outputSize);
         TimeSeriesResponse timeSeries = AlphaVantage.api()
                 .timeSeries()
                 .intraday()
@@ -53,11 +54,11 @@ public class TickerServiceImp implements TickerService{
                 .fetchSync();
         Ticker ticker = convertToInternalObject(timeSeries);
         if(!(timeSeries.getErrorMessage() == null)){
-            log.info("Stock Query Error '{}'", timeSeries.getErrorMessage());
+            log.info("getTimeSeriesInfo: Stock Query Error '{}'", timeSeries.getErrorMessage());
             ticker = null;
         }
         else if(!validateTicker(ticker)){
-            log.debug("Stock Query Data Invalad");
+            log.debug("getTimeSeriesInfo: Stock Query Data Invalad");
             ticker = null;
         }
         return ticker;
@@ -72,7 +73,7 @@ public class TickerServiceImp implements TickerService{
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Ticker>> violations = validator.validate(ticker);
         if (!violations.isEmpty()) {
-            log.debug("Violation in ticker");
+            log.debug("validateTicker: Violation in ticker: '{}'", ticker);
             return false;
             //throw new ConstraintViolationException(violations);
         }
