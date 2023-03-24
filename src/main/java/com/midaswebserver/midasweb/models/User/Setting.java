@@ -6,6 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Stack;
 
+/**
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
+ * the {@value Setting} is used to persistently store a user search of a symbol
+ */
 @Entity
 @Table(name = "user_settings")
 public class Setting {
@@ -40,19 +46,9 @@ public class Setting {
     public void setUserId(User userId) {
         this.user = userId;
     }
-
-    /**
-     * Returns a stack of valid tickers by splitting stored string
-     * @return a stack of valid tickers the user has looked up
-     */
     public String getTicker() {
         return this.ticker;
     }
-
-    /**
-     * Creates string with a Stack of tickers and saves it
-     * @param ticker
-     */
     public void setTicker(String ticker) {
         this.ticker = ticker;
     }

@@ -11,7 +11,10 @@ import java.util.Set;
 
 
 /**
- * User is the model object holding basic user data
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
+ * User is the model object holding basic user data like username, hashedPassword, email ect.
  */
 @Entity
 @Table(name = "app_user")
@@ -34,10 +37,25 @@ public class User {
 
     public User() {
     }
+
+    /**
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * @param username
+     * @param hashedPassword password must be hashed before given.
+     */
     public User(String username, String hashedPassword) {
         this.username = username;
         this.hashedPassword = hashedPassword;
     }
+    /**
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * @param username
+     * @param hashedPassword password must be hashed before given.
+     * @param email
+     * @param phoneNumber maximum length of phone number is 15
+     */
     public User(String username, String hashedPassword, String email, String phoneNumber) {
         this.username = username;
         this.hashedPassword = hashedPassword;
@@ -54,6 +72,15 @@ public class User {
     public void addSetting(Setting setting){
         this.settings.add(setting);
     }
+
+    /**
+     * @Author Aidan Scott
+     * @since 0.0.1
+     * @version 0.0.1
+     * adds settings to user
+     * @param ticker example: "EUC"
+     * @param user {@link User}
+     */
     public void addTicker(String ticker, User user){
         Setting setting = new Setting(ticker);
         setting.setUserId(user);
