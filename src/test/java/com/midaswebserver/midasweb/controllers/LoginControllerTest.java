@@ -21,22 +21,22 @@ public class LoginControllerTest {
     // Post /login (I don't Know how I will do this one
     // Get  /loginFailure
     // Get  /loginSuccess
-    @Test
     @Disabled
+    @Test
     public void ValidateLogin() throws Exception {//this needs to be a more dynamic unit test
         mockMvc.perform(get("/login")).andDo(print())
                 .andExpect(status().isOk());
 
     }
-    @Test
     @Disabled
+    @Test
     public void ValidateLoginFailure() throws Exception{
         mockMvc.perform(get("/loginFailure")).andDo(print())
                 .andExpect(status().isOk());
     }
 
-    @Test
     @Disabled
+    @Test
     public void ValidateLoginSuccess() throws Exception{
         mockMvc.perform(get("/loginSuccess")).andDo(print())
                 .andExpect(status().isOk());

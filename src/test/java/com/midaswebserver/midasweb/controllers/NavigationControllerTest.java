@@ -17,8 +17,8 @@ public class NavigationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
     @Disabled
+    @Test
     public void indexTest() throws Exception {//this needs to be a more dynamic unit test
         mockMvc.perform(get("/")).andDo(print())
                 .andExpect(status().isOk())
