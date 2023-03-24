@@ -3,6 +3,8 @@ package com.midaswebserver.midasweb.controllers;
 import com.midaswebserver.midasweb.forms.LoginForm;
 import com.midaswebserver.midasweb.services.LoginService;
 import com.midaswebserver.midasweb.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -34,14 +36,13 @@ public class LoginController {
 
     /**
      * loginGet sends the loginForm with the model to the client
-     *
      * @param model
      * @return "login" template
      */
     @GetMapping("/login")
-    public String logingGet(Model model) {
+    public String loginGet(Model model) {
         model.addAttribute("loginForm", new LoginForm());
-        log.info("A user has attempted to sign in"); //how can I make this better? add to a counter?
+        log.debug("loginGet: Client connected to /login"); //how can I make this better? add to a counter?
         return "login";
     }
 
@@ -53,18 +54,19 @@ public class LoginController {
      * @return either "loginsuccess" or "login"
      */
     @PostMapping("/login")
-    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs) {
+    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request) {
         if (result.hasErrors()) {
-            log.debug("{} has submitted a form which has errors", loginForm.getUsername());
+            log.debug("LoginPost: Form from '{}' had errors", getClientIp(request));
             return "login";
         }
         if (!loginService.validateUser(loginForm)) {
             result.addError(new ObjectError("globalError", "Username and password do not match known users"));
-            log.info("{} was used for a login attempt that failed validation", loginForm.getUsername());
+            log.debug("loginPost: Attempted validation from '{}' with username '{}'", getClientIp(request), loginForm.getUsername());
             return "/login";
         }
         attrs.addAttribute("username", loginForm.getUsername());
-        log.info("{} has successfully logged in", loginForm.getUsername());//adding a time to this could be useful, or a more global logging system
+        log.debug("loginPost: User '{}' has successfully logged in from '{}'",
+                userService.getUserByName(loginForm.getUsername()), getClientIp(request));
         return "redirect:/loginSuccess";
     }
 
@@ -79,9 +81,9 @@ public class LoginController {
      */
     @GetMapping("/loginSuccess")
     public String loginSuccess(HttpSession session, Model model, String username) {
-        log.debug("User has ID of '{}'", userService.getIdByUsername(username));
         session.setAttribute("UserId", userService.getIdByUsername(username));
         model.addAttribute("username", username);
+        log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByName(username), session.getId());
         return "loginSuccess";
     }
 
@@ -89,14 +91,26 @@ public class LoginController {
      * @return the "loginFailure" template
      * TODO find a solution to this, delete this or replace its functionality as there isnt a loginFailure template
      */
-    @GetMapping("/loginFailure")
-    public String loginFailure() {
-        return "loginFailure";
-    }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, HttpServletRequest request) {
+        log.debug("logout: User '{}', session ID '{}', location '{}', logged out",
+                userService.getUserById((long)session.getAttribute("UserId")), session.getId(), getClientIp(request));
         session.invalidate();
         return "index";
+    }
+
+    private static String getClientIp(HttpServletRequest request) {
+
+        String remoteAddr = "";
+
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+
+        return remoteAddr;
     }
 }

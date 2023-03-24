@@ -4,6 +4,8 @@ import com.midaswebserver.midasweb.forms.UserForm;
 import com.midaswebserver.midasweb.services.HashService;
 import com.midaswebserver.midasweb.services.UserService;
 import com.midaswebserver.midasweb.models.User.User;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,20 +53,20 @@ public class UserController {
      * @return redirects user to "registerSuccess" template
      */
     @PostMapping("/register")
-    public String registerPost(@Valid @ModelAttribute UserForm userForm, BindingResult result, RedirectAttributes attrs) {
+    public String registerPost(@Valid @ModelAttribute UserForm userForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request) {
         if (result.hasErrors()) {
-            log.debug("{} Errors in form", userForm.getUsername());
+            log.debug("registerPost: Form from '{}' had errors", getClientIp(request));
             return "register";
         }
         if (!userService.validateUniqueUsername(userForm.getUsername())){
             result.addError(new ObjectError("globalError", "User already Registered"));
-            log.info("{} already registered", userForm.getUsername());
+            log.debug("registerPost: Attempted validation from '{}' with username '{}'", getClientIp(request), userForm.getUsername());
             return "register";
         }
         //Checks if passwords are the same, if not, then user will be returned to register
         if (!userForm.getPassword().equals(userForm.getConfirmPass())){
             result.addError(new ObjectError("globalError", "Passwords do not match"));
-            log.info("{} passwords don't match", userForm.getUsername());//this could result in inaccurate logs
+            log.debug("loginPost: Passwords from '{}' do not match", getClientIp(request));
             return "register";
         }
         attrs.addAttribute("username", userForm.getUsername()); //im not sure why this is used
@@ -76,7 +78,7 @@ public class UserController {
         user.setPhoneNumber(userForm.getPhoneNumber());
         userService.add(user);
 
-        log.info("{} been registered", userForm.getUsername());//adding a time to this could be useful, or a more global logging system
+        log.info("loginPost:'{}' been registered", userService.getUserByName(userForm.getUsername()));//adding a time to this could be useful, or a more global logging system
         return "redirect:registerSuccess";
     }
 
@@ -89,7 +91,20 @@ public class UserController {
     @GetMapping("/registerSuccess")
     public String loginSuccess(String username, Model model) {
         model.addAttribute("username", username);
-        log.info("{} logged in", username);
         return "registerSuccess";
+    }
+
+    private static String getClientIp(HttpServletRequest request) {
+
+        String remoteAddr = "";
+
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+
+        return remoteAddr;
     }
 }

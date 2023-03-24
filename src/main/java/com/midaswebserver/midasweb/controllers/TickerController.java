@@ -41,7 +41,7 @@ public class TickerController {
     @GetMapping("/ticker/data")
     public ResponseEntity getTickerData(@Valid @ModelAttribute StockDataRequestForm stockDataRequestForm, BindingResult result, HttpSession session){
         if(result.hasErrors()){
-            log.debug("Found Errors: '{}'", result.getAllErrors());
+            log.debug("getTickerData:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return ResponseEntity.ok(result.getAllErrors());
         }
         Ticker ticker = tickerService.getTimeSeriesInfo(stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval(), OutputSize.COMPACT);
@@ -50,7 +50,7 @@ public class TickerController {
         if(symbol!=null && session.getAttribute("UserId")!=null) {
             User user = userService.getUserById((Long)(session.getAttribute("UserId")));
             user.addTicker(symbol, user);
-            log.debug("Ticker in user Setting: '{}'", symbol);
+            log.debug("getTickerData:'{}', Searched Ticker: '{}'", session.getAttribute("UserId"), symbol);
             userService.update(user);
         }
         return ResponseEntity.ok(ticker);
