@@ -2,8 +2,6 @@ package com.midaswebserver.midasweb.forms;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * loginForm is used to move user login data

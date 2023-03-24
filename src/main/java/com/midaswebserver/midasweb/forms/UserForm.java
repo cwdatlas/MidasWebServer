@@ -3,15 +3,11 @@ package com.midaswebserver.midasweb.forms;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * UserForm contains user from the client
  */
 public class UserForm {
-
-    private static final Logger log = LoggerFactory.getLogger(UserForm.class);
 
     @NotNull//validation code
     @Size(min = 6, max = 20, message = "Username must be at least 6 characters long")
@@ -41,7 +37,6 @@ public class UserForm {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.confirmPass = confirmPass;
-        log.info("Created UserForm for {}", username);
     }
 
     public String getConfirmPass() {
