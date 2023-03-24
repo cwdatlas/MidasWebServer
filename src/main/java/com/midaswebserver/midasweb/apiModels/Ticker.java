@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @Author crazzyghost
+ * @since 0.0.1
+ * @version 0.0.1
  * Ticker is the object used to house all the information from a ticker query
- * see TickerServiceImp to see how Ticker is set and used
+ * This class is a custom implementation of {@link com.crazzyghost.alphavantage crazzyghost alphabantage}
+ * All of the subsequent code is from {link https://github.com/crazzyghost crazzyghost} using the alphavantage library
  */
 public class Ticker {
 

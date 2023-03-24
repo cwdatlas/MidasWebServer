@@ -1,18 +1,24 @@
 package com.midaswebserver.midasweb.apiModels;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 
 /**
+ * @Author Aidan Scott
+ * @since 0.0.1
+ * @version 0.0.1
  * MetaData is used to store symbol and other information from a stock query
+ * This class is a custom implementation of {@link com.crazzyghost.alphavantage.timeseries.response.MetaData crazzyghost MetaData}
+ * Most of the subsequent code is from {link https://github.com/crazzyghost crazzyghost} using the alphavantage library
  */
 public class MetaData{
 
     @NotNull
     private String information;
     /**
-     * an alias symbol is ticker, which can be seen elsewhere in the application
+     * @Author Aidan Scott
+     * since 0.0.1
+     * An example of a symbol is 'UEC' or 'AAPL'
+     * An alias of symbol is ticker
      */
     @NotNull
     private String symbol;
