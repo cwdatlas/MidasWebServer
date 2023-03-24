@@ -114,7 +114,7 @@ public class UserServiceImp implements UserService {
                 if (users.size() == 1) {
                     return users.get(0);
                 } else {
-                    log.warn("GetUserByName: found more than one user with '{}' name", userName);
+                    log.warn("GetUserByName: 0 or 1 < users found with name '{}'", userName);
                 }
             } catch (Exception e) {
                 log.info("getUserByName: '{}' was thrown", e);

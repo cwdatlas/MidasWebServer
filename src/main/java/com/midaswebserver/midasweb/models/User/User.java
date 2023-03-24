@@ -2,6 +2,9 @@ package com.midaswebserver.midasweb.models.User;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
+import com.midaswebserver.midasweb.services.HashService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -120,4 +123,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(username, hashedPassword);
     }
+
 }
