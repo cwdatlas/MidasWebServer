@@ -52,13 +52,14 @@ public class TickerController {
         }
         Ticker ticker = tickerService.getTimeSeriesInfo(stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval(), OutputSize.COMPACT);
         //adds called ticker to tickers that have been called before
-        String symbol = ticker.getMetaData().getSymbol();
-        if(symbol!=null && session.getAttribute("UserId")!=null) {
+        if(ticker!=null && session.getAttribute("UserId")!=null) {
+            String symbol = ticker.getMetaData().getSymbol();
             User user = userService.getUserById((Long)(session.getAttribute("UserId")));
             user.addTicker(symbol, user);
             log.debug("getTickerData:'{}', Searched Ticker: '{}'", session.getAttribute("UserId"), symbol);
             userService.update(user);
+            return ResponseEntity.ok(ticker);
         }
-        return ResponseEntity.ok(ticker);
+        return ResponseEntity.ok("home");
     }
 }

@@ -26,7 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * UserController is the CRUD interface for users
  * this controller is built to serve users adding themselves and admin management
  * uses {@link HashService} and {@link UserService} heavily to interact with user repository and for business logic
- * TODO develope admin management
+ * TODO develop admin management
  */
 @Controller
 public class UserController {
@@ -70,13 +70,13 @@ public class UserController {
         }
         if (!userService.validateUniqueUsername(userForm.getUsername())){
             result.addError(new ObjectError("globalError", "User already Registered"));
-            log.debug("registerPost: Attempted validation from '{}' with username '{}'", getClientIp(request), userForm.getUsername());
+            log.debug("registerPost: User was found with same name of '{}' from '{}'", userForm.getUsername(),getClientIp(request));
             return "register";
         }
         //Checks if passwords are the same, if not, then user will be returned to register
         if (!userForm.getPassword().equals(userForm.getConfirmPass())){
             result.addError(new ObjectError("globalError", "Passwords do not match"));
-            log.debug("loginPost: Passwords from '{}' do not match", getClientIp(request));
+            log.debug("registerPost: Passwords from '{}' do not match", getClientIp(request));
             return "register";
         }
         attrs.addAttribute("username", userForm.getUsername()); //im not sure why this is used
@@ -108,10 +108,10 @@ public class UserController {
      * @since 0.0.1
      * takes request and finds the user's Ip. Used in place of user id when logging
      * TODO centralize getClientIp into one method {See LoginController} to see other method
-     * @param request {link HttpServletRequest} takes the servlet request received from a post method
+     * @param request {@link HttpServletRequest} takes the servlet request received from a post method
      * @return remote IP address
      */
-    private static String getClientIp(HttpServletRequest request) {
+    private String getClientIp(HttpServletRequest request) {
 
         String remoteAddr = "";
 

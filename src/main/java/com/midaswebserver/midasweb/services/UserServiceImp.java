@@ -78,11 +78,11 @@ public class UserServiceImp implements UserService {
     @Override
     public boolean delete(User user) {
         if (user == null) {
-            log.info("Delete: null was passed to method");
+            log.error("Delete: null was passed to method");
             return false;
         }
         if (this.getUserByName(user.getUsername())==null) {
-            log.debug("Delete: User '{}' was not found in database to delete", user.getUsername());
+            log.warn("Delete: User '{}' was not found in database to delete", user.getUsername());
             return false;
         }
         userRepo.delete(user);
@@ -106,8 +106,7 @@ public class UserServiceImp implements UserService {
         try {
             return userRepo.findById(ID).get();
         }catch(Exception e){
-            log.info("getUserByID: id, '{}', didnt have corresponding user", ID);
-            log.info("getUserByID: '{}' was thrown", e);
+            log.error("getUserByID: id, '{}', didnt have corresponding user", ID, e);
         }
         return null;
     }

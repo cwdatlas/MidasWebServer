@@ -68,8 +68,8 @@ public class TickerSerivceImpTest {
      * both symbol and interval are bad
      */
     @Test
-    public void getRequestOnURLBadTest() {
-        String symbol = "ZOOM";
+    public void getRequestOnURLCrazyTest() {
+        String symbol = null;
         Ticker ticker = service.getTimeSeriesInfo(symbol, Interval.DAILY, OutputSize.COMPACT);
         assertFalse(symbol + " wasn't null", ticker != null);
     }
