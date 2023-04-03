@@ -25,5 +25,4 @@ public interface TickerService{
      */
     Ticker getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize);
 
-
 }

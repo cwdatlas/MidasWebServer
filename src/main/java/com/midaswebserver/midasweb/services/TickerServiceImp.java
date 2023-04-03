@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 /**
  * @Author Aidan Scott
@@ -25,7 +26,6 @@ import java.util.Set;
 public class TickerServiceImp implements TickerService{
     private static final Logger log = LoggerFactory.getLogger(TickerServiceImp.class);
     private static final String apiKey = "XIHOPJON41H6MNHT"; //I think this should be secret and have some logic behind it so it isnt found
-
     /**
      * @Author Aidan Scott
      * @since 0.0.1
