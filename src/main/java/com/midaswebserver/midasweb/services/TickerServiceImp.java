@@ -84,7 +84,6 @@ public class TickerServiceImp implements TickerService{
         if (!violations.isEmpty()) {
             log.debug("validateTicker: Violation in ticker: '{}'", ticker);
             return false;
-            //throw new ConstraintViolationException(violations);
         }
         return true;
     }
