@@ -38,13 +38,14 @@ public class NavigationController {
      */
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
-        User user = new User();
-        user.setUsername("New User");
+        User baseUser = new User();
+        baseUser.setUsername("New User");
         if(!session.isNew()){
-            user = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
+            User user = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
             log.debug("index: User '{}' has accessed Index page", session.getAttribute("UserId").toString());
+            baseUser = user;
         }
-        model.addAttribute("user", user);
+        model.addAttribute("user", baseUser);
         return "index";
     }
 
