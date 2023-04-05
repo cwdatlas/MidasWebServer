@@ -40,7 +40,7 @@ public class NavigationController {
     public String index(Model model, HttpSession session) {
         User baseUser = new User();
         baseUser.setUsername("New User");
-        if(!session.isNew()){
+        if(!session.isNew() && session.getAttribute("UserId") != null){
             User user = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
             log.debug("index: User '{}' has accessed Index page", session.getAttribute("UserId").toString());
             baseUser = user;
@@ -61,11 +61,24 @@ public class NavigationController {
     @Transactional
     @GetMapping("/user/home")
     public String home(HttpSession session,  Model model) {
-        User user = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
-        Setting[] settings = user.getSetting().toArray(new Setting[user.getSetting().size()]);
+        //session/user validation if user is logged in
+        Object userId = session.getAttribute("UserId");
+        if (userId == null)
+            return "login";
+
+        //exposing and setting standard model attributes
+        User user = userService.getUserById((Long)(userId));
         model.addAttribute("user", user);
+        //other attributesa
+        Setting[] settings = user.getSetting().toArray(new Setting[user.getSetting().size()]);
         model.addAttribute("userSettings", settings);
-        log.debug("home: User '{}', data added to form ", session.getAttribute("UserId").toString());
+        if (session.getAttribute("ticker") != null) {
+            model.addAttribute("ticker", session.getAttribute("ticker"));
+            log.debug("home: session attribute ticker equals '{}'", session.getAttribute("ticker"));
+        }
+        else
+            log.debug("home: session attribute ticker equals null");
+        log.debug("home: User '{}', data added to form ", session.getAttribute("UserId"));
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         return "home";
     }

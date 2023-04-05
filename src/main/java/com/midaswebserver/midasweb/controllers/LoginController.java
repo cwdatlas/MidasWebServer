@@ -40,13 +40,16 @@ public class LoginController {
     /**
      * @Author Aidan Scott
      * @sinse 0.0.1
-     * loginGet sends the loginForm with the model to the client
+     * loginGet sends the loginForm with the model to the client after adding redirect location to a hidden field
      * @param model
      * @return "login" template, which houses all info needed for login
      */
     @GetMapping("/login")
-    public String loginGet(Model model) {
-        model.addAttribute("loginForm", new LoginForm());
+    public String loginGet(Model model, HttpServletRequest request) {
+        String referer = request.getHeader("referer");
+        LoginForm loginForm = new LoginForm();
+        loginForm.setRedirect(referer);
+        model.addAttribute("loginForm", loginForm);
         log.debug("loginGet: Client connected to /login"); //how can I make this better? add to a counter?
         return "login";
     }
@@ -59,10 +62,10 @@ public class LoginController {
      * @param result {@link BindingResult} if loginForm data is valid, what errors it contains
      * @param attrs
      * @param request {@link HttpServletRequest}
-     * @return either "loginsuccess" or "login" templates
+     * @return either "index" or redirect user to previous page
      */
     @PostMapping("/login")
-    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request) {
+    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request, HttpSession session) {
         if (result.hasErrors()) {
             log.debug("LoginPost: Form from '{}' had errors", getClientIp(request));
             return "login";
@@ -70,31 +73,21 @@ public class LoginController {
         if (!loginService.validateUser(loginForm)) {
             result.addError(new ObjectError("globalError", "Username and password do not match known users"));
             log.debug("loginPost: Attempted validation from '{}' with username '{}'", getClientIp(request), loginForm.getUsername());
-            return "/login";
+            return "login";
         }
         attrs.addAttribute("username", loginForm.getUsername());
-        log.debug("loginPost: User '{}' has successfully logged in from '{}'",
-                userService.getUserByName(loginForm.getUsername()), getClientIp(request));
-        return "redirect:/loginSuccess";
-    }
-
-    /**
-     * @Author Aidan Scott
-     * @sinse 0.0.1
-     * adds or updates persistent cookie
-     * TODO rather than adding only username, add object that holds all of whats important
-     * TODO much of this needs to be moved to a separate cookie class. We need a centralized location to work with cookies
-     * @param session {@link HttpSession}User session
-     * @param model {@link Model}
-     * @param username
-     * @return the "loginSuccess" template
-     */
-    @GetMapping("/loginSuccess")
-    public String loginSuccess(HttpSession session, Model model, String username) {
-        session.setAttribute("UserId", userService.getIdByUsername(username));
-        model.addAttribute("username", username);
-        log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByName(username), session.getId());
-        return "loginSuccess";
+        log.debug("loginPost: User '{}' has successfully logged in from '{}'", userService.getUserByName(loginForm.getUsername()), getClientIp(request));
+        //setting up session for valid user
+        session.setAttribute("UserId", userService.getIdByUsername(loginForm.getUsername()));
+        log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByName(loginForm.getUsername()), session.getId());
+        //Redirecting user to correct location
+        if(loginForm.getRedirect() == null){
+            log.debug("getTickerData:'{}', Searched for a ticker but didn't have a redirect address", getClientIp(request));
+            return "redirect:/";
+        }
+        String referer = loginForm.getRedirect();
+        log.debug("loginPost: User '{}' has been redirected to '{}'", userService.getUserByName(loginForm.getUsername()), referer);
+        return "redirect:" + referer;
     }
 
     /**@Author Aidan Scott
@@ -109,7 +102,7 @@ public class LoginController {
         log.debug("logout: User '{}', session ID '{}', location '{}', logged out",
                 userService.getUserById((long)session.getAttribute("UserId")), session.getId(), getClientIp(request));
         session.invalidate();
-        return "index";
+        return "redirect:/";
     }
 
     /**

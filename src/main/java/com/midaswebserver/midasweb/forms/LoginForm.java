@@ -18,6 +18,15 @@ public class LoginForm {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
+    public String redirect;
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
     public String getUsername() {
         return username;
     }
