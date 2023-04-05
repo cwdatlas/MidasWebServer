@@ -65,7 +65,7 @@ public class NavigationController {
         //session/user validation if user is logged in
         Object userId = session.getAttribute("UserId");
         if (userId == null)
-            return "login";
+            return "redirect:/login";
 
         //exposing and setting standard model attributes
         User user = userService.getUserById((Long)(userId));
@@ -74,7 +74,7 @@ public class NavigationController {
         Setting[] settings = user.getSetting().toArray(new Setting[user.getSetting().size()]);
         model.addAttribute("userSettings", settings);
         if (session.getAttribute("ticker") != null) {
-            model.addAttribute("ticker", (Ticker)session.getAttribute("ticker"));
+            model.addAttribute("ticker", session.getAttribute("ticker"));
             log.debug("home: session attribute ticker equals '{}'", session.getAttribute("ticker"));
         }
         else

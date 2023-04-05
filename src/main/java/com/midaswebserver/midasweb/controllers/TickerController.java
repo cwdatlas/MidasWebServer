@@ -32,7 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class TickerController {
     private static final Logger log = LoggerFactory.getLogger(TickerController.class);
-    private TickerService tickerService = new TickerServiceImp();
+    private final TickerService tickerService = new TickerServiceImp();
     @Autowired
     private UserService userService;
 
