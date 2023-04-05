@@ -6,16 +6,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Login page</title>
 </head>
-<body>
-<h1>Login</h1>
-<p>If you dont have a login, register <a href="/register">here</a>!</p>
-<form action="#" th:action="@{/login}" th:object="${loginForm}" method="post">
-    <span th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>
-    <input type="text" th:field="*{username}" placeholder="Username"/>
-    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span><br/>
-    <input type="password" th:field="*{password}" placeholder="Password"/>
-    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span><br/>
-    <button type="submit">Login</button>
+<body class="container-md p-5">
+<div class="mx-auto p-5 col-4 border">
+<p class="text-center display-1">Login</p>
+<form class="text-center" action="#" th:action="@{/login}" th:object="${loginForm}" method="post">
+    <span class="text-danger" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>
+    <input class="m-1 text-center" type="text" th:field="*{username}" placeholder="Username"/>
+    <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span><br/>
+    <input class="m-1 text-center" type="password" th:field="*{password}" placeholder="Password"/>
+    <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span><br/>
+    <button type="submit" class="btn col-12">Login</button>
+    <p>If you dont have a login, register <a href="/register">here</a>!</p>
 </form>
+</div>
 </body>
 </html>
