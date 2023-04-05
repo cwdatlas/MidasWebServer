@@ -58,6 +58,7 @@ public class LoginController {
      * @Author Aidan Scott
      * @sinse 0.0.1
      * loginPost takes the completed form for login, validates, and copies data to a User object
+     * Creates session for user
      * @param loginForm {@link LoginForm} returned loginform with filled out user data
      * @param result {@link BindingResult} if loginForm data is valid, what errors it contains
      * @param attrs

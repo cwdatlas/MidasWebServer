@@ -1,5 +1,6 @@
 package com.midaswebserver.midasweb.controllers;
 
+import com.midaswebserver.midasweb.apiModels.Ticker;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
 import com.midaswebserver.midasweb.models.User.Setting;
 import com.midaswebserver.midasweb.models.User.User;
@@ -73,7 +74,7 @@ public class NavigationController {
         Setting[] settings = user.getSetting().toArray(new Setting[user.getSetting().size()]);
         model.addAttribute("userSettings", settings);
         if (session.getAttribute("ticker") != null) {
-            model.addAttribute("ticker", session.getAttribute("ticker"));
+            model.addAttribute("ticker", (Ticker)session.getAttribute("ticker"));
             log.debug("home: session attribute ticker equals '{}'", session.getAttribute("ticker"));
         }
         else
