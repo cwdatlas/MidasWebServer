@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.server.Cookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -46,10 +47,7 @@ public class LoginController {
      */
     @GetMapping("/login")
     public String loginGet(Model model, HttpServletRequest request) {
-        String referer = request.getHeader("referer");
-        LoginForm loginForm = new LoginForm();
-        loginForm.setRedirect(referer);
-        model.addAttribute("loginForm", loginForm);
+        model.addAttribute("loginForm", new LoginForm());
         log.debug("loginGet: Client connected to /login"); //how can I make this better? add to a counter?
         return "login";
     }
@@ -82,11 +80,11 @@ public class LoginController {
         session.setAttribute("UserId", userService.getIdByUsername(loginForm.getUsername()));
         log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByName(loginForm.getUsername()), session.getId());
         //Redirecting user to correct location
-        if(loginForm.getRedirect() == null){
+        if(request.getHeader("referer") == null){
             log.debug("getTickerData:'{}', Searched for a ticker but didn't have a redirect address", getClientIp(request));
             return "redirect:/";
         }
-        String referer = loginForm.getRedirect();
+        String referer =request.getHeader("referer");
         log.debug("loginPost: User '{}' has been redirected to '{}'", userService.getUserByName(loginForm.getUsername()), referer);
         return "redirect:" + referer;
     }

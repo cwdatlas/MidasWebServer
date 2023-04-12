@@ -1,20 +1,16 @@
 package com.midaswebserver.midasweb.models.User;
 
 import jakarta.persistence.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Stack;
 
 /**
  * @Author Aidan Scott
  * @since 0.0.1
  * @version 0.0.1
- * the {@value Setting} is used to persistently store a user search of a symbol
+ * the {@value Symbol} is used to persistently store a user search of a symbol
  */
 @Entity
 @Table(name = "user_settings")
-public class Setting {
+public class Symbol {
     @Id
     @GeneratedValue
     private Long id;
@@ -24,10 +20,10 @@ public class Setting {
     @Column(name = "searched_ticker", nullable = true)
     private String ticker;
 
-    public Setting(){
+    public Symbol(){
     }
 
-    public Setting(String ticker){
+    public Symbol(String ticker){
         this.ticker = ticker;
     }
 

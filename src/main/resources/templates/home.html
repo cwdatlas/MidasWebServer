@@ -12,10 +12,10 @@
     <div class="col-5 border">
         <p class="display-4">Financial Search</p>
         <p>Previous tickers searched</p>
-        <div class="bg-dark text-white m-1" th:each="setting: ${userSettings}">
-            <a th:text="${setting.getTicker()}"></a>
+        <div class="bg-dark text-white m-1" th:each="symbol: ${userSettings}">
+            <a th:text="${symbol.getTicker()}"></a>
         </div>
-    <form onclick="toggleTable()" action="#" th:action="@{/ticker/data}" th:object="${stockDataRequestForm}" method="get">
+    <form onclick="toggleTable()" action="#" th:action="@{/user/home}" th:object="${stockDataRequestForm}" method="get">
         <span class="text-danger" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>
         <input class="m-1 text-center" type="text" th:field="*{ticker}" placeholder="Ticker 'UEC'"/>
         <span class="text-danger" th:if="${#fields.hasErrors('ticker')}" th:errors="*{ticker}">Ticker error</span><br/>
@@ -27,7 +27,7 @@
     <div class="col-7 text-center border">
         <p>financial graph</p>
     </div>
-    <!--<div id="table" style="display: none;" th:replace="fragments/lineChart :: lineChart">&nbsp;</div>-->
+    <div id="table" style="display: none;" th:replace="fragments/lineChart :: lineChart">&nbsp;</div>
     </div>
 </body>
 </html>

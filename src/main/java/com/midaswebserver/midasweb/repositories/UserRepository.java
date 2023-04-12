@@ -9,7 +9,7 @@ import java.util.List;
  * @since 0.0.1
  * @version 0.0.1
  * Vehicle to interact with the user table within the database
- * Through relations, other tables can be interacted with {@see Setting}
+ * Through relations, other tables can be interacted with {@see Symbol}
  */
 public interface UserRepository extends JpaRepository<User, Long> {
     /**

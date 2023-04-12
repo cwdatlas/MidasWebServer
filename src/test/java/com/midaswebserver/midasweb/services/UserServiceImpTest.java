@@ -1,6 +1,6 @@
 package com.midaswebserver.midasweb.services;
 
-import com.midaswebserver.midasweb.models.User.Setting;
+import com.midaswebserver.midasweb.models.User.Symbol;
 import com.midaswebserver.midasweb.models.User.User;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -276,14 +276,14 @@ public class UserServiceImpTest {
         userService.add(testUser1);
         //sets updates username
         String ticker = "EUC";
-        Setting setting = new Setting(ticker);
-        setting.setUserId(testUser1);//I shouldnt have to add the user to the setting
-        testUser1.addSetting(setting);
+        Symbol symbol = new Symbol(ticker);
+        symbol.setUserId(testUser1);//I shouldnt have to add the user to the symbol
+        testUser1.addSetting(symbol);
         userService.update(testUser1);
         //retrieving the user and seeing if the name was saved
         User changedUser = userService.getUserByName(testUser1.getUsername());
-        Setting[] setArray = changedUser.getSetting().toArray(new Setting[changedUser.getSetting().size()]);
-        List<Setting> setList = new ArrayList<>(changedUser.getSetting());
+        Symbol[] setArray = changedUser.getSetting().toArray(new Symbol[changedUser.getSetting().size()]);
+        List<Symbol> setList = new ArrayList<>(changedUser.getSetting());
         userService.delete(changedUser);
         assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
     }
@@ -294,14 +294,14 @@ public class UserServiceImpTest {
         userService.add(testUser2);
         //sets updates username
         String ticker = "EUC";
-        Setting setting = new Setting(ticker);
-        setting.setUserId(testUser2);//I shouldnt have to add the user to the setting
-        testUser2.addSetting(setting);
+        Symbol symbol = new Symbol(ticker);
+        symbol.setUserId(testUser2);//I shouldnt have to add the user to the symbol
+        testUser2.addSetting(symbol);
         userService.update(testUser2);//<--This is the main function that we are testing
         //retrieving the user and seeing if the name was saved
         User changedUser = userService.getUserByName(testUser2.getUsername());
-        Setting[] setArray = changedUser.getSetting().toArray(new Setting[changedUser.getSetting().size()]);
-        List<Setting> setList = new ArrayList<>(changedUser.getSetting());
+        Symbol[] setArray = changedUser.getSetting().toArray(new Symbol[changedUser.getSetting().size()]);
+        List<Symbol> setList = new ArrayList<>(changedUser.getSetting());
         userService.delete(changedUser);
         assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
     }

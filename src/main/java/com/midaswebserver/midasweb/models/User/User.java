@@ -2,8 +2,6 @@ package com.midaswebserver.midasweb.models.User;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
-import com.midaswebserver.midasweb.services.HashService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -33,7 +31,7 @@ public class User {
     private String phoneNumber;
     @OneToMany(mappedBy = "user")//this is bad practice, you WILL change it back.
     @Cascade({org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
-    private Set<Setting> settings = new HashSet<>();
+    private Set<Symbol> symbols = new HashSet<>();
 
     public User() {
     }
@@ -63,28 +61,28 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public Set<Setting> getSetting() {
-        return settings;
+    public Set<Symbol> getSetting() {
+        return symbols;
     }
-    public void setSetting(Set<Setting> settings) {
-        this.settings = settings;
+    public void setSetting(Set<Symbol> symbols) {
+        this.symbols = symbols;
     }
-    public void addSetting(Setting setting){
-        this.settings.add(setting);
+    public void addSetting(Symbol symbol){
+        this.symbols.add(symbol);
     }
 
     /**
      * @Author Aidan Scott
      * @since 0.0.1
      * @version 0.0.1
-     * adds settings to user
+     * adds symbols to user
      * @param ticker example: "EUC"
      * @param user {@link User}
      */
     public void addTicker(String ticker, User user){
-        Setting setting = new Setting(ticker);
-        setting.setUserId(user);
-        this.settings.add(setting);
+        Symbol symbol = new Symbol(ticker);
+        symbol.setUserId(user);
+        this.symbols.add(symbol);
     }
     public String getPhoneNumber() {
         return phoneNumber;
