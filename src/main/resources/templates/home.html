@@ -12,7 +12,7 @@
     <div class="col-5 border">
         <p class="display-4">Financial Search</p>
         <p>Previous tickers searched</p>
-        <div class="bg-dark text-white m-1" th:each="symbol: ${userSettings}">
+        <div class="bg-dark text-white m-1 col-2 text-center" th:each="symbol: ${userSettings}">
             <a th:text="${symbol.getTicker()}"></a>
         </div>
     <form action="#" th:action="@{/user/home}" th:object="${stockDataRequestForm}" method="post">
