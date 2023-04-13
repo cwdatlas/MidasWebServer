@@ -60,12 +60,19 @@ public interface UserService {
      */
     Long getIdByUsername(String username);
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * Updates the user in database, make sure that the param has the original user ID set as its ID,
      * the function will return null if not
      * @param user
      * @return boolean
      */
     boolean update(User user);
+
+    /**
+     * Adds a symbol to a user. This will create a symbol object linked to the user object
+     * which can be used to retrieve the saved ticker
+     * @param user
+     * @param ticker like 'UEC'
+     * @return boolean based on the success of the transaction
+     */
+    boolean addSymbolToUser(User user, String ticker);
 }

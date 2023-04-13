@@ -1,10 +1,12 @@
 package com.midaswebserver.midasweb.services;
 
+import com.midaswebserver.midasweb.models.User.Symbol;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,8 +27,6 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * Adds user to the database
      * If User is already in the database (same username) then the method will return false
      * @param user
@@ -47,8 +47,6 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * ValidateUniqueUsername checks to see if there is another person in the database with the same username
      * @param username
      * @return boolean
@@ -68,8 +66,6 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * delete deletes a user from the database
      * TODO make sure the process succeeded
      * @param user
@@ -91,8 +87,6 @@ public class UserServiceImp implements UserService {
 
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * Gets User by Id
      * TODO have validation and safe and expected returns;
      * @param ID
@@ -112,8 +106,6 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * Gets user with the corresponding name
      * @param userName
      * @return user with corresponding name, or null if no user was found
@@ -136,8 +128,6 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * Gets Id by corresponding username
      * @param username
      * @return the ID of the user or null if there isn't a user in the database with that username or if there are more than one user
@@ -161,8 +151,6 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * Updates the user in database, make sure that the param has the original user ID set as its ID,
      * the function will return null if not
      * @param user
@@ -180,5 +168,44 @@ public class UserServiceImp implements UserService {
         userRepo.save(user);
         return true;
     }
-
+    /**
+     * Adds a symbol to a user. This will create a symbol object linked to the user object
+     * which can be used to retrieve the saved ticker
+     * @param user
+     * @param ticker like 'UEC'
+     * @return boolean based on the success of the transaction
+     */
+    @Transactional
+    @Override
+    public boolean addSymbolToUser(User user, String ticker) {
+        //validation
+        if(user == null || ticker == null) {
+            log.error("addSymbolToUser: user, '{}', or symbol, '{}', was found to be null", user, ticker);
+            return false;
+        }
+        if(ticker.getBytes().length > 4) {
+            log.error("addSymbolToUser: symbol, '{}', was longer than expected, 4 characters", ticker);
+            return false;
+        }
+        if(userRepo.existsById(user.getId())){
+            log.error("addSymbolToUser: user, '{}', with id, '{}', was not found in database", user.getUsername(), user.getId());
+            return false;
+        }
+        //logic
+        for(Symbol symbolSaved : user.getSymbol()){
+            if(symbolSaved.getTicker().equalsIgnoreCase(ticker)) {
+                log.debug("addSymbolToUser: user, '{}', attempted to add ticker, '{}', that was added previously", user.getUsername(), ticker);
+                return true;
+            }
+        }
+        user.addTicker(ticker, user);
+        for(Symbol symbolSaved : user.getSymbol()){
+            if(symbolSaved.getTicker().equalsIgnoreCase(ticker)) {
+                log.debug("addSymbolToUser: user, '{}', added ticker , '{}', to the database", user.getUsername(), ticker);
+                return true;
+            }
+        }
+        log.error("addSymbolToUser: user, '{}', failed to add ticker , '{}', should have found ticker in database", user.getUsername(), ticker);
+        return false;
+    }
 }

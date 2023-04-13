@@ -278,12 +278,12 @@ public class UserServiceImpTest {
         String ticker = "EUC";
         Symbol symbol = new Symbol(ticker);
         symbol.setUserId(testUser1);//I shouldnt have to add the user to the symbol
-        testUser1.addSetting(symbol);
+        testUser1.addSymbol(symbol);
         userService.update(testUser1);
         //retrieving the user and seeing if the name was saved
         User changedUser = userService.getUserByName(testUser1.getUsername());
-        Symbol[] setArray = changedUser.getSetting().toArray(new Symbol[changedUser.getSetting().size()]);
-        List<Symbol> setList = new ArrayList<>(changedUser.getSetting());
+        Symbol[] setArray = changedUser.getSymbol().toArray(new Symbol[changedUser.getSymbol().size()]);
+        List<Symbol> setList = new ArrayList<>(changedUser.getSymbol());
         userService.delete(changedUser);
         assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
     }
@@ -296,12 +296,12 @@ public class UserServiceImpTest {
         String ticker = "EUC";
         Symbol symbol = new Symbol(ticker);
         symbol.setUserId(testUser2);//I shouldnt have to add the user to the symbol
-        testUser2.addSetting(symbol);
+        testUser2.addSymbol(symbol);
         userService.update(testUser2);//<--This is the main function that we are testing
         //retrieving the user and seeing if the name was saved
         User changedUser = userService.getUserByName(testUser2.getUsername());
-        Symbol[] setArray = changedUser.getSetting().toArray(new Symbol[changedUser.getSetting().size()]);
-        List<Symbol> setList = new ArrayList<>(changedUser.getSetting());
+        Symbol[] setArray = changedUser.getSymbol().toArray(new Symbol[changedUser.getSymbol().size()]);
+        List<Symbol> setList = new ArrayList<>(changedUser.getSymbol());
         userService.delete(changedUser);
         assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
     }

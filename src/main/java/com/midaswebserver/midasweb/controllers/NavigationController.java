@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Set;
+
 /**
  * @Author Aidan Scott
  * @since 0.0.1
@@ -82,7 +84,7 @@ public class NavigationController {
         User user = userService.getUserById((Long)(userId));
         model.addAttribute("user", user);
         //other attributesa
-        Symbol[] symbols = user.getSetting().toArray(new Symbol[user.getSetting().size()]);
+        Set<Symbol> symbols = user.getSymbol();
         model.addAttribute("userSettings", symbols);
         if (session.getAttribute("ticker") != null) {
             model.addAttribute("ticker", session.getAttribute("ticker"));
@@ -131,10 +133,8 @@ public class NavigationController {
         //adds called ticker to tickers that have been called before
         if(ticker!=null) {
             String symbol = ticker.getMetaData().getSymbol();
-            user.addTicker(symbol, user);
             log.debug("getTickerData:'{}', Searched Ticker: '{}'", session.getAttribute("UserId"), symbol);
             userService.update(user);
-            session.setAttribute("ticker", ticker);
         }
         return "redirect:" + referer;
     }

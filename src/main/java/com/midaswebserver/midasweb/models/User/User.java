@@ -61,13 +61,13 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public Set<Symbol> getSetting() {
+    public Set<Symbol> getSymbol() {
         return symbols;
     }
     public void setSetting(Set<Symbol> symbols) {
         this.symbols = symbols;
     }
-    public void addSetting(Symbol symbol){
+    public void addSymbol(Symbol symbol){
         this.symbols.add(symbol);
     }
 
