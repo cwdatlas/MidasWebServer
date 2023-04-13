@@ -15,8 +15,6 @@ public class MetaData{
     @NotNull
     private String information;
     /**
-     * @Author Aidan Scott
-     * since 0.0.1
      * An example of a symbol is 'UEC' or 'AAPL'
      * An alias of symbol is ticker
      */

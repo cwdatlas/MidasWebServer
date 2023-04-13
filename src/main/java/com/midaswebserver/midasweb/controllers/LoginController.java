@@ -40,9 +40,8 @@ public class LoginController {
     }
 
     /**
-     * @Author Aidan Scott
-     * @sinse 0.0.1
-     * loginGet sends the loginForm with the model to the client after adding redirect location to a hidden field
+     * loginGet sends the loginForm with the model to the client
+     * also creates cookie that holds previous uri
      * @param model
      * @return "login" template, which houses all info needed for login
      */
@@ -57,8 +56,6 @@ public class LoginController {
     }
 
     /**
-     * @Author Aidan Scott
-     * @sinse 0.0.1
      * loginPost takes the completed form for login, validates, and copies data to a User object
      * Creates session for user
      * @param loginForm {@link LoginForm} returned loginform with filled out user data
@@ -92,8 +89,7 @@ public class LoginController {
         return "redirect:" + preLoginUri;
     }
 
-    /**@Author Aidan Scott
-     * @sinse 0.0.1
+    /**
      * logs out user, invalidates session
      * @param request {@link HttpServletRequest}
      * @param session {@link HttpSession}
@@ -108,8 +104,6 @@ public class LoginController {
     }
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * takes request and finds the user's Ip. Used in place of user id when logging
      * TODO centralize getClientIp into one method {See UserController} to see other method
      * @param request {@link HttpServletRequest} takes the servlet request received from a post method

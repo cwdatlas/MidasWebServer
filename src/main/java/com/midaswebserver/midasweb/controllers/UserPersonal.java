@@ -68,9 +68,9 @@ public class UserPersonal {
     }
 
     /**
-     * GetTickerData takes a StockDataRequestForm and returns the equivalent stock data
-     * will return a null value if anything went wrong.
-     * TODO errors should be returned rather than a null value, the client should understand what went wrong
+     * GetTickerData takes a StockDataRequestForm and displays the data on the displayData page
+     * will return user to /user/home if any data validates bad
+     * TODO errors should be returned to the user, they should know what went wrong
      * @param stockDataRequestForm {@link StockDataRequestForm}
      * @param result {@link BindingResult}
      * @param session {@link HttpSession}
