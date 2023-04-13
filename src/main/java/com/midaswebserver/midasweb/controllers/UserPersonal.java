@@ -27,45 +27,20 @@ import java.util.Set;
  * @Author Aidan Scott
  * @since 0.0.1
  * @version 0.0.1
- * NavigationController manages the endpoints for general locations
+ * UserPersonal manages the endpoints for general locations
  * This includes the index page and the user/home page
  * In the future general endpoints can be split up into more specific areas (admin, management, and so on)
  * Uses {@link UserService} heavily to get userdata used in logs and sessions
  */
 @Controller
-public class NavigationController {
-    private static final Logger log = LoggerFactory.getLogger(NavigationController.class);
+public class UserPersonal {
+    private static final Logger log = LoggerFactory.getLogger(UserPersonal.class);
     @Autowired
     private UserService userService;
     @Autowired
     private TickerService tickerService;
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
-     * Routs to index page
-     * @param model
-     * @param session {@link HttpSession}
-     * @return "index" template
-     */
-    @GetMapping("/")
-    public String index(Model model, HttpSession session) {
-        User baseUser;
-        if(!session.isNew() && session.getAttribute("UserId") != null){
-            baseUser = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
-            log.debug("index: User '{}' has accessed Index page", session.getAttribute("UserId").toString());
-        }
-        else{
-            baseUser = new User();
-            baseUser.setUsername("New User");
-        }
-        model.addAttribute("user", baseUser);
-        return "index";
-    }
-
-    /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * Routs the user to their home. Uses sessions to provide a custom experience
      * Adds the {@link User} and {@link Symbol} to the model
      * @param session {@link HttpSession}
@@ -86,20 +61,12 @@ public class NavigationController {
         //other attributesa
         Set<Symbol> symbols = user.getSymbol();
         model.addAttribute("userSettings", symbols);
-        if (session.getAttribute("ticker") != null) {
-            model.addAttribute("ticker", session.getAttribute("ticker"));
-            log.debug("home: session attribute ticker equals '{}'", session.getAttribute("ticker"));
-        }
-        else
-            log.debug("home: session attribute ticker equals null");
         log.debug("home: User '{}', data added to form ", session.getAttribute("UserId"));
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         return "home";
     }
 
     /**
-     * @Author Aidan Scott
-     * @sinse 0.0.1
      * GetTickerData takes a StockDataRequestForm and returns the equivalent stock data
      * will return a null value if anything went wrong.
      * TODO errors should be returned rather than a null value, the client should understand what went wrong
@@ -116,26 +83,32 @@ public class NavigationController {
         if (userId == null)
             return "redirect:/login";
         if (request.getHeader("referer") == null ){
-            log.debug("getTickerData:'{}', Searched for a ticker but didn't have a redirect address", session.getAttribute("UserId"));
+            log.debug("getTickerData:'{}', Searched header, but didn't find a redirect address", session.getAttribute("UserId"));
             return "redirect:/index";
         }
-        String referer = request.getHeader("referer");
-
-        //exposing and setting standard model attributes
         User user = userService.getUserById((Long)(userId));
-        model.addAttribute("user", user);
-
         if(result.hasErrors()){
             log.debug("getTickerData:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
-            return "redirect:" + referer;
+            return "redirect:/user/home";
         }
         Ticker ticker = tickerService.getTimeSeriesInfo(stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval(), OutputSize.COMPACT);
         //adds called ticker to tickers that have been called before
-        if(ticker!=null) {
+        if(ticker!=null || ticker.getMetaData() != null || ticker.getMetaData().getSymbol() != null) {
             String symbol = ticker.getMetaData().getSymbol();
-            log.debug("getTickerData:'{}', Searched Ticker: '{}'", session.getAttribute("UserId"), symbol);
-            userService.update(user);
+            boolean addedTicker = userService.addSymbolToUser(user, symbol);
+            log.debug("getTickerData:'{}', Searched Ticker: '{}', added ticker, '{}'", session.getAttribute("UserId"), symbol, addedTicker);
         }
-        return "redirect:" + referer;
+        else{ // this is if the incoming data isnt valid, this is probably because the wrong ticker was sent to the api
+            log.debug("getTickerData:'{}', Searched for ticker, '{}', bad data given, recieved bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
+            stockDataRequestForm.setTicker("invalid");//I dont know if they will be able to see this
+            return "redirect:/user/home";
+        }
+        //exposing and setting standard model attributes
+        model.addAttribute("user", user);
+        //other attributes
+        Set<Symbol> symbols = user.getSymbol();
+        model.addAttribute("userSettings", symbols);
+        model.addAttribute("ticker", ticker);
+        return "dataDisplay";
     }
 }

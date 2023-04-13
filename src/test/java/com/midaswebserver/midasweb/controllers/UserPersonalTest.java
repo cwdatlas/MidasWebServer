@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(NavigationController.class)
-public class NavigationControllerTest {
+@WebMvcTest(UserPersonal.class)
+public class UserPersonalTest {
     @Autowired
     private MockMvc mockMvc;
 

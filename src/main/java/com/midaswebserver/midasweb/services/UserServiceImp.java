@@ -199,6 +199,7 @@ public class UserServiceImp implements UserService {
             }
         }
         user.addTicker(ticker, user);
+        update(user);
         for(Symbol symbolSaved : user.getSymbol()){
             if(symbolSaved.getTicker().equalsIgnoreCase(ticker)) {
                 log.debug("addSymbolToUser: user, '{}', added ticker , '{}', to the database", user.getUsername(), ticker);
