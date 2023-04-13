@@ -3,6 +3,7 @@ package com.midaswebserver.midasweb.controllers;
 import com.midaswebserver.midasweb.forms.LoginForm;
 import com.midaswebserver.midasweb.services.LoginService;
 import com.midaswebserver.midasweb.services.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -10,10 +11,10 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,9 +47,12 @@ public class LoginController {
      * @return "login" template, which houses all info needed for login
      */
     @GetMapping("/login")
-    public String loginGet(Model model, HttpServletRequest request) {
+    public String loginGet(Model model, HttpServletResponse response, HttpServletRequest request) {
         model.addAttribute("loginForm", new LoginForm());
-        log.debug("loginGet: Client connected to /login"); //how can I make this better? add to a counter?
+        log.debug("loginGet: Client connected to /login");
+        Cookie preLoginUriCookie = new Cookie("preLoginUri", request.getHeader("referer"));
+        preLoginUriCookie.setMaxAge(60 * 4); //sets cookie's life to 10 seconds
+        response.addCookie(preLoginUriCookie);
         return "login";
     }
 
@@ -64,7 +68,7 @@ public class LoginController {
      * @return either "index" or redirect user to previous page
      */
     @PostMapping("/login")
-    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request, HttpSession session) {
+    public String loginPost(@Valid @ModelAttribute @CookieValue("preLoginUri") String preLoginUri, LoginForm loginForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request, HttpSession session) {
         if (result.hasErrors()) {
             log.debug("LoginPost: Form from '{}' had errors", getClientIp(request));
             return "login";
@@ -80,13 +84,12 @@ public class LoginController {
         session.setAttribute("UserId", userService.getIdByUsername(loginForm.getUsername()));
         log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByName(loginForm.getUsername()), session.getId());
         //Redirecting user to correct location
-        if(request.getHeader("referer") == null){
+        if(preLoginUri == null){
             log.debug("getTickerData:'{}', Searched for a ticker but didn't have a redirect address", getClientIp(request));
             return "redirect:/";
         }
-        String referer =request.getHeader("referer");
-        log.debug("loginPost: User '{}' has been redirected to '{}'", userService.getUserByName(loginForm.getUsername()), referer);
-        return "redirect:" + referer;
+        log.debug("loginPost: User '{}' has been redirected to '{}'", userService.getUserByName(loginForm.getUsername()), preLoginUri);
+        return "redirect:" + preLoginUri;
     }
 
     /**@Author Aidan Scott

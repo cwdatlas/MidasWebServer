@@ -99,7 +99,7 @@ public class UserPersonal {
             log.debug("getTickerData:'{}', Searched Ticker: '{}', added ticker, '{}'", session.getAttribute("UserId"), symbol, addedTicker);
         }
         else{ // this is if the incoming data isnt valid, this is probably because the wrong ticker was sent to the api
-            log.debug("getTickerData:'{}', Searched for ticker, '{}', bad data given, recieved bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
+            log.warn("getTickerData:'{}', Searched for ticker, '{}', bad data given, recieved bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
             stockDataRequestForm.setTicker("invalid");//I dont know if they will be able to see this
             return "redirect:/user/home";
         }
