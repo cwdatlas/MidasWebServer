@@ -14,51 +14,37 @@ import static org.springframework.test.util.AssertionErrors.*;
 
 @SpringBootTest
 public class LoginServiceImplTest {
-    //create test variables, usernames and passwords/other data that will be used for the test that doesnt change
-    private static final String username = "testuser";
-    private static final String password = "testpass";
 //get services and other required objects to test or to aid the testing
     @Autowired
     private LoginService loginService;
-    @Autowired
-    private UserRepository loginRepo;
-    @Autowired
-    private HashService hashService;
-
-    private final User fakeUser = new User(username, Integer.toString(password.hashCode()));//login (the name) might want to be changed as it is a little confusing
-
-    @BeforeEach
-    public void beforeTest() {
-        assertNotNull("UserRepository must be injected", loginRepo);
-        assertNotNull("loginService must be injected", loginService);
-
-        // Ensure dummy record is in the DB
-        final List<User> users =
-                loginRepo.findByUsernameIgnoreCase(username);
-        if (users.isEmpty())
-            loginRepo.save(fakeUser);
-    }
-
     @Test
     public void validateUserSuccessTest() {
+        String username = "testuser";
+        String password = "testpass";
         final LoginForm form = new LoginForm(username, password);
         assertTrue("validateUserSuccessTest: should succeed using the same user/pass info", loginService.validateUser(form));
     }
 
     @Test
     public void validateUserExistingUserInvalidPasswordTest() {
+        String username = "testuser";
+        String password = "testpass";
         final LoginForm form = new LoginForm(username, password + "extra");
         assertFalse("validateUserExistingUserInvalidPasswordTest: should fail using a valid user, invalid pass", loginService.validateUser(form));
     }
 
     @Test
     public void validateUserInvalidUserValidPasswordTest() {
+        String username = "testuser";
+        String password = "testpass";
         final LoginForm form = new LoginForm(username + "not", password);
         assertFalse("validateUserInvalidUserValidPasswordTest: should fail using an invalid user, valid pass", loginService.validateUser(form));
     }
 
     @Test
     public void validateUserInvalidUserInvalidPasswordTest() {
+        String username = "testuser";
+        String password = "testpass";
         final LoginForm form = new LoginForm(username + "not", password + "extra");
         assertFalse("validateUserInvalidUserInvalidPasswordTest: should fail using an invalid user, valid pass", loginService.validateUser(form));
     }
