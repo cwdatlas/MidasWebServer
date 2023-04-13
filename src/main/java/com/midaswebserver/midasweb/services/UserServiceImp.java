@@ -187,7 +187,7 @@ public class UserServiceImp implements UserService {
             log.error("addSymbolToUser: symbol, '{}', was longer than expected, 4 characters", ticker);
             return false;
         }
-        if(userRepo.existsById(user.getId())){
+        if(!userRepo.existsById(user.getId())){
             log.error("addSymbolToUser: user, '{}', with id, '{}', was not found in database", user.getUsername(), user.getId());
             return false;
         }

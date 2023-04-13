@@ -14,7 +14,7 @@
     <logger name="org.springframework" level="WARN" />
 
     <!-- Increase verbosity for local classes during testing -->
-    <logger name="com.midaswebserver.midasweb" level="DEBUG" />
+    <logger name="com.midaswebserver" level="DEBUG" />
 
     <!-- Default level is INFO -->
     <root level="INFO">

@@ -58,8 +58,8 @@ public class UserPersonal {
         //exposing and setting standard model attributes
         User user = userService.getUserById((Long)(userId));
         model.addAttribute("user", user);
-        //other attributesa
-        Set<Symbol> symbols = user.getSymbol();
+        //other attributes
+        Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
         log.debug("home: User '{}', data added to form ", session.getAttribute("UserId"));
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
@@ -93,7 +93,11 @@ public class UserPersonal {
         }
         Ticker ticker = tickerService.getTimeSeriesInfo(stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval(), OutputSize.COMPACT);
         //adds called ticker to tickers that have been called before
-        if(ticker!=null || ticker.getMetaData() != null || ticker.getMetaData().getSymbol() != null) {
+        if(ticker==null){
+            log.warn("getTickerData:'{}', Searched for ticker, '{}', bad data given, recieved bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
+            return "redirect:/user/home";
+        }
+        if(ticker.getMetaData() != null || ticker.getMetaData().getSymbol() != null) {
             String symbol = ticker.getMetaData().getSymbol();
             boolean addedTicker = userService.addSymbolToUser(user, symbol);
             log.debug("getTickerData:'{}', Searched Ticker: '{}', added ticker, '{}'", session.getAttribute("UserId"), symbol, addedTicker);
@@ -106,7 +110,7 @@ public class UserPersonal {
         //exposing and setting standard model attributes
         model.addAttribute("user", user);
         //other attributes
-        Set<Symbol> symbols = user.getSymbol();
+        Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
         model.addAttribute("ticker", ticker);
         return "dataDisplay";
