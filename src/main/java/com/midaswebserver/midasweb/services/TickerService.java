@@ -4,6 +4,10 @@ import com.crazzyghost.alphavantage.parameters.Interval;
 import com.crazzyghost.alphavantage.parameters.OutputSize;
 import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
 import com.midaswebserver.midasweb.apiModels.Ticker;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author Aidan Scott
  * @since 0.0.1
@@ -14,8 +18,6 @@ import com.midaswebserver.midasweb.apiModels.Ticker;
  */
 public interface TickerService{
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * getTimeSeriesInfo takes params for the stock query for the AlphaVantage api
      * @param symbol, the symbol for the stock:IBM
      * @param interval, the amount of time in between each record
@@ -25,4 +27,10 @@ public interface TickerService{
      */
     Ticker getTimeSeriesInfo(String symbol, Interval interval, OutputSize outputSize);
 
+    /**
+     * Turns ticker data into a list of points data and high price
+     * @param ticker
+     * @return list of points
+     */
+    List<Map<String, Object>> tickerToDataPoints(Ticker ticker);
 }

@@ -1,6 +1,7 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.crazzyghost.alphavantage.parameters.OutputSize;
+import com.crazzyghost.alphavantage.timeseries.response.StockUnit;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
 import com.midaswebserver.midasweb.models.User.Symbol;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author Aidan Scott
@@ -109,10 +110,12 @@ public class UserPersonal {
         }
         //exposing and setting standard model attributes
         model.addAttribute("user", user);
+        //convert stock data to data chart.js can use
+        List<Map<String, Object>> data = tickerService.tickerToDataPoints(ticker);
         //other attributes
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
-        model.addAttribute("ticker", ticker);
+        model.addAttribute("data", data);
         return "dataDisplay";
     }
 }

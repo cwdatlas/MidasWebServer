@@ -4,6 +4,7 @@ import com.crazzyghost.alphavantage.AlphaVantage;
 import com.crazzyghost.alphavantage.Config;
 import com.crazzyghost.alphavantage.parameters.Interval;
 import com.crazzyghost.alphavantage.parameters.OutputSize;
+import com.crazzyghost.alphavantage.timeseries.response.StockUnit;
 import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
 import com.midaswebserver.midasweb.apiModels.MetaData;
 import com.midaswebserver.midasweb.apiModels.Ticker;
@@ -12,8 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 /**
  * @Author Aidan Scott
  * @since 0.0.1
@@ -69,6 +70,24 @@ public class TickerServiceImp implements TickerService{
             ticker = null;
         }
         return ticker;
+    }
+
+    /**
+     * Turns ticker data into a list of points data and high price
+     *
+     * @param ticker
+     * @return list of points
+     */
+    @Override
+    public List<Map<String, Object>> tickerToDataPoints(Ticker ticker) {
+        List<Map<String, Object>> data = new ArrayList<>();
+        for (StockUnit stockUnit : ticker.getTimeSeries()) {
+            Map<String, Object> point = new HashMap<>();
+            point.put("x", stockUnit.getDate());
+            point.put("y", stockUnit.getHigh());
+            data.add(point);
+        }
+        return data;
     }
 
     /**
