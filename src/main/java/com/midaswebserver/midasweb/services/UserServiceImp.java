@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * @Author Aidan Scott
  * @since 0.0.1
- * @version 0.0.1
  * UserService is the CRUD service for Users. the majority of user logic goes through the
  * UserServiceImp
  */

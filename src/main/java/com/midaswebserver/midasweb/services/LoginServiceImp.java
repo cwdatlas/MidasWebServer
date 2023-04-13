@@ -31,9 +31,6 @@ public class LoginServiceImp implements LoginService {
         this.loginRepo = loginRepo;
     }
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
-     * @version 0.0.1
      * Given a loginForm, determine if the information provided is valid, and the user exists in the system.
      * @param loginForm - Data containing user login information, such as username and password.
      * @return true if data exists and matches what's on record, false otherwise
