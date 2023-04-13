@@ -20,6 +20,7 @@ import java.util.*;
  * @since 0.0.1
  * TickerService manages API requests to third party ticker databases.
  * Alpha Advantage is being queried
+ * //TODO make apiKey a environment variable when containerizing
  * Webull will be queried in the future for realtime stock data
  */
 @Service
@@ -76,6 +77,14 @@ public class TickerServiceImp implements TickerService{
     @Override
     public List<Map<String, Object>> tickerToDataPoints(Ticker ticker) {
         List<Map<String, Object>> data = new ArrayList<>();
+        if(ticker == null) {
+            log.error("tickerToDataPoints: Ticker invalid, was found to be null");
+            return data;
+        }
+        if(ticker.getTimeSeries() == null) {
+            log.error("tickerToDataPoints: Ticker invalid, time series was found to be null");
+            return data;
+        }
         for (StockUnit stockUnit : ticker.getTimeSeries()) {
             Map<String, Object> point = new HashMap<>();
             point.put("x", stockUnit.getDate());

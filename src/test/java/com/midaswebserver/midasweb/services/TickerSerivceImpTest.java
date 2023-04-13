@@ -29,7 +29,8 @@ public class TickerSerivceImpTest {
     public void getRequestOnURLGoodTest1() {
         String symbol = "IBM";
         Ticker ticker = service.getTimeSeriesInfo(symbol, Interval.SIXTY_MIN, OutputSize.COMPACT);
-        assertTrue(symbol + " was null", ticker.getMetaData().getSymbol()!=null);
+        assertTrue(symbol + " returned null", ticker.getMetaData().getSymbol()!=null);
+        assertFalse(symbol + " returned data that was invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
 
     /**
@@ -41,6 +42,7 @@ public class TickerSerivceImpTest {
         String symbol = "AAPL";
         Ticker ticker = service.getTimeSeriesInfo(symbol, Interval.ONE_MIN, OutputSize.FULL);
         assertTrue(symbol + " was null", ticker.getMetaData().getSymbol()!=null);
+        assertFalse(symbol + " returned data that was invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
     /**
      * getRequestOnURLBadTest: badInputTest
@@ -52,6 +54,7 @@ public class TickerSerivceImpTest {
         String symbol = "IBM";
         Ticker ticker = service.getTimeSeriesInfo(symbol, Interval.MONTHLY, OutputSize.COMPACT);
         assertFalse(symbol + " wasn't null", ticker != null);
+        assertTrue(symbol + " returned data was valid, should be invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
     /**
      * getRequestOnURLBadTest: badInputTest
@@ -62,6 +65,7 @@ public class TickerSerivceImpTest {
         String symbol = "ZOOM";
         Ticker ticker = service.getTimeSeriesInfo(symbol, Interval.SIXTY_MIN, OutputSize.COMPACT);
         assertFalse(symbol + " wasn't null", ticker != null);
+        assertTrue(symbol + " returned data was valid, should be invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
     /**
      * getRequestOnURLBadTest: badInputTest
@@ -72,5 +76,6 @@ public class TickerSerivceImpTest {
         String symbol = null;
         Ticker ticker = service.getTimeSeriesInfo(symbol, Interval.DAILY, OutputSize.COMPACT);
         assertFalse(symbol + " wasn't null", ticker != null);
+        assertTrue(symbol + " returned data was valid, should be invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
 }
