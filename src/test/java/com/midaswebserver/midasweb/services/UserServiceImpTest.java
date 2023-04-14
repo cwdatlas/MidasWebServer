@@ -124,7 +124,7 @@ public class UserServiceImpTest {
         assertTrue("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
         userService.delete(testUser3);
         assertTrue("User wasnt deleted", null == userService.getUserById(testUser3.getId()));
-        assertFalse("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
+        assertTrue("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
     }
     @Test
     public void badDeleteUnknownUserUser1(){
