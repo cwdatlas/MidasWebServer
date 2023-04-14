@@ -59,18 +59,18 @@ public class UserController {
     public String registerPost(@Valid @ModelAttribute UserForm userForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request) {
         if (result.hasErrors()) {
             log.debug("registerPost: Form from '{}' had errors", getClientIp(request));
-            return "register";
+            return "redirect:/register";
         }
         if (!userService.validateUniqueUsername(userForm.getUsername())){
             result.addError(new ObjectError("globalError", "User already Registered"));
             log.debug("registerPost: User was found with same name of '{}' from '{}'", userForm.getUsername(),getClientIp(request));
-            return "register";
+            return "redirect:/register";
         }
         //Checks if passwords are the same, if not, then user will be returned to register
         if (!userForm.getPassword().equals(userForm.getConfirmPass())){
             result.addError(new ObjectError("globalError", "Passwords do not match"));
             log.debug("registerPost: Passwords from '{}' do not match", getClientIp(request));
-            return "register";
+            return "redirect:/register";
         }
         attrs.addAttribute("username", userForm.getUsername()); //im not sure why this is used
         //mapping results from form to user
@@ -82,7 +82,7 @@ public class UserController {
         userService.add(user);
 
         log.info("loginPost:'{}' been registered", userService.getUserByUsername(userForm.getUsername()));//adding a time to this could be useful, or a more global logging system
-        return "redirect:registerSuccess";
+        return "redirect:/registerSuccess";
     }
 
     /**
