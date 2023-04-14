@@ -52,7 +52,7 @@ public class UserServiceImp implements UserService {
      */
     @Override
     public boolean validateUniqueUsername(String username) {
-        log.debug("validateUser: '{}' attempted login", getUserByName(username));
+        log.debug("validateUser: '{}' attempted login", getUserByUsername(username));
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = userRepo.findByUsernameIgnoreCase(username);
 
@@ -76,7 +76,7 @@ public class UserServiceImp implements UserService {
             log.error("Delete: null was passed to method");
             return false;
         }
-        if (this.getUserByName(user.getUsername())==null) {
+        if (this.getUserByUsername(user.getUsername())==null) {
             log.warn("Delete: User '{}' was not found in database to delete", user.getUsername());
             return false;
         }
@@ -110,7 +110,7 @@ public class UserServiceImp implements UserService {
      * @return user with corresponding name, or null if no user was found
      */
     @Override
-    public User getUserByName(String userName) {
+    public User getUserByUsername(String userName) {
         if (userName != null) {
             try {
                 List<User> users = userRepo.findByUsernameIgnoreCase(userName);
@@ -170,6 +170,12 @@ public class UserServiceImp implements UserService {
     /**
      * Adds a symbol to a user. This will create a symbol object linked to the user object
      * which can be used to retrieve the saved ticker
+     * WIll return false if user or ticker is null
+     * if ticker is invalid > 4, return false
+     * if User doesn't exist, return false
+     * if ticker is already saved, return true
+     * if ticker is added, return true
+     * all else fails, return false
      * @param user
      * @param ticker like 'UEC'
      * @return boolean based on the success of the transaction

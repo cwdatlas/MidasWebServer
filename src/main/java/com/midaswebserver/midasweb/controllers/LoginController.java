@@ -76,16 +76,16 @@ public class LoginController {
             return "login";
         }
         attrs.addAttribute("username", loginForm.getUsername());
-        log.debug("loginPost: User '{}' has successfully logged in from '{}'", userService.getUserByName(loginForm.getUsername()), getClientIp(request));
+        log.debug("loginPost: User '{}' has successfully logged in from '{}'", userService.getUserByUsername(loginForm.getUsername()), getClientIp(request));
         //setting up session for valid user
         session.setAttribute("UserId", userService.getIdByUsername(loginForm.getUsername()));
-        log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByName(loginForm.getUsername()), session.getId());
+        log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByUsername(loginForm.getUsername()), session.getId());
         //Redirecting user to correct location
         if(preLoginUri == null){
             log.debug("getTickerData:'{}', Searched for a ticker but didn't have a redirect address", getClientIp(request));
             return "redirect:/";
         }
-        log.debug("loginPost: User '{}' has been redirected to '{}'", userService.getUserByName(loginForm.getUsername()), preLoginUri);
+        log.debug("loginPost: User '{}' has been redirected to '{}'", userService.getUserByUsername(loginForm.getUsername()), preLoginUri);
         return "redirect:" + preLoginUri;
     }
 

@@ -38,7 +38,7 @@ public class LoginServiceImp implements LoginService {
      */
     @Override
     public boolean validateUser(LoginForm loginForm) {
-        log.debug("validateUser:'{}' attempted login", userService.getUserByName(loginForm.getUsername()));
+        log.debug("validateUser:'{}' attempted login", userService.getUserByUsername(loginForm.getUsername()));
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = loginRepo.findByUsernameIgnoreCase(loginForm.getUsername());
 
@@ -55,7 +55,7 @@ public class LoginServiceImp implements LoginService {
         }
 
         // User exists, and the provided password matches the hashed password in the database.
-        log.debug("validateUser: User '{}', successful login", userService.getUserByName(loginForm.getUsername()));
+        log.debug("validateUser: User '{}', successful login", userService.getUserByUsername(loginForm.getUsername()));
         return true;
     }
 }

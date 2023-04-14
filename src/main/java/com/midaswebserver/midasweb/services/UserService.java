@@ -40,7 +40,7 @@ public interface UserService {
      * @param userName
      * @return user with corresponding name, or null if no user was found
      */
-    User getUserByName(String userName);
+    User getUserByUsername(String userName);
     /**
      * Gets Id by corresponding username
      * @param username

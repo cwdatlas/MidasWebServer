@@ -5,7 +5,6 @@ import com.midaswebserver.midasweb.services.HashService;
 import com.midaswebserver.midasweb.services.UserService;
 import com.midaswebserver.midasweb.models.User.User;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +81,7 @@ public class UserController {
         user.setPhoneNumber(userForm.getPhoneNumber());
         userService.add(user);
 
-        log.info("loginPost:'{}' been registered", userService.getUserByName(userForm.getUsername()));//adding a time to this could be useful, or a more global logging system
+        log.info("loginPost:'{}' been registered", userService.getUserByUsername(userForm.getUsername()));//adding a time to this could be useful, or a more global logging system
         return "redirect:registerSuccess";
     }
 
