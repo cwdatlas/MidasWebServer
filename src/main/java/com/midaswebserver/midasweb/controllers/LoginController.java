@@ -12,21 +12,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * @Author Aidan Scott
- * @sinse 0.0.1
  * @version 0.0.1
  * The LoginController works with all interactions by the client regarding logging in, logging out
  * uses {@link LoginService} and {@link UserService} heavily to interact with user repository and for business logic
+ * @Author Aidan Scott
+ * @sinse 0.0.1
  */
 @Controller
 public class LoginController {
@@ -40,8 +40,30 @@ public class LoginController {
     }
 
     /**
+     * takes request and finds the user's Ip. Used in place of user id when logging
+     * TODO centralize getClientIp into one method {See UserController} to see other method
+     *
+     * @param request {@link HttpServletRequest} takes the servlet request received from a post method
+     * @return remote IP address
+     */
+    private static String getClientIp(HttpServletRequest request) {
+
+        String remoteAddr = "";
+
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+
+        return remoteAddr;
+    }
+
+    /**
      * loginGet sends the loginForm with the model to the client
      * also creates cookie that holds previous uri
+     *
      * @param model
      * @return "login" template, which houses all info needed for login
      */
@@ -58,14 +80,20 @@ public class LoginController {
     /**
      * loginPost takes the completed form for login, validates, and copies data to a User object
      * Creates session for user
+     *
      * @param loginForm {@link LoginForm} returned loginform with filled out user data
-     * @param result {@link BindingResult} if loginForm data is valid, what errors it contains
+     * @param result    {@link BindingResult} if loginForm data is valid, what errors it contains
      * @param attrs
-     * @param request {@link HttpServletRequest}
+     * @param request   {@link HttpServletRequest}
      * @return either "index" or redirect user to previous page
      */
     @PostMapping("/login")
     public String loginPost(@Valid @ModelAttribute @CookieValue("preLoginUri") String preLoginUri, LoginForm loginForm, BindingResult result, RedirectAttributes attrs, HttpServletRequest request, HttpSession session) {
+        if (loginForm.getUsername().equals("") || loginForm.getPassword().equals("")) {
+            result.addError(new ObjectError("globalError", "Make sure to fill all fields"));
+            log.debug("loginPost: Attempted login with empty fields from '{}' with username '{}'", getClientIp(request), loginForm.getUsername());
+            return "login";
+        }
         if (result.hasErrors()) {
             log.debug("LoginPost: Form from '{}' had errors", getClientIp(request));
             return "login";
@@ -81,7 +109,7 @@ public class LoginController {
         session.setAttribute("UserId", userService.getIdByUsername(loginForm.getUsername()));
         log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByUsername(loginForm.getUsername()), session.getId());
         //Redirecting user to correct location
-        if(preLoginUri == null){
+        if (preLoginUri == null) {
             log.debug("getTickerData:'{}', Searched for a ticker but didn't have a redirect address", getClientIp(request));
             return "redirect:/";
         }
@@ -91,6 +119,7 @@ public class LoginController {
 
     /**
      * logs out user, invalidates session
+     *
      * @param request {@link HttpServletRequest}
      * @param session {@link HttpSession}
      * @return the "index" template
@@ -98,28 +127,8 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpSession session, HttpServletRequest request) {
         log.debug("logout: User '{}', session ID '{}', location '{}', logged out",
-                userService.getUserById((long)session.getAttribute("UserId")), session.getId(), getClientIp(request));
+                userService.getUserById((long) session.getAttribute("UserId")), session.getId(), getClientIp(request));
         session.invalidate();
         return "redirect:/";
-    }
-
-    /**
-     * takes request and finds the user's Ip. Used in place of user id when logging
-     * TODO centralize getClientIp into one method {See UserController} to see other method
-     * @param request {@link HttpServletRequest} takes the servlet request received from a post method
-     * @return remote IP address
-     */
-    private static String getClientIp(HttpServletRequest request) {
-
-        String remoteAddr = "";
-
-        if (request != null) {
-            remoteAddr = request.getHeader("X-FORWARDED-FOR");
-            if (remoteAddr == null || "".equals(remoteAddr)) {
-                remoteAddr = request.getRemoteAddr();
-            }
-        }
-
-        return remoteAddr;
     }
 }

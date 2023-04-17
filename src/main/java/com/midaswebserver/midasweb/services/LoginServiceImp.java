@@ -1,22 +1,21 @@
 package com.midaswebserver.midasweb.services;
 
 import com.midaswebserver.midasweb.forms.LoginForm;
+import com.midaswebserver.midasweb.models.User.User;
+import com.midaswebserver.midasweb.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.midaswebserver.midasweb.repositories.UserRepository;
-import com.midaswebserver.midasweb.models.User.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * @Author Aidan Scott
- * @since 0.0.1
  * @version 0.0.1
  * LoginServiceImp validates user data relating to login
  * TODO consolidate loginService and UserService methods
+ * @Author Aidan Scott
+ * @since 0.0.1
  */
 @Service
 public class LoginServiceImp implements LoginService {
@@ -27,12 +26,15 @@ public class LoginServiceImp implements LoginService {
 
     @Autowired
     private UserService userService;
+
     public LoginServiceImp(UserRepository loginRepo) {
         this.loginRepo = loginRepo;
     }
+
     /**
      * Given a loginForm, determine if the information provided is valid, and the user exists in the system.
      * //TODO break up validation into component methods to test better
+     *
      * @param loginForm - Data containing user login information, such as username and password.
      * @return true if data exists and matches what's on record, false otherwise
      */

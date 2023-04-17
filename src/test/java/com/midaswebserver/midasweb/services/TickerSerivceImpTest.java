@@ -2,7 +2,6 @@ package com.midaswebserver.midasweb.services;
 
 import com.crazzyghost.alphavantage.parameters.Interval;
 import com.crazzyghost.alphavantage.parameters.OutputSize;
-import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class TickerSerivceImpTest {
     public void getRequestOnURLGoodTest1() {
         String symbol = "IBM";
         Ticker ticker = service.getTimeSeriesInfo(symbol, Interval.SIXTY_MIN, OutputSize.COMPACT);
-        assertTrue(symbol + " returned null", ticker.getMetaData().getSymbol()!=null);
+        assertTrue(symbol + " returned null", ticker.getMetaData().getSymbol() != null);
         assertFalse(symbol + " returned data that was invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
 
@@ -41,9 +40,10 @@ public class TickerSerivceImpTest {
     public void getRequestOnURLGoodTest2() {
         String symbol = "AAPL";
         Ticker ticker = service.getTimeSeriesInfo(symbol, Interval.ONE_MIN, OutputSize.FULL);
-        assertTrue(symbol + " was null", ticker.getMetaData().getSymbol()!=null);
+        assertTrue(symbol + " was null", ticker.getMetaData().getSymbol() != null);
         assertFalse(symbol + " returned data that was invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
+
     /**
      * getRequestOnURLBadTest: badInputTest
      * Interval MONTHLY, outputsize compact (both options work)
@@ -56,6 +56,7 @@ public class TickerSerivceImpTest {
         assertFalse(symbol + " wasn't null", ticker != null);
         assertTrue(symbol + " returned data was valid, should be invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
+
     /**
      * getRequestOnURLBadTest: badInputTest
      * only symbol is bad
@@ -67,6 +68,7 @@ public class TickerSerivceImpTest {
         assertFalse(symbol + " wasn't null", ticker != null);
         assertTrue(symbol + " returned data was valid, should be invalid", service.tickerToDataPoints(ticker).isEmpty());
     }
+
     /**
      * getRequestOnURLBadTest: badInputTest
      * both symbol and interval are bad

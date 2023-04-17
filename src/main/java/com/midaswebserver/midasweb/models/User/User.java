@@ -9,15 +9,17 @@ import java.util.Set;
 
 
 /**
- * @Author Aidan Scott
- * @since 0.0.1
  * @version 0.0.1
  * User is the model object holding basic user data like username, hashedPassword, email ect.
+ * @Author Aidan Scott
+ * @since 0.0.1
  */
 @Entity
 @Table(name = "app_user")
 public class User {
     private static final long serialVersionUID = 1L;//this is what identifies the data
+    private static final String EOL = System.lineSeparator();
+    private static final String TAB = "\t";
     @Id//primary key!! this is what makes it primary! (can be composite)
     @GeneratedValue
     private Long id;//must be an Integer so the ID isnt 0 if the object hasnt been set (should use Long)
@@ -37,22 +39,23 @@ public class User {
     }
 
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * @param username
      * @param hashedPassword password must be hashed before given.
+     * @Author Aidan Scott
+     * @since 0.0.1
      */
     public User(String username, String hashedPassword) {
         this.username = username;
         this.hashedPassword = hashedPassword;
     }
+
     /**
-     * @Author Aidan Scott
-     * @since 0.0.1
      * @param username
      * @param hashedPassword password must be hashed before given.
      * @param email
-     * @param phoneNumber maximum length of phone number is 15
+     * @param phoneNumber    maximum length of phone number is 15
+     * @Author Aidan Scott
+     * @since 0.0.1
      */
     public User(String username, String hashedPassword, String email, String phoneNumber) {
         this.username = username;
@@ -64,38 +67,45 @@ public class User {
     public Set<Symbol> getSymbol() {
         return symbols;
     }
+
     public void setSetting(Set<Symbol> symbols) {
         this.symbols = symbols;
     }
-    public void addSymbol(Symbol symbol){
+
+    public void addSymbol(Symbol symbol) {
         this.symbols.add(symbol);
     }
 
     /**
+     * @param ticker example: "EUC"
+     * @param user   {@link User}
      * @Author Aidan Scott
-     * @since 0.0.1
      * @version 0.0.1
      * adds symbols to user
-     * @param ticker example: "EUC"
-     * @param user {@link User}
+     * @since 0.0.1
      */
-    public void addTicker(String ticker, User user){
+    public void addTicker(String ticker, User user) {
         Symbol symbol = new Symbol(ticker);
         symbol.setUserId(user);
         this.symbols.add(symbol);
     }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public Long getId() {
         return id;
     }
@@ -120,9 +130,6 @@ public class User {
         this.hashedPassword = hashedPassword;
     }
 
-    private static final String EOL = System.lineSeparator();
-    private static final String TAB = "\t";
-
     @Override
     public String toString() {
         String builder = "Login @ " + super.toString() + "[" + EOL +
@@ -139,7 +146,7 @@ public class User {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        final User login = (User)o;
+        final User login = (User) o;
         return username.equals(login.username) && hashedPassword.equals(login.hashedPassword);
     }
 

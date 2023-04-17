@@ -3,10 +3,10 @@ package com.midaswebserver.midasweb.models.User;
 import jakarta.persistence.*;
 
 /**
- * @Author Aidan Scott
- * @since 0.0.1
  * @version 0.0.1
  * the {@value Symbol} is used to persistently store a user search of a symbol
+ * @Author Aidan Scott
+ * @since 0.0.1
  */
 @Entity
 @Table(name = "user_settings")
@@ -20,10 +20,10 @@ public class Symbol {
     @Column(name = "searched_ticker", nullable = true)
     private String ticker;
 
-    public Symbol(){
+    public Symbol() {
     }
 
-    public Symbol(String ticker){
+    public Symbol(String ticker) {
         this.ticker = ticker;
     }
 
@@ -42,9 +42,11 @@ public class Symbol {
     public void setUserId(User userId) {
         this.user = userId;
     }
+
     public String getTicker() {
         return this.ticker;
     }
+
     public void setTicker(String ticker) {
         this.ticker = ticker;
     }

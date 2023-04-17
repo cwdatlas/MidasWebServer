@@ -9,7 +9,7 @@
 <body class="container-md p-5">
 <div class="mx-auto p-5 col-4 border">
     <p class="text-center display-2">Register</p>
-<form class="text-center" action="#" th:action="@{/register}" th:object="${registerForm}" method="post">
+<form class="text-center" action="#" th:action="@{/register}" th:object="${userForm}" method="post">
     <span class="text-danger" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>
     <input class="m-1 text-center" type="text" th:field="*{username}" placeholder="Username"/>
     <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span><br/>

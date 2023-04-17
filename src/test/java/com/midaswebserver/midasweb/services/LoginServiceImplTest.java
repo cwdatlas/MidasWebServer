@@ -14,11 +14,12 @@ import static org.springframework.test.util.AssertionErrors.*;
 
 @SpringBootTest
 public class LoginServiceImplTest {
-//get services and other required objects to test or to aid the testing
+    //get services and other required objects to test or to aid the testing
     @Autowired
     private LoginService loginService;
     @Autowired
     private UserRepository userRepo;
+
     @BeforeEach
     public void beforeTest() {
         String username = "testuser";
@@ -33,6 +34,7 @@ public class LoginServiceImplTest {
         if (users.isEmpty())
             userRepo.save(fakeUser);
     }
+
     @Test//happy
     public void validateUserSuccessTest1() {
         String username = "testuser";
@@ -40,6 +42,7 @@ public class LoginServiceImplTest {
         final LoginForm form = new LoginForm(username, password);
         assertTrue("validateUserSuccessTest: didnt succeed with valid user/pass info", loginService.validateUser(form));
     }
+
     @Test//happy
     public void validateUserSuccessTest2() {
         String username = "HelloWorld123455<>";
@@ -63,6 +66,7 @@ public class LoginServiceImplTest {
         final LoginForm form = new LoginForm(username + "not", password);
         assertFalse("validateUserInvalidUserValidPasswordTest: should fail using an invalid user, valid pass", loginService.validateUser(form));
     }
+
     @Test//crappy
     public void validateUserInvalidUserAndPasswordTest() {
         String username = "testuser";
@@ -82,6 +86,7 @@ public class LoginServiceImplTest {
         final LoginForm form = new LoginForm();
         assertFalse("validateUserInvalidUserInvalidPasswordTest: should fail using an invalid user, valid pass", loginService.validateUser(form));
     }
+
     @Test//crazy
     public void validateUserLong() {
         final LoginForm form = new LoginForm("I WISH I WOULD PUT THE ENTIRE SCRIPT OF MCBETH IN HERE", "THIS SADLY ISNT THE ENTIRE SCRIPT");

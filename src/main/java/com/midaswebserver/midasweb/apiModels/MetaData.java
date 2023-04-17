@@ -3,14 +3,14 @@ package com.midaswebserver.midasweb.apiModels;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * @Author Aidan Scott
- * @since 0.0.1
  * @version 0.0.1
  * MetaData is used to store symbol and other information from a stock query
  * This class is a custom implementation of {@link com.crazzyghost.alphavantage.timeseries.response.MetaData crazzyghost MetaData}
  * Most of the subsequent code is from <a href="https://github.com/crazzyghost">crazzyghost</a> using the alphavantage library
+ * @Author Aidan Scott
+ * @since 0.0.1
  */
-public class MetaData{
+public class MetaData {
 
     @NotNull
     private String information;
@@ -29,10 +29,12 @@ public class MetaData{
     @NotNull
     private String outputSize;
 
-    public MetaData(){}
+    public MetaData() {
+    }
 
     /**
      * SetData is used to convert a 3rd party object to a native object that can be validated
+     *
      * @param information
      * @param symbol
      * @param lastRefreshed
@@ -41,7 +43,7 @@ public class MetaData{
      * @param outputSize
      */
 
-    public void setData(String information, String symbol, String lastRefreshed, String timeZone, String interval, String outputSize){
+    public void setData(String information, String symbol, String lastRefreshed, String timeZone, String interval, String outputSize) {
         this.information = information;
         this.symbol = symbol;
         this.lastRefreshed = lastRefreshed;
@@ -49,6 +51,7 @@ public class MetaData{
         this.interval = interval;
         this.outputSize = outputSize;
     }
+
     public String getInformation() {
         return information;
     }
@@ -105,8 +108,8 @@ public class MetaData{
         sb.append("symbol=" + symbol);
         sb.append("lastRefreshed=" + lastRefreshed);
         sb.append("timeZone=" + timeZone);
-        if(interval != null) sb.append("interval=" + interval);
-        if(outputSize != null) sb.append("outputSize=" + outputSize);
+        if (interval != null) sb.append("interval=" + interval);
+        if (outputSize != null) sb.append("outputSize=" + outputSize);
         sb.append("}");
         return sb.toString();
     }

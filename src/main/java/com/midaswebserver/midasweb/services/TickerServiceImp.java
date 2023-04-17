@@ -8,7 +8,9 @@ import com.crazzyghost.alphavantage.timeseries.response.StockUnit;
 import com.crazzyghost.alphavantage.timeseries.response.TimeSeriesResponse;
 import com.midaswebserver.midasweb.apiModels.MetaData;
 import com.midaswebserver.midasweb.apiModels.Ticker;
-import jakarta.validation.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,25 +26,28 @@ import java.util.*;
  * Webull will be queried in the future for realtime stock data
  */
 @Service
-public class TickerServiceImp implements TickerService{
+public class TickerServiceImp implements TickerService {
     private static final Logger log = LoggerFactory.getLogger(TickerServiceImp.class);
     private static final String apiKey = "XIHOPJON41H6MNHT"; //I think this should be secret and have some logic behind it so it isnt found
+
     /**
      * TickerServiceImp sets up the apiKey and timeout params in config for AlphaVantage wrapper
      * The AlphaVantage wrapper can only be called 5 times a second and 500 times a day
      */
-    public TickerServiceImp(){
+    public TickerServiceImp() {
         Config cfg = Config.builder()
                 .key(apiKey)
                 .timeOut(10)
                 .build();
         AlphaVantage.api().init(cfg);
     }
+
     /**
      * getTimeSeriesInfo takes params for the stock query for the AlphaVantage api
-     * @param symbol, the symbol for the stock:IBM
-     * @param interval, the amount of time in between each record
-     *                  Only 1min, 5min, 15min, 30min, 60min are valid
+     *
+     * @param symbol,     the symbol for the stock:IBM
+     * @param interval,   the amount of time in between each record
+     *                    Only 1min, 5min, 15min, 30min, 60min are valid
      * @param outputSize, either FULL, shorter more recent data or COMPACT, full length record
      * @return ticker object with requested data, will return null if input was invalid or errors occurred
      */
@@ -57,11 +62,10 @@ public class TickerServiceImp implements TickerService{
                 .outputSize(outputSize)
                 .fetchSync();
         Ticker ticker = convertToInternalObject(timeSeries);
-        if(!(timeSeries.getErrorMessage() == null)){
+        if (!(timeSeries.getErrorMessage() == null)) {
             log.info("getTimeSeriesInfo: Stock Query Error '{}'", timeSeries.getErrorMessage());
             ticker = null;
-        }
-        else if(!validateTicker(ticker)){
+        } else if (!validateTicker(ticker)) {
             log.debug("getTimeSeriesInfo: Stock Query Data Invalad");
             ticker = null;
         }
@@ -77,11 +81,11 @@ public class TickerServiceImp implements TickerService{
     @Override
     public List<Map<String, Object>> tickerToDataPoints(Ticker ticker) {
         List<Map<String, Object>> data = new ArrayList<>();
-        if(ticker == null) {
+        if (ticker == null) {
             log.error("tickerToDataPoints: Ticker invalid, was found to be null");
             return data;
         }
-        if(ticker.getTimeSeries() == null) {
+        if (ticker.getTimeSeries() == null) {
             log.error("tickerToDataPoints: Ticker invalid, time series was found to be null");
             return data;
         }
@@ -96,6 +100,7 @@ public class TickerServiceImp implements TickerService{
 
     /**
      * validateTicker uses the internal spring validation to validate objects with validation annotations
+     *
      * @param ticker {@link Ticker}
      * @return boolean, true or false depending on validity
      */
@@ -112,10 +117,11 @@ public class TickerServiceImp implements TickerService{
     /**
      * convertToInternalObject changes a TimeSeriesResponse object to a native ticker
      * object that can be locally validated
+     *
      * @param timeSeries {@link TimeSeriesResponse}
      * @return ticker, newly formed by the method
      */
-    private Ticker convertToInternalObject(TimeSeriesResponse timeSeries){
+    private Ticker convertToInternalObject(TimeSeriesResponse timeSeries) {
         Ticker ticker = new Ticker();
         MetaData metaData = new MetaData();
         ticker.setTimeSeries(timeSeries.getStockUnits());

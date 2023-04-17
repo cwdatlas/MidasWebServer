@@ -8,7 +8,7 @@
 </head>
 <body class="container-md p-5">
 <div class="mx-auto p-5 col-4 border">
-<p class="text-center display-1">Login</p>
+    <p class="text-center display-1">Login</p>
 <form class="text-center" action="#" th:action="@{/login}" th:object="${loginForm}" method="post">
     <span class="text-danger" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}">Global error</span><br/>
     <input class="m-1 text-center" type="text" th:field="*{username}" placeholder="Username"/>

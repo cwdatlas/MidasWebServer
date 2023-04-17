@@ -15,8 +15,10 @@ public class PublicController {
     private static final Logger log = LoggerFactory.getLogger(PublicController.class);
     @Autowired
     private UserService userService;
+
     /**
      * Routs to index page
+     *
      * @param model
      * @param session {@link HttpSession}
      * @return "index" template
@@ -24,11 +26,10 @@ public class PublicController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         User baseUser;
-        if(!session.isNew() && session.getAttribute("UserId") != null){
+        if (!session.isNew() && session.getAttribute("UserId") != null) {
             baseUser = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
             log.debug("index: User '{}' has accessed Index page", session.getAttribute("UserId").toString());
-        }
-        else{
+        } else {
             baseUser = new User();
             baseUser.setUsername("New User");
         }

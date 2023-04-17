@@ -20,6 +20,7 @@ import java.util.List;
 public class UserServiceImp implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImp.class);
     private final UserRepository userRepo;
+
     public UserServiceImp(UserRepository userRepo) {
         this.userRepo = userRepo;
         log.debug("User Repository initialized in UserService");
@@ -28,16 +29,17 @@ public class UserServiceImp implements UserService {
     /**
      * Adds user to the database
      * If User is already in the database (same username) then the method will return false
+     *
      * @param user
      * @return true if user could be added, if there was a user of the same name or user is null, false
      */
     @Override
     public boolean add(User user) {
-        if(user == null){
+        if (user == null) {
             log.warn("'add': User is null");
             return false;
         }
-        if(!validateUniqueUsername(user.getUsername())) {
+        if (!validateUniqueUsername(user.getUsername())) {
             log.error("add: '{}' has the same name in database", user.getUsername());
             return false;
         }
@@ -47,6 +49,7 @@ public class UserServiceImp implements UserService {
 
     /**
      * ValidateUniqueUsername checks to see if there is another person in the database with the same username
+     *
      * @param username
      * @return boolean
      */
@@ -67,6 +70,7 @@ public class UserServiceImp implements UserService {
     /**
      * delete deletes a user from the database
      * TODO make sure the process succeeded
+     *
      * @param user
      * @return boolean
      */
@@ -76,7 +80,7 @@ public class UserServiceImp implements UserService {
             log.error("Delete: null was passed to method");
             return false;
         }
-        if (this.getUserByUsername(user.getUsername())==null) {
+        if (this.getUserByUsername(user.getUsername()) == null) {
             log.warn("Delete: User '{}' was not found in database to delete", user.getUsername());
             return false;
         }
@@ -88,17 +92,18 @@ public class UserServiceImp implements UserService {
     /**
      * Gets User by Id
      * TODO have validation and safe and expected returns;
+     *
      * @param ID
      * @return User if user excists, returns null otherwise and if user passes null ID
      */
     @Override
     public User getUserById(Long ID) {
-        if(ID == null){
+        if (ID == null) {
             return null;
         }
         try {
             return userRepo.findById(ID).get();
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error("getUserByID: id, '{}', didnt have corresponding user", ID, e);
         }
         return null;
@@ -106,6 +111,7 @@ public class UserServiceImp implements UserService {
 
     /**
      * Gets user with the corresponding name
+     *
      * @param userName
      * @return user with corresponding name, or null if no user was found
      */
@@ -128,38 +134,40 @@ public class UserServiceImp implements UserService {
 
     /**
      * Gets Id by corresponding username
+     *
      * @param username
      * @return the ID of the user or null if there isn't a user in the database with that username or if there are more than one user
      */
     @Override
     public Long getIdByUsername(String username) {
-         List<User> users = userRepo.findByUsernameIgnoreCase(username);
-         if (username == null){
+        List<User> users = userRepo.findByUsernameIgnoreCase(username);
+        if (username == null) {
             log.warn("getIDByUser: passed username was null");
             return null;
         }
-         if (users.size() == 0){
-             log.info("getIDByUser: no user found with username of '{}'", username);
-             return null;
-         }
-         if(users.size()>1){
-             log.warn("getIDByUser: two users with username '{}' have been found", username);
-             return null;
-         }
+        if (users.size() == 0) {
+            log.info("getIDByUser: no user found with username of '{}'", username);
+            return null;
+        }
+        if (users.size() > 1) {
+            log.warn("getIDByUser: two users with username '{}' have been found", username);
+            return null;
+        }
         return users.get(0).getId();
     }
 
     /**
      * Updates the user in database, make sure that the param has the original user ID set as its ID,
      * the function will return null if not
+     *
      * @param user
      * @return boolean
      */
     @Override
     public boolean update(User user) {
-        if(user==null)
+        if (user == null)
             return false;
-        if(this.getUserById(user.getId()) == null){
+        if (this.getUserById(user.getId()) == null) {
             log.warn("ID of user '{}' didn't match anything in database", user.getUsername());
             return false;
         }
@@ -167,6 +175,7 @@ public class UserServiceImp implements UserService {
         userRepo.save(user);
         return true;
     }
+
     /**
      * Adds a symbol to a user. This will create a symbol object linked to the user object
      * which can be used to retrieve the saved ticker
@@ -176,6 +185,7 @@ public class UserServiceImp implements UserService {
      * if ticker is already saved, return true
      * if ticker is added, return true
      * all else fails, return false
+     *
      * @param user
      * @param ticker like 'UEC'
      * @return boolean based on the success of the transaction
@@ -184,29 +194,29 @@ public class UserServiceImp implements UserService {
     @Override
     public boolean addSymbolToUser(User user, String ticker) {
         //validation
-        if(user == null || ticker == null) {
+        if (user == null || ticker == null) {
             log.error("addSymbolToUser: user, '{}', or symbol, '{}', was found to be null", user, ticker);
             return false;
         }
-        if(ticker.getBytes().length > 4) {
+        if (ticker.getBytes().length > 4) {
             log.error("addSymbolToUser: symbol, '{}', was longer than expected, 4 characters", ticker);
             return false;
         }
-        if(!userRepo.existsById(user.getId())){
+        if (!userRepo.existsById(user.getId())) {
             log.error("addSymbolToUser: user, '{}', with id, '{}', was not found in database", user.getUsername(), user.getId());
             return false;
         }
         //logic
-        for(Symbol symbolSaved : user.getSymbol()){
-            if(symbolSaved.getTicker().equalsIgnoreCase(ticker)) {
+        for (Symbol symbolSaved : user.getSymbol()) {
+            if (symbolSaved.getTicker().equalsIgnoreCase(ticker)) {
                 log.debug("addSymbolToUser: user, '{}', attempted to add ticker, '{}', that was added previously", user.getUsername(), ticker);
                 return true;
             }
         }
         user.addTicker(ticker, user);
         update(user);
-        for(Symbol symbolSaved : user.getSymbol()){
-            if(symbolSaved.getTicker().equalsIgnoreCase(ticker)) {
+        for (Symbol symbolSaved : user.getSymbol()) {
+            if (symbolSaved.getTicker().equalsIgnoreCase(ticker)) {
                 log.debug("addSymbolToUser: user, '{}', added ticker , '{}', to the database", user.getUsername(), ticker);
                 return true;
             }
