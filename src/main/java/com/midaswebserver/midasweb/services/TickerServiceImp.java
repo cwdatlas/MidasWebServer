@@ -66,7 +66,7 @@ public class TickerServiceImp implements TickerService {
             log.info("getTimeSeriesInfo: Stock Query Error '{}'", timeSeries.getErrorMessage());
             ticker = null;
         } else if (!validateTicker(ticker)) {
-            log.debug("getTimeSeriesInfo: Stock Query Data Invalad");
+            log.debug("getTimeSeriesInfo: Stock Query Data Invalid");
             ticker = null;
         }
         return ticker;
@@ -108,7 +108,7 @@ public class TickerServiceImp implements TickerService {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Ticker>> violations = validator.validate(ticker);
         if (!violations.isEmpty()) {
-            log.debug("validateTicker: Violation in ticker: '{}'", ticker);
+            log.debug("validateTicker: Violation in ticker: '{}' of '{}'", ticker, violations);
             return false;
         }
         return true;

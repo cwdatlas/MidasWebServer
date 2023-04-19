@@ -40,13 +40,13 @@ public class LoginServiceImp implements LoginService {
      */
     @Override
     public boolean validateUser(LoginForm loginForm) {
-        log.debug("validateUser:'{}' attempted login", userService.getUserByUsername(loginForm.getUsername()));
+        log.debug("validateUser:'{}' attempting login", userService.getUserByUsername(loginForm.getUsername()));
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = loginRepo.findByUsernameIgnoreCase(loginForm.getUsername());
 
         // We expect 0 or 1, so if we get more than 1, bail out as this is an error we don't deal with properly.
         if (users.size() != 1) {
-            log.debug("validateUser: Found '{}' user(s), invalid user", users.size());
+            log.debug("validateUser: Found '{}' user(s), invalid quantity of users, should only have 1 user", users.size());
             return false;
         }
         User u = users.get(0);

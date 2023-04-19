@@ -22,6 +22,11 @@ public class UserServiceImp implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImp.class);
     private final UserRepository userRepo;
 
+    /**
+     * Injected dependencies
+     *
+     * @param userRepo
+     */
     public UserServiceImp(UserRepository userRepo) {
         this.userRepo = userRepo;
         log.debug("User Repository initialized in UserService");
@@ -37,7 +42,7 @@ public class UserServiceImp implements UserService {
     @Override
     public boolean add(User user) {
         if (user == null) {
-            log.warn("'add': User is null");
+            log.error("add: User is null");
             return false;
         }
         if (!validateUniqueUsername(user.getUsername())) {
@@ -45,6 +50,7 @@ public class UserServiceImp implements UserService {
             return false;
         }
         userRepo.save(user);
+        log.debug("add: '{}' has been added to the database", user.getUsername());
         return true;
     }
 
@@ -62,7 +68,7 @@ public class UserServiceImp implements UserService {
 
         // We expect 0 or 1, so if we get more than 1, bail out as this is an error we don't deal with properly.
         if (users.size() != 0) {
-            log.debug("validateUser: found {} users", users.size());
+            log.debug("validateUniqueUsername: found {} users, invalid quantity. Valid = 1", users.size());
             return false;
         }
         return true;
@@ -70,7 +76,6 @@ public class UserServiceImp implements UserService {
 
     /**
      * delete deletes a user from the database
-     * TODO make sure the process succeeded
      *
      * @param user
      * @return boolean
@@ -82,10 +87,11 @@ public class UserServiceImp implements UserService {
             return false;
         }
         if (this.getUserByUsername(user.getUsername()) == null) {
-            log.warn("Delete: User '{}' was not found in database to delete", user.getUsername());
+            log.error("Delete: User '{}' was not found in database to delete", user.getUsername());
             return false;
         }
         userRepo.delete(user);
+        log.debug("Delete: User '{}' was deleted from the database", user.getUsername());
         return true;
     }
 
@@ -127,7 +133,7 @@ public class UserServiceImp implements UserService {
                     log.warn("GetUserByName: 0 or 1 < users found with name '{}'", userName);
                 }
             } catch (Exception e) {
-                log.info("getUserByName: '{}' was thrown", e);
+                log.info("getUserByName:", e);
             }
         }
         return null;
@@ -143,7 +149,7 @@ public class UserServiceImp implements UserService {
     public Long getIdByUsername(String username) {
         List<User> users = userRepo.findByUsernameIgnoreCase(username);
         if (username == null) {
-            log.warn("getIDByUser: passed username was null");
+            log.error("getIDByUser: passed username was null");
             return null;
         }
         if (users.size() == 0) {
@@ -151,7 +157,7 @@ public class UserServiceImp implements UserService {
             return null;
         }
         if (users.size() > 1) {
-            log.warn("getIDByUser: two users with username '{}' have been found", username);
+            log.error("getIDByUser: two users with username '{}' have been found", username);
             return null;
         }
         return users.get(0).getId();
@@ -166,13 +172,15 @@ public class UserServiceImp implements UserService {
      */
     @Override
     public boolean update(User user) {
-        if (user == null)
-            return false;
-        if (this.getUserById(user.getId()) == null) {
-            log.warn("ID of user '{}' didn't match anything in database", user.getUsername());
+        if (user == null) {
+            log.error("update: passed username was null");
             return false;
         }
-        log.debug("User '{}' has been updated", user.getUsername());
+        if (this.getUserById(user.getId()) == null) {
+            log.warn("update: D of user '{}' didn't match anything in database", user.getUsername());
+            return false;
+        }
+        log.debug("update: User '{}' has been updated", user.getUsername());
         userRepo.save(user);
         return true;
     }
@@ -228,7 +236,6 @@ public class UserServiceImp implements UserService {
 
     /**
      * takes request and finds the user's Ip. Used in place of user id when logging
-     * TODO centralize getClientIp into one method {See UserController} to see other method
      *
      * @param request {@link HttpServletRequest} takes the servlet request received from a post method
      * @return remote IP address
