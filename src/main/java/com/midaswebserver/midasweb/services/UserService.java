@@ -1,6 +1,7 @@
 package com.midaswebserver.midasweb.services;
 
 import com.midaswebserver.midasweb.models.User.User;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @version 0.0.1
@@ -79,4 +80,13 @@ public interface UserService {
      * @return boolean based on the success of the transaction
      */
     boolean addSymbolToUser(User user, String ticker);
+
+    /**
+     * takes request and finds the user's Ip. Used in place of user id when logging
+     * TODO centralize getClientIp into one method {See UserController} to see other method
+     *
+     * @param request {@link HttpServletRequest} takes the servlet request received from a post method
+     * @return remote IP address
+     */
+    String getClientIp(HttpServletRequest request);
 }

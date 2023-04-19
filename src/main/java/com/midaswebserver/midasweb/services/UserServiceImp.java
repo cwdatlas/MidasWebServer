@@ -3,6 +3,7 @@ package com.midaswebserver.midasweb.services;
 import com.midaswebserver.midasweb.models.User.Symbol;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -223,5 +224,26 @@ public class UserServiceImp implements UserService {
         }
         log.error("addSymbolToUser: user, '{}', failed to add ticker , '{}', should have found ticker in database", user.getUsername(), ticker);
         return false;
+    }
+
+    /**
+     * takes request and finds the user's Ip. Used in place of user id when logging
+     * TODO centralize getClientIp into one method {See UserController} to see other method
+     *
+     * @param request {@link HttpServletRequest} takes the servlet request received from a post method
+     * @return remote IP address
+     */
+    @Override
+    public String getClientIp(HttpServletRequest request) {
+        String remoteAddr = "";
+
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+
+        return remoteAddr;
     }
 }

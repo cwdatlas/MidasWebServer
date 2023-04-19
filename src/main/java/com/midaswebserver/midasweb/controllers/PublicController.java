@@ -2,6 +2,7 @@ package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PublicController {
     private static final Logger log = LoggerFactory.getLogger(PublicController.class);
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
+    /**
+     * Injects services into controller
+     *
+     * @param userService
+     */
+    public PublicController(UserService userService){
+        this.userService = userService;
+    }
     /**
      * Routs to index page
      *
@@ -24,11 +32,13 @@ public class PublicController {
      * @return "index" template
      */
     @GetMapping("/")
-    public String index(Model model, HttpSession session) {
+    public String index(Model model, HttpSession session, HttpServletRequest request) {
         User baseUser;
+        log.debug("index: User from '{}' has accessed Index page", userService.getClientIp(request));
         if (!session.isNew() && session.getAttribute("UserId") != null) {
             baseUser = userService.getUserById(Long.parseLong(session.getAttribute("UserId").toString()));
-            log.debug("index: User '{}' has accessed Index page", session.getAttribute("UserId").toString());
+            log.debug("index: User '{}' from '{}' has accessed Index page",
+                    session.getAttribute("UserId").toString(), userService.getClientIp(request));
         } else {
             baseUser = new User();
             baseUser.setUsername("New User");
@@ -36,4 +46,5 @@ public class PublicController {
         model.addAttribute("user", baseUser);
         return "index";
     }
+
 }

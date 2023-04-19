@@ -40,6 +40,8 @@ public class UserPersonal {
     private final TickerService tickerService;
 
     /**
+     * Injects services into controller
+     *
      * @param userService
      * @param tickerService
      */
@@ -70,7 +72,7 @@ public class UserPersonal {
         //other attributes
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
-        log.debug("home: User '{}', data added to form ", session.getAttribute("UserId"));
+        log.debug("home: User '{}', symbols: '{}' added to form", session.getAttribute("UserId"), symbols);
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         return "home";
     }
@@ -78,7 +80,6 @@ public class UserPersonal {
     /**
      * GetTickerData takes a StockDataRequestForm and displays the data on the displayData page
      * will return user to /user/home if any data validates bad
-     * TODO errors should be returned to the user, they should know what went wrong
      *
      * @param stockDataRequestForm {@link StockDataRequestForm}
      * @param result               {@link BindingResult}
@@ -92,10 +93,7 @@ public class UserPersonal {
         Object userId = session.getAttribute("UserId");
         if (userId == null)
             return "redirect:/login";
-        if (request.getHeader("referer") == null) {
-            log.debug("getTickerData:'{}', Searched header, but didn't find a redirect address", session.getAttribute("UserId"));
-            return "redirect:/index";
-        }
+
         User user = userService.getUserById((Long) (userId));
         //exposing and setting standard model attributes
         model.addAttribute("user", user);
@@ -116,7 +114,7 @@ public class UserPersonal {
         Ticker ticker = tickerService.getTimeSeriesInfo(stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval(), OutputSize.COMPACT);
         //adds called ticker to tickers that have been called before
         if (ticker == null) {
-            log.warn("getTickerData:'{}', Searched for ticker, '{}', bad data given, recieved bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
+            log.warn("getTickerData:'{}', Searched for ticker, '{}', bad ticker or interval, received bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
             return "home";
         }
         if (ticker.getMetaData() != null || ticker.getMetaData().getSymbol() != null) {
@@ -124,7 +122,7 @@ public class UserPersonal {
             boolean addedTicker = userService.addSymbolToUser(user, symbol);
             log.debug("getTickerData:'{}', Searched Ticker: '{}', added ticker, '{}'", session.getAttribute("UserId"), symbol, addedTicker);
         } else { // this is if the incoming data isnt valid, this is probably because the wrong ticker was sent to the api
-            log.warn("getTickerData:'{}', Searched for ticker, '{}', bad data given, recieved bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
+            log.warn("getTickerData:'{}', Searched for ticker, '{}', bad ticker or interval, received bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
             stockDataRequestForm.setTicker("invalid");//I dont know if they will be able to see this
             return "home";
         }
