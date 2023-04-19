@@ -1,6 +1,8 @@
 package com.midaswebserver.midasweb.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @version 0.0.1
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HashServiceImp implements HashService {
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     public HashServiceImp() {
     }
 
@@ -22,6 +25,6 @@ public class HashServiceImp implements HashService {
      */
     @Override
     public String getHash(String rawString) {
-        return Integer.toString(rawString.hashCode());
+        return encoder.encode(rawString);
     }
 }
