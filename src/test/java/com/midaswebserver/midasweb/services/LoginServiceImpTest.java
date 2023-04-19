@@ -13,7 +13,7 @@ import java.util.List;
 import static org.springframework.test.util.AssertionErrors.*;
 
 @SpringBootTest
-public class LoginServiceImplTest {
+public class LoginServiceImpTest {
     //get services and other required objects to test or to aid the testing
     @Autowired
     private LoginService loginService;

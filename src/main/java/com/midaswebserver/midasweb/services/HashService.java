@@ -15,4 +15,13 @@ public interface HashService {
      * @return hashed password
      */
     String getHash(String rawString);
+
+    /**
+     * Checks to see if the two input passwords match
+     *
+     * @param rawPass
+     * @param hashedPass
+     * @return true if match, false if !match
+     */
+    Boolean checkMatch(String rawPass, String hashedPass);
 }

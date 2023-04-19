@@ -21,14 +21,20 @@ import java.util.List;
 public class LoginServiceImp implements LoginService {
     private static final Logger log = LoggerFactory.getLogger(LoginServiceImp.class);
     private final UserRepository loginRepo;
-    @Autowired
-    private HashService hashService;
+    private final HashService hashService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
-
-    public LoginServiceImp(UserRepository loginRepo) {
+    /**
+     * Injected dependencies
+     *
+     * @param loginRepo
+     * @param hashService
+     * @param userService
+     */
+    public LoginServiceImp(UserRepository loginRepo, HashService hashService, UserService userService) {
         this.loginRepo = loginRepo;
+        this.hashService = hashService;
+        this.userService = userService;
     }
 
     /**
@@ -50,8 +56,7 @@ public class LoginServiceImp implements LoginService {
             return false;
         }
         User u = users.get(0);
-        final String userProvidedHash = hashService.getHash(loginForm.getPassword());//blowfish is a 8-9 so do that
-        if (!u.getHashedPassword().equals(userProvidedHash)) {
+        if (!hashService.checkMatch(loginForm.getPassword(), u.getHashedPassword())) {
             log.debug("validateUser: Given password doesnt match stored password");
             return false;
         }
