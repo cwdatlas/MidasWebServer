@@ -45,6 +45,14 @@ public class UserServiceImp implements UserService {
             log.error("add: User is null");
             return false;
         }
+        if (user.getUsername()==null ||  user.getEmail()==null || user.getPhoneNumber()==null || user.getHashedPassword()==null) {
+            log.error("add: One of fields in user found to be null");
+            return false;
+        }
+        if (user.getUsername().isBlank() ||  user.getEmail().isBlank() || user.getPhoneNumber().isBlank() || user.getHashedPassword().isBlank()) {
+            log.error("add: One of fields in user found to be blank");
+            return false;
+        }
         if (!validateUniqueUsername(user.getUsername())) {
             log.error("add: '{}' has the same name in database", user.getUsername());
             return false;

@@ -23,21 +23,20 @@ public class UserServiceImpTest {
      * arguably we test the validateUniqueUsername using these userAdd tests
      */
     //good test
-    //TODO add more valid tests, once validation is added within addUser, add more tests
     @Test
     public void goodAddOneUser1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        assertTrue("Test User Couldn't be added", userService.add(testUser1));
-        assertNotNull("User was not found in database", userService.getUserById(testUser1.getId()));
+        assertTrue("Test User Couldn't be added", userService.add(testUser));
+        assertNotNull("User was not found in database", userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
     public void goodAddOneUser2() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        assertTrue("Test User Couldn't be added", userService.add(testUser2));
-        assertNotNull("User was not found in database", userService.getUserById(testUser2.getId()));
+        assertTrue("Test User Couldn't be added", userService.add(testUser));
+        assertNotNull("User was not found in database", userService.getUserByUsername(testUser.getUsername()));
     }
 
     /**
@@ -45,14 +44,14 @@ public class UserServiceImpTest {
      */
     @Test
     public void goodUserAddTwoUsers() {
-        final User testUser2 = new User
+        final User testUser1 = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        final User testUser3 = new User
+        final User testUser2 = new User
                 ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
-        assertTrue("TestUser2 wasn't added in add method", userService.add(testUser2));
-        assertTrue("TestUser3 wasn't added in add method", userService.add(testUser3));
-        assertTrue("TestUser2 was added but not found", null != userService.getUserByUsername(testUser2.getUsername()));
-        assertTrue("TestUser3 was added but not found", null != userService.getUserByUsername(testUser3.getUsername()));
+        assertTrue("TestUser2 wasn't added in add method", userService.add(testUser1));
+        assertTrue("TestUser3 wasn't added in add method", userService.add(testUser2));
+        assertTrue("TestUser2 was added but not found", testUser1 == userService.getUserByUsername(testUser1.getUsername()));
+        assertTrue("TestUser3 was added but not found", testUser2 == userService.getUserByUsername(testUser2.getUsername()));
     }
 
     /**
@@ -60,20 +59,20 @@ public class UserServiceImpTest {
      */
     @Test
     public void badUserAddSameUserTwice1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser1);
-        assertFalse("User was added", userService.add(testUser1));
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
+        assertTrue("testUser wasn't added first time", userService.add(testUser));
+        assertFalse("testUser was added second time", userService.add(testUser));
+        assertTrue("testUser not expected", testUser == userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
     public void badUserAddSameUserTwice2() {
-        final User testUser3 = new User
+        final User testUser = new User
                 ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
-        userService.add(testUser3);
-        assertFalse("User was added", userService.add(testUser3));
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser3.getId()));
+        assertTrue("testUser wasn't added first time", userService.add(testUser));
+        assertFalse("testUser was added second time", userService.add(testUser));
+        assertTrue("TestUser not expected", testUser == userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
@@ -88,52 +87,52 @@ public class UserServiceImpTest {
 
     @Test
     public void goodDeleteUserAndCheck1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser1);
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
-        userService.delete(testUser1);
-        assertTrue("User wasnt deleted", null == userService.getUserById(testUser1.getId()));
+        assertTrue("TestUser wasn't added", userService.add(testUser));
+        assertTrue("Added validation failed", testUser == userService.getUserByUsername(testUser.getUsername()));
+        assertTrue("TestUser wasn't deleted", userService.delete(testUser));
+        assertTrue("Deletion validation failed", null == userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
     public void goodDeleteUserAndCheck2() {
-        final User testUser3 = new User
+        final User testUser = new User
                 ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
-        userService.add(testUser3);
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser3.getId()));
-        userService.delete(testUser3);
-        assertTrue("User wasnt deleted", null == userService.getUserById(testUser3.getId()));
+        assertTrue("TestUser wasn't added", userService.add(testUser));
+        assertTrue("Added validation failed", testUser == userService.getUserByUsername(testUser.getUsername()));
+        assertTrue("TestUser wasn't deleted", userService.delete(testUser));
+        assertTrue("Deletion validation failed", null == userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
     public void goodAddTwoUsersDeleteOne3() {
-        final User testUser3 = new User
-                ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
         final User testUser1 = new User
+                ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
+        final User testUser2 = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser3);
-        userService.add(testUser1);
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser3.getId()));
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
-        userService.delete(testUser3);
-        assertTrue("User wasnt deleted", null == userService.getUserById(testUser3.getId()));
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
+        assertTrue("TestUser1 wasn't added", userService.add(testUser1));
+        assertTrue("TestUser2 wasn't added", userService.add(testUser2));
+        assertTrue("TestUser1 Added validation failed", testUser1 == userService.getUserByUsername(testUser1.getUsername()));
+        assertTrue("TestUser1 Added validation failed", testUser2 == userService.getUserByUsername(testUser2.getUsername()));
+        assertTrue("TestUser1 Deletion validation failed", userService.delete(testUser1));
+        assertTrue("TestUser1 wasn't deleted", null == userService.getUserByUsername(testUser1.getUsername()));
+        assertTrue("TestUser2 returned not expected response", testUser2 == userService.getUserByUsername(testUser2.getUsername()));
     }
 
     @Test
     public void BadAddTwoUsersDeleteWrongOne3() {
-        final User testUser3 = new User
-                ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
         final User testUser1 = new User
+                ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
+        final User testUser2 = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser3);
-        userService.add(testUser1);
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser3.getId()));
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
-        userService.delete(testUser3);
-        assertTrue("User wasnt deleted", null == userService.getUserById(testUser3.getId()));
-        assertTrue("Test User wasn't added", null != userService.getUserById(testUser1.getId()));
+        assertTrue("TestUser1 wasn't added", userService.add(testUser1));
+        assertTrue("TestUser2 wasn't added", userService.add(testUser2));
+        assertTrue("TestUser1 Added validation failed", testUser1 == userService.getUserByUsername(testUser1.getUsername()));
+        assertTrue("TestUser1 Added validation failed", testUser2 == userService.getUserByUsername(testUser2.getUsername()));
+        assertTrue("TestUser1 Deletion validation failed", userService.delete(testUser1));
+        assertFalse("TestUser2 was deleted", null == userService.getUserByUsername(testUser2.getUsername()));
+        assertFalse("TestUser1 returned not expected response", testUser1 == userService.getUserByUsername(testUser1.getUsername()));
     }
 
     @Test
@@ -142,9 +141,9 @@ public class UserServiceImpTest {
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         final User testUser2 = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser1);
-        assertFalse("User was deleted", userService.delete(testUser2));
-        assertFalse("User was deleted", null == userService.getUserById(testUser1.getId()));
+        assertTrue("TestUser1 wasn't added", userService.add(testUser1));
+        assertFalse("TestUser2 Deletion validation failed", userService.delete(testUser2));
+        assertFalse("TestUser1 was deleted, should have not been deleted", null == userService.getUserByUsername(testUser1.getUsername()));
     }
 
     @Test
@@ -153,36 +152,34 @@ public class UserServiceImpTest {
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         final User testUser2 = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
-        assertFalse("User was deleted", userService.delete(testUser1));
-        assertTrue("User was deleted", null != userService.getUserById(testUser2.getId()));
+        assertTrue("TestUser2 wasn't added", userService.add(testUser2));
+        assertFalse("TestUser1 Deletion failed", userService.delete(testUser1));
+        assertFalse("TestUser2 was deleted, should have not been deleted", null == userService.getUserByUsername(testUser2.getUsername()));
     }
 
     @Test
     public void crazyDeleteUserWithNull1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser1);
-        assertFalse("User was deleted", userService.delete(null));
-        assertTrue("User was deleted", null != userService.getUserById(testUser1.getId()));
+        assertTrue("TestUser wasn't added", userService.add(testUser));
+        assertFalse("A User was deleted", userService.delete(null));
+        assertFalse("TestUser was deleted", null == userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
     public void goodGetUserByID1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser1);
-        User returnedUser = userService.getUserById(userService.getIdByUsername(testUser1.getUsername()));
-        assertTrue("Returned User wasnt same as expected", returnedUser.equals(testUser1));
+        assertTrue("TestUser wasn't added", userService.add(testUser));
+        assertFalse("Returned user was not expected", null == userService.getUserById(testUser.getId()));
     }
 
     @Test
     public void goodGetUserByID2() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
-        User returnedUser = userService.getUserById(userService.getIdByUsername(testUser2.getUsername()));
-        assertTrue("Returned User wasnt same as expected", returnedUser.equals(testUser2));
+        assertTrue("TestUser wasn't added", userService.add(testUser));
+        assertFalse("TestUser wasn't returned", null == userService.getUserById(testUser.getId()));
     }
 
     @Test
@@ -191,9 +188,8 @@ public class UserServiceImpTest {
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         final User testUser2 = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser1);
-        User returnedUser = userService.getUserById(userService.getIdByUsername(testUser2.getUsername()));
-        assertFalse("Returned User was the same then added user", returnedUser != null);
+        assertTrue("TestUser1 wasn't added", userService.add(testUser1));
+        assertTrue("User was returned", null == userService.getUserById(testUser2.getId()));
     }
 
     @Test
@@ -202,41 +198,39 @@ public class UserServiceImpTest {
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         final User testUser2 = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
-        User returnedUser = userService.getUserById(userService.getIdByUsername(testUser1.getUsername()));
-        assertFalse("Returned User was the same then added user", returnedUser != null);
+        assertTrue("TestUser2 wasn't added", userService.add(testUser2));
+        assertTrue("Returned User was the same then added user", null == userService.getUserById(testUser1.getId()));
     }
 
     @Test
     public void crazyGetUserByID1() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
-        User returnedUser = userService.getUserById(null);
-        assertTrue("Returned User wasn't null", returnedUser == null);
+        assertTrue("TestUser2 wasn't added", userService.add(testUser));
+        assertTrue("Returned User wasn't null", null == userService.getUserById(null));
     }
 
     @Test
     public void goodGetUserByName1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser1);
-        assertTrue("User couldn't be found", null != userService.getUserByUsername(testUser1.getUsername()));
+        assertTrue("TestUser wasn't added", userService.add(testUser));
+        assertTrue("Failed to return testUser", testUser == userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
     public void goodGetUserByName2() {
-        final User testUser3 = new User
+        final User testUser= new User
                 ("LordCabbage", "CabbageMan", "pleaseImSafe@friendly.edu", "23414443333");
-        userService.add(testUser3);
-        assertTrue("User couldn't be found", null != userService.getUserByUsername(testUser3.getUsername()));
+        assertTrue("TestUser wasn't added", userService.add(testUser));
+        assertTrue("Failed to return testUser", testUser == userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
     public void badGetUserByName1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        assertTrue("User was found where they shouldn't have been", null == userService.getUserByUsername(testUser1.getUsername()));
+        assertFalse("User was found where they shouldn't have been", testUser == userService.getUserByUsername(testUser.getUsername()));
     }
 
     @Test
@@ -247,17 +241,16 @@ public class UserServiceImpTest {
     /**
      * Checking if data can be updated within the database. This requires getting the object from the database with the
      * specific Id, then changing its data, then using that updated object in the update method
-     * TODO: once validation is added, we will have to add in many more tests to make sure invalid update data cant be passed
      */
     @Test //Test if username can be updated (good)
     public void goodUpdateUserTest1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser1);
+        assertTrue("TestUser wasn't added", userService.add(testUser));
         //sets updates username
         String newUsername = "MadAtlas2";
-        testUser1.setUsername(newUsername);
-        userService.update(testUser1);
+        testUser.setUsername(newUsername);
+        userService.update(testUser);
         //retrieving the user and seeing if the name was saved
         User changedUser = userService.getUserByUsername(newUsername);
         assertTrue("Username wasnt changed", newUsername.equals(changedUser.getUsername()));
@@ -266,12 +259,12 @@ public class UserServiceImpTest {
 
     @Test
     public void goodUpdateUserTest2() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
+        assertTrue("TestUser wasn't added", userService.add(testUser));
         //sets updates username
         String newUsername = "MadAtlas3";
-        User user = userService.getUserByUsername(testUser2.getUsername());
+        User user = userService.getUserByUsername(testUser.getUsername());
         user.setUsername(newUsername);
         userService.update(user);
         //retrieving the user and seeing if the name was saved
@@ -282,34 +275,34 @@ public class UserServiceImpTest {
 
     @Test
     public void goodUpdateUserTest3() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
+        assertTrue("TestUser wasn't added", userService.add(testUser));
         //sets updates username
         String newPhonenumber = "4066604455";
-        testUser2.setPhoneNumber(newPhonenumber);
-        userService.update(testUser2);
+        testUser.setPhoneNumber(newPhonenumber);
+        userService.update(testUser);
         //retrieving the user and seeing if the name was saved
-        User changedUser = userService.getUserByUsername(testUser2.getUsername());
+        User changedUser = userService.getUserByUsername(testUser.getUsername());
         assertTrue("Phone number wasn't changed", newPhonenumber.equals(changedUser.getPhoneNumber()));
     }
 
     @Test
     public void badUpdateUserTest1() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
+        assertTrue("TestUser wasn't added", userService.add(testUser));
         //sets updates username
         Long newId = (long) 40666;
-        testUser2.setId(newId);
-        assertFalse("User was updated, when they shouldn't have", userService.update(testUser2));
+        testUser.setId(newId);
+        assertFalse("User was updated, when they shouldn't have", userService.update(testUser));
     }
 
     @Test
     public void crazyUpdateUserTest1() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
+        assertTrue("TestUser wasn't added", userService.add(testUser));
         assertFalse("User was updated, when null was passed", userService.update(null));
     }
 
@@ -320,76 +313,76 @@ public class UserServiceImpTest {
      */
     @Test
     public void goodUpdateSymbolTest1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
-        userService.add(testUser1);
+        assertTrue("TestUser wasn't added", userService.add(testUser));
         //sets updates username
         String ticker = "EUC";
         Symbol symbol = new Symbol(ticker);
-        symbol.setUserId(testUser1);//I shouldnt have to add the user to the symbol
-        testUser1.addSymbol(symbol);
-        userService.update(testUser1);
+        symbol.setUserId(testUser);//I shouldnt have to add the user to the symbol
+        testUser.addSymbol(symbol);
+        assertTrue("User couldn't be updated", userService.update(testUser));
         //retrieving the user and seeing if the name was saved
-        User changedUser = userService.getUserByUsername(testUser1.getUsername());
+        User changedUser = userService.getUserByUsername(testUser.getUsername());
         Symbol[] setArray = changedUser.getSymbol().toArray(new Symbol[changedUser.getSymbol().size()]);
         List<Symbol> setList = new ArrayList<>(changedUser.getSymbol());
-        userService.delete(changedUser);
+        assertTrue("Couldnt delete changeduser", userService.delete(changedUser));
         assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
     }
 
     @Test
     public void goodUpdateSymbolTest2() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
-        userService.add(testUser2);
+        assertTrue("TestUser wasn't added", userService.add(testUser));
         //sets updates username
         String ticker = "EUC";
         Symbol symbol = new Symbol(ticker);
-        symbol.setUserId(testUser2);//I shouldnt have to add the user to the symbol
-        testUser2.addSymbol(symbol);
-        userService.update(testUser2);//<--This is the main function that we are testing
+        symbol.setUserId(testUser);//I shouldnt have to add the user to the symbol
+        testUser.addSymbol(symbol);
+        assertTrue("User couldn't be updated", userService.update(testUser));
         //retrieving the user and seeing if the name was saved
-        User changedUser = userService.getUserByUsername(testUser2.getUsername());
+        User changedUser = userService.getUserByUsername(testUser.getUsername());
         Symbol[] setArray = changedUser.getSymbol().toArray(new Symbol[changedUser.getSymbol().size()]);
         List<Symbol> setList = new ArrayList<>(changedUser.getSymbol());
-        userService.delete(changedUser);
+        assertTrue("Couldnt delete changeduser", userService.delete(changedUser));
         assertTrue("Returned ticker and set ticker wasn't the same", setList.get(0).getTicker().equals(ticker));
     }
 
     @Test
     public void goodAddSymbolInvalidSymbol1() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         final String symbol = "UECCC";
-        assertTrue("User wasn't added to database", userService.add(testUser2));
-        assertFalse("Input symbol was valid, should have been invalid", userService.addSymbolToUser(testUser2, symbol));
+        assertTrue("User wasn't added to database", userService.add(testUser));
+        assertFalse("Input symbol was valid, should have been invalid", userService.addSymbolToUser(testUser, symbol));
     }
 
     @Test
     public void goodAddSymbolInvalidSymbol2() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         final String symbol = "APPLE";
-        assertTrue("User wasn't added to database", userService.add(testUser1));
-        assertFalse("Input symbol was valid, should have been invalid", userService.addSymbolToUser(testUser1, symbol));
+        assertTrue("User wasn't added to database", userService.add(testUser));
+        assertFalse("Input symbol was valid, should have been invalid", userService.addSymbolToUser(testUser, symbol));
     }
 
     @Test
     public void goodAddSymbolValidSymbol1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         final String symbol = "AAPL";
-        assertTrue("User wasn't added to database", userService.add(testUser1));
-        assertTrue("Input symbol was invalid, should have been valid", userService.addSymbolToUser(testUser1, symbol));
+        assertTrue("User wasn't added to database", userService.add(testUser));
+        assertTrue("Input symbol was invalid, should have been valid", userService.addSymbolToUser(testUser, symbol));
     }
 
     @Test
     public void goodAddSymbolValidSymbol2() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         final String symbol = "UEC";
-        assertTrue("User wasn't added to database", userService.add(testUser2));
-        assertTrue("Input symbol was invalid, should have been valid", userService.addSymbolToUser(testUser2, symbol));
+        assertTrue("User wasn't added to database", userService.add(testUser));
+        assertTrue("Input symbol was invalid, should have been valid", userService.addSymbolToUser(testUser, symbol));
     }
 
     @Test
@@ -406,15 +399,15 @@ public class UserServiceImpTest {
 
     @Test
     public void goodAddSymbolPreviouslySaved1() {
-        final User testUser1 = new User
+        final User testUser = new User
                 ("CabbageMan", "password", "riblueliany@docomo.ne.jp", "4065556666");
         final String symbol = "AAPL";
-        assertTrue("User wasn't added to database", userService.add(testUser1));
-        assertTrue("Input symbol and or user was invalid, should have been valid", userService.addSymbolToUser(testUser1, symbol));
-        assertTrue("Input symbol and or user was invalid, second add should have returned true", userService.addSymbolToUser(testUser1, symbol));
+        assertTrue("User wasn't added to database", userService.add(testUser));
+        assertTrue("Input symbol and or user was invalid, should have been valid", userService.addSymbolToUser(testUser, symbol));
+        assertTrue("Input symbol and or user was invalid, second add should have returned true", userService.addSymbolToUser(testUser, symbol));
 
         List<String> dupedTickers = new ArrayList<>();
-        for (Symbol symbolSaved : testUser1.getSymbol()) {
+        for (Symbol symbolSaved : testUser.getSymbol()) {
             if (symbolSaved.getTicker().equalsIgnoreCase(symbol)) {
                 dupedTickers.add(symbolSaved.getTicker());
             }
@@ -424,15 +417,15 @@ public class UserServiceImpTest {
 
     @Test
     public void goodAddSymbolPreviouslySaved2() {
-        final User testUser2 = new User
+        final User testUser = new User
                 ("MonkeyKing", "PassW0rd", "一个@阿育王。印度", "861065529988");
         final String symbol = "UEC";
-        assertTrue("User wasn't added to database", userService.add(testUser2));
-        assertTrue("Input symbol and or user was invalid, should have been invalid", userService.addSymbolToUser(testUser2, symbol));
-        assertTrue("Input symbol and or user was invalid, second add should have returned true", userService.addSymbolToUser(testUser2, symbol));
+        assertTrue("User wasn't added to database", userService.add(testUser));
+        assertTrue("Input symbol and or user was invalid, should have been invalid", userService.addSymbolToUser(testUser, symbol));
+        assertTrue("Input symbol and or user was invalid, second add should have returned true", userService.addSymbolToUser(testUser, symbol));
 
         List<String> dupedTickers = new ArrayList<>();
-        for (Symbol symbolSaved : testUser2.getSymbol()) {
+        for (Symbol symbolSaved : testUser.getSymbol()) {
             if (symbolSaved.getTicker().equalsIgnoreCase(symbol)) {
                 dupedTickers.add(symbolSaved.getTicker());
             }
@@ -442,7 +435,7 @@ public class UserServiceImpTest {
 
     @Test
     public void crazyNullInputs() {
-        final User testUser1 = new User();
-        assertFalse("Input symbol was invalid, should have been valid", userService.addSymbolToUser(testUser1, null));
+        final User testUser = new User();
+        assertFalse("Input symbol was invalid, should have been valid", userService.addSymbolToUser(testUser, null));
     }
 }
