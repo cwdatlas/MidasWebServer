@@ -1,4 +1,5 @@
 # MidasWebServer
+JavaDocs: https://cwdatlas.github.io/MidasWebServer/
 Hello, Welcome to my project, MidasWebServer
 
 First, This project centered around consuming stock data then displaying it. 
