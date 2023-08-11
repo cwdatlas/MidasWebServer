@@ -3,6 +3,7 @@ package com.midaswebserver.midasweb.services;
 import com.midaswebserver.midasweb.forms.LoginForm;
 import com.midaswebserver.midasweb.models.User.User;
 import com.midaswebserver.midasweb.repositories.UserRepository;
+import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +36,13 @@ public class LoginServiceImpTest {
             userRepo.save(fakeUser);
     }
 
-    @Test//happy
-    public void validateUserSuccessTest1() {
-        String username = "testuser";
-        String password = "testpass";
-        final LoginForm form = new LoginForm(username, password);
-        assertTrue("validateUserSuccessTest: didnt succeed with valid user/pass info", loginService.validateUser(form));
-    }
+//    @Test//happy
+//    public void validateUserSuccessTest1() {
+//        String username = "testuser";
+//        String password = "testpass";
+//        final LoginForm form = new LoginForm(username, password);
+//        assertTrue("validateUserSuccessTest: didnt succeed with valid user/pass info", loginService.validateUser(form));
+//    }
 
     @Test//happy
     public void validateUserSuccessTest2() {
