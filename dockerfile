@@ -1,4 +1,6 @@
-FROM 17-alpine3.16
-VOLUME /midasweb
+FROM khipu/openjdk17-alpine
+VOLUME /tmp
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/build/libs/midasweb-0.0.1.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]
