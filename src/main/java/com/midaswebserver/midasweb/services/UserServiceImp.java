@@ -21,14 +21,17 @@ import java.util.List;
 public class UserServiceImp implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImp.class);
     private final UserRepository userRepo;
+    private final HashService hashService;
+
 
     /**
      * Injected dependencies
      *
      * @param userRepo
      */
-    public UserServiceImp(UserRepository userRepo) {
+    public UserServiceImp(UserRepository userRepo, HashService hashService) {
         this.userRepo = userRepo;
+        this.hashService = hashService;
         log.debug("User Repository initialized in UserService");
     }
 
@@ -260,5 +263,17 @@ public class UserServiceImp implements UserService {
         }
 
         return remoteAddr;
+    }
+
+    /**
+     * Takes User and raw password, hashes the password then adds the password to the user object
+     *
+     * @param rawPass unhashed password
+     * @param user corresponding user for the password
+     * @return user with added hashed password
+     */
+    public User hashPass(User user, String rawPass) {
+        user.setHashedPassword(hashService.getHash(rawPass));
+        return user;
     }
 }
