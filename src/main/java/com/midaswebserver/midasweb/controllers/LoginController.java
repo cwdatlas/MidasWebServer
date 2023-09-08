@@ -21,11 +21,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * @version 0.0.1
  * The LoginController works with all interactions by the client regarding logging in, logging out
  * uses {@link LoginService} and {@link UserService} heavily to interact with user repository and for business logic
  * @Author Aidan Scott
- * @sinse 0.0.1
  */
 @Controller
 public class LoginController {
@@ -56,7 +54,7 @@ public class LoginController {
         model.addAttribute("loginForm", new LoginForm());
         log.debug("loginGet: Client '{}' connected to /login", userService.getClientIp(request));
         Cookie preLoginUriCookie = new Cookie("preLoginUri", request.getHeader("referer"));
-        preLoginUriCookie.setMaxAge(60 * 4); //sets cookie's life to 10 seconds
+        preLoginUriCookie.setMaxAge(60 * 4); //sets cookie's life to 240 seconds
         response.addCookie(preLoginUriCookie);
         return "login";
     }
@@ -89,10 +87,10 @@ public class LoginController {
             return "login";
         }
         attrs.addAttribute("username", loginForm.getUsername());
-        log.debug("loginPost: User '{}' has successfully logged in from '{}'", userService.getUserByUsername(loginForm.getUsername()), userService.getClientIp(request));
+        log.info("loginPost: User '{}' has successfully logged in from '{}'", userService.getUserByUsername(loginForm.getUsername()), userService.getClientIp(request));
         //setting up session for valid user
         session.setAttribute("UserId", userService.getIdByUsername(loginForm.getUsername()));
-        log.debug("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByUsername(loginForm.getUsername()), session.getId());
+        log.info("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByUsername(loginForm.getUsername()), session.getId());
         //Redirecting user to correct location
         if (preLoginUri == null) {
             log.debug("getTickerData:'{}', no address found in preLoginUri, redirect failed", userService.getClientIp(request));

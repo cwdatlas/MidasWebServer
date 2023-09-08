@@ -1,6 +1,7 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.midaswebserver.midasweb.models.User.User;
+import com.midaswebserver.midasweb.services.LoginService;
 import com.midaswebserver.midasweb.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * The PublicController is the location where users are redirected to if they don't have a valid session
+ * This endpoint is also used as the front page of the website
+ * @Author Aidan Scott
+ */
 @Controller
 public class PublicController {
     private static final Logger log = LoggerFactory.getLogger(PublicController.class);
@@ -25,7 +31,7 @@ public class PublicController {
         this.userService = userService;
     }
     /**
-     * Routs to index page
+     * Routes to index page
      *
      * @param model
      * @param session {@link HttpSession}

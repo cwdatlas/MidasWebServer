@@ -3,12 +3,10 @@ package com.midaswebserver.midasweb.apiModels;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * @version 0.0.1
  * MetaData is used to store symbol and other information from a stock query
  * This class is a custom implementation of {@link com.crazzyghost.alphavantage.timeseries.response.MetaData crazzyghost MetaData}
  * Most of the subsequent code is from <a href="https://github.com/crazzyghost">crazzyghost</a> using the alphavantage library
  * @Author Aidan Scott
- * @since 0.0.1
  */
 public class MetaData {
 
@@ -42,7 +40,6 @@ public class MetaData {
      * @param interval
      * @param outputSize
      */
-
     public void setData(String information, String symbol, String lastRefreshed, String timeZone, String interval, String outputSize) {
         this.information = information;
         this.symbol = symbol;
