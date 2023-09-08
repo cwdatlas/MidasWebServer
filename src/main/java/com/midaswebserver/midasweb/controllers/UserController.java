@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * @Author Aidan Scott
- * @since 0.0.1
  * UserController is the CRUD interface for users
  * this controller is built to serve users adding themselves and admin management
  * uses {@link HashService} and {@link UserService} heavily to interact with user repository and for business logic
@@ -50,13 +49,13 @@ public class UserController {
      * @return register template
      */
     @GetMapping("/register") //map to register
-    public String registerGet(Model model) {//still don't know what model is in this case
+    public String registerGet(Model model) {
         model.addAttribute("userForm", new UserForm());
         return "register";//adds the form to the model and returns it
     }
 
     /**
-     * registerPost takes userForm, validates, checks if the user already in the database,
+     * registerPost takes userForm, validates, checks if the user exists,
      * and checks if the passwords match. If all validates, then user is added to the database
      *
      * @param userForm {@link UserForm}
@@ -77,7 +76,7 @@ public class UserController {
             return "register";
         }
         if (!userService.validateUniqueUsername(userForm.getUsername())) {
-            result.addError(new ObjectError("globalError", "User already Registered"));
+            result.addError(new ObjectError("globalError", "Invalid Username"));
             log.debug("registerPost: User was found with same name of '{}' from '{}'", userForm.getUsername(), userService.getClientIp(request));
             return "register";
         }
@@ -91,9 +90,9 @@ public class UserController {
         //mapping results from form to user
         User user = new User();
         user.setUsername(userForm.getUsername());
-        user.setHashedPassword(hashService.getHash(userForm.getPassword()));
         user.setEmail(userForm.getEmail());
         user.setPhoneNumber(userForm.getPhoneNumber());
+        userService.hashPass(user, userForm.getPassword());
         userService.add(user);
 
         log.info("loginPost:'{}' been registered", userService.getUserByUsername(userForm.getUsername()));//adding a time to this could be useful, or a more global logging system
