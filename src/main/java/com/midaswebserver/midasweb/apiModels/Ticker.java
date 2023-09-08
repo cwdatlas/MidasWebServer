@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version 0.0.1
  * Ticker is the object used to house all the information from a ticker query
  * This class is a custom implementation of {@link com.crazzyghost.alphavantage crazzyghost alphabantage}
  * All of the subsequent code is from <a href="https://github.com/crazzyghost">crazzyghost</a> using the alphavantage library
  * @Author crazzyghost
- * @since 0.0.1
  */
 public class Ticker {
 
@@ -39,7 +37,6 @@ public class Ticker {
 
     /**
      * setTimeSeries takes a list of foreign objects and sets it to an internal value
-     *
      * @param timeSeries
      */
     public void setTimeSeries(List<StockUnit> timeSeries) {
