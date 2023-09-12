@@ -16,20 +16,23 @@ How to use the website
 8. You can type in any number of symbols you would like, once your done you can click the logout button in the navbar. Good bye!
 
 How to run the website
-Dependencies:
-java17
-1. Go to this location 'https://www.oracle.com/java/technologies/downloads/#jdk17-windows' to download windows java 17 jdk. If you are using linux  I recomend using 'apt install java17', its much nicer
-2. Download and install java17 with default configs, if you know what your doing you can change the config
-3. your done for java17! If you have downloaded and installed other versions of java you need to make sure you are using java17, type 'java -version'. 
+We use a containerization system to successfully boot the website. You will pull both the mariadb and the midaswebapp images then start them as containers with the given commands
 
-mariaDB
-1. When creating the database please use the username 'Midas' and password '156545'
-2. Follow this guid to install and configure mariaDB: 'https://mariadb.com/kb/en/installing-mariadb-msi-packages-on-windows/'
+Dependencies:
+Podman or Docker:
+download and install podman or docker. These two container ingines have almost identical commands to run containers. I am using podman, so that is what I would recomend to have the best results. 
+Here are the official instruction on how to install podman: https://podman.io/docs/installation
+
+After podman or docker is installed, use the commands in your terminal after the podman engine is running(use the container engine's name that you are using in the command:
+docker/podman pull madatlas/midasweb:0.0.1
+docker/podman pull mariadb:latest
 
 Starting the website
-1. Download the zip of the MidasWebServer project, its at the top right of the code viewer
-2. Once the zip is downloaded, extract the zip file into a folder, you can name it whatever you want. 
-3. Open your command promp, type cmd in your windows search bar, then navigate to the folder the MidasWebProject is in, use 'cd' to navigate to the folder
-4. Once you in the folder, you should see a 'gradlew' file and a 'src' folder, type in the command './gradlew bootrun' (for terminal) or '.\gradlew bootrun' (for command line)
-5. There you go! go to 'How to use the website' so see how to navigate through the MidasWebServer website
-6. If you want to shut down the application, 'ctrl c' 'y' then 'enter'. 
+1. start the mariadb database by using this command in the command line: podman run --detach --name midas-mariadb --env MARIADB_DATABASE=midasweb --env MARIADB_USER=frontend --env MARIADB_PASSWORD=156545 --env MARIADB_ROOT_PASSWORD=YourPass --network non-prod -p 3306:3306 mariadb:latest
+2. Use "docker/podman container list" and copy the id of the running mariadb container
+3. Use "docker/podman container attach ContainerId" with the id of the container to connect to the console of the container
+4. Use "ip a" to list ips of the container. copy the container's ip. we will be using it in the next command
+5. Exit out of the attached container session, if you need to you can start another terminal
+6. input this command into your terminal replacing the ip and other variables you wish to change: docker/podman run --detach --name midasfrontend --env DATABASE_LOCATION=//ContainerIP:3306/midasweb --env DATABASE_USERNAME=frontend --env DATABASE_PASSWORD=156545 --network non-prod -p 8080:8080 midasweb:0.0.1
+7. Now go to your favorite web browser and type in "localhost:8080". You should be able to connect to the website!
+8. If you want to shut down the application, docker/podman container rm ContainerID
