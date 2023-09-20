@@ -95,7 +95,7 @@ public class UserController {
         userService.hashPass(user, userForm.getPassword());
         userService.add(user);
 
-        log.info("loginPost:'{}' been registered", userService.getUserByUsername(userForm.getUsername()));//adding a time to this could be useful, or a more global logging system
+        log.info("loginPost:'{}' been registered", userService.getUserByUsername(userForm.getUsername()));
         return "redirect:/registerSuccess";
     }
 

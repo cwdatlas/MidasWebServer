@@ -25,13 +25,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @version 0.0.1
- * UserPersonal manages the endpoints for general locations
+  * UserPersonal manages the endpoints for general locations
  * This includes the index page and the user/home page
  * In the future general endpoints can be split up into more specific areas (admin, management, and so on)
  * Uses {@link UserService} heavily to get userdata used in logs and sessions
  * @Author Aidan Scott
- * @since 0.0.1
  */
 @Controller
 public class UserPersonal {
@@ -120,7 +118,8 @@ public class UserPersonal {
         if (ticker.getMetaData() != null || ticker.getMetaData().getSymbol() != null) {
             String symbol = ticker.getMetaData().getSymbol();
             boolean addedTicker = userService.addSymbolToUser(user, symbol);
-            log.debug("getTickerData:'{}', Searched Ticker: '{}', added ticker, '{}'", session.getAttribute("UserId"), symbol, addedTicker);
+            //TODO fix this debug log so it doesnt error out
+            //log.debug("getTickerData:'{}', Searched Ticker: '{}', added ticker, '{}'", session.getAttribute("UserId"), symbol, addedTicker);
         } else { // this is if the incoming data isnt valid, this is probably because the wrong ticker was sent to the api
             log.warn("getTickerData:'{}', Searched for ticker, '{}', bad ticker or interval, received bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
             stockDataRequestForm.setTicker("invalid");//I dont know if they will be able to see this
