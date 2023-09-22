@@ -79,6 +79,8 @@ public class UserPersonal {
         model.addAttribute("userSettings", symbols);
         log.debug("home: User '{}', symbols: '{}' added to form", session.getAttribute("UserId"), symbols);
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
+        model.addAttribute("backTraderForm", new BackTraderForm());
+        model.addAttribute("backTraderOptimizeForm", new BackTraderOptimizeForm());
         return "home";
     }
 
