@@ -60,7 +60,7 @@ public class BackTesterServiceImp implements BackTesterService{
         double balance = 400.90;
         double optSMA = 30;
         double optEMA = 20;
-        double optVolume = 1000;
+        double optVolume = 1000; //TODO get opt trading volume. add changing volume feature
         optParams.put("optSMA", optSMA);
         optParams.put("optEMA", optEMA);
         optParams.put("optVolume", optVolume);
