@@ -6,33 +6,52 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Arrays;
 
 public class BackTraderOptimizeForm {
     //TODO get date annotation
     @NotNull
+    @NotBlank
+    @DateTimeFormat
     @NotBlank(message = "Please Enter a time series start date")
     public String startDate;
     @NotNull
+    @NotBlank
+    @DateTimeFormat
     @NotBlank(message = "Please enter a time series end date")
     public String endDate;
     @NotNull
+    @NotBlank
     @NotBlank(message = "Please select a stock ticker")
     public StockTicker stockTicker;
     @NotNull
+    @NotBlank
     @NotBlank(message = "Please select an algorithm")
     public Algorithm algorithm;
     @NotNull
+    @NotBlank
+    @Min(0)
+    @Max(1)
     @NotBlank(message = "Please enter stake in decimal form (3% -> .03)")
     public float stake;
     @NotNull
+    @NotBlank
+    @Min(0)
+    @Max(1)
     @NotBlank(message = "Please enter commission in decimal form (3% -> .03)")
     public float commission;
     @NotNull
+    @NotBlank
+    @Max(100)
+    @Min(1)
     @NotBlank(message = "Please enter sma length, 1 < 100")
     public int[] smaOptChange;
     @NotNull
+    @NotBlank
+    @Max(100)
+    @Min(1)
     @NotBlank(message = "Please enter ema length, 1 < 100")
     public int[] emaOptChange;
     public BackTraderOptimizeForm(){
