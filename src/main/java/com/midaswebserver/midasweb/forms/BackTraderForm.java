@@ -17,10 +17,8 @@ public class BackTraderForm {
     @NotBlank(message = "Please enter a time series end date")
     public String endDate;
     @NotNull
-    @NotBlank(message = "Please select a stock ticker")
     public StockTicker stockTicker;
     @NotNull
-    @NotBlank(message = "Please select an algorithm")
     public Algorithm algorithm;
     @NotNull
     @NotBlank(message = "Please enter stake in decimal form (3% -> .03)")
