@@ -13,7 +13,6 @@ import java.util.Map;
  * Alpha Advantage is being queried
  * Webull will be queried in the future for realtime stock data
  * @Author Aidan Scott
- * @since 0.0.1
  */
 public interface TickerService {
     /**

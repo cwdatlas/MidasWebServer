@@ -19,7 +19,6 @@ import java.util.*;
 
 /**
  * @Author Aidan Scott
- * @since 0.0.1
  * TickerService manages API requests to third party ticker databases.
  * Alpha Advantage is being queried
  * //TODO make apiKey a environment variable when containerizing
