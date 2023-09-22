@@ -47,13 +47,13 @@ public class BackTraderOptimizeForm {
     @Max(100)
     @Min(1)
     @NotBlank(message = "Please enter sma length, 1 < 100")
-    public int[] smaOptChange;
+    public int smaOptChange;
     @NotNull
     @NotBlank
     @Max(100)
     @Min(1)
     @NotBlank(message = "Please enter ema length, 1 < 100")
-    public int[] emaOptChange;
+    public int emaOptChange;
     public BackTraderOptimizeForm(){
     }
 
@@ -105,19 +105,19 @@ public class BackTraderOptimizeForm {
         this.commission = commission;
     }
 
-    public int[] getSmaOptChange() {
+    public int getSmaOptChange() {
         return smaOptChange;
     }
 
-    public void setSmaOptChange(int[] smaOptChange) {
+    public void setSmaOptChange(int smaOptChange) {
         this.smaOptChange = smaOptChange;
     }
 
-    public int[] getEmaOptChange() {
+    public int getEmaOptChange() {
         return emaOptChange;
     }
 
-    public void setEmaOptChange(int[] emaOptChange) {
+    public void setEmaOptChange(int emaOptChange) {
         this.emaOptChange = emaOptChange;
     }
 
@@ -130,8 +130,8 @@ public class BackTraderOptimizeForm {
                 ", algorithm=" + algorithm +
                 ", stake=" + stake +
                 ", commission=" + commission +
-                ", smaOptChange=" + Arrays.toString(smaOptChange) +
-                ", emaOptChange=" + Arrays.toString(emaOptChange) +
+                ", smaOptChange=" + smaOptChange +
+                ", emaOptChange=" + emaOptChange +
                 '}';
     }
 }
