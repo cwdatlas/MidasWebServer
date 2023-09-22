@@ -2,9 +2,13 @@ package com.midaswebserver.midasweb.controllers;
 
 import com.crazzyghost.alphavantage.parameters.OutputSize;
 import com.midaswebserver.midasweb.apiModels.Ticker;
+import com.midaswebserver.midasweb.forms.BackTraderForm;
+import com.midaswebserver.midasweb.forms.BackTraderOptimizeForm;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
 import com.midaswebserver.midasweb.models.User.Symbol;
 import com.midaswebserver.midasweb.models.User.User;
+import com.midaswebserver.midasweb.models.trader.StockTicker;
+import com.midaswebserver.midasweb.services.BackTesterService;
 import com.midaswebserver.midasweb.services.TickerService;
 import com.midaswebserver.midasweb.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,16 +40,19 @@ public class UserPersonal {
     private static final Logger log = LoggerFactory.getLogger(UserPersonal.class);
     private final UserService userService;
     private final TickerService tickerService;
+    private final BackTesterService backtesterService;
 
     /**
      * Injects services into controller
      *
      * @param userService
      * @param tickerService
+     * @param backtesterService
      */
-    public UserPersonal(UserService userService, TickerService tickerService) {
+    public UserPersonal(UserService userService, TickerService tickerService, BackTesterService backtesterService) {
         this.userService = userService;
         this.tickerService = tickerService;
+        this.backtesterService = backtesterService;
     }
 
     /**
@@ -98,6 +105,7 @@ public class UserPersonal {
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
 
+        //TODO Get rid of this section and make sure it doesnt break anything because it is covered by the annotations in the forms
         if (stockDataRequestForm.getTicker().equals("") || stockDataRequestForm.getInterval() == null) {
             result.addError(new ObjectError("globalError", "Make sure to fill all fields"));
             log.debug("getTickerData: Attempted submitting of at least one blank field. Fields: ticker, '{}' interval '{}'",
@@ -131,5 +139,93 @@ public class UserPersonal {
         //other attributes
         model.addAttribute("data", data);
         return "dataDisplay";
+    }
+    /**
+     * GetTickerData takes a StockDataRequestForm and displays the data on the displayData page
+     * will return user to /user/home if any data validates bad
+     *
+     * @param backTraderForm {@link StockDataRequestForm}
+     * @param result               {@link BindingResult}
+     * @param session              {@link HttpSession}
+     * @return previous url the user had, after it adds ticker data to their session
+     */
+    @Transactional
+    @PostMapping("/user/home/backtrade")
+    public String getBacktrade(@Valid @ModelAttribute BackTraderForm backTraderForm, BindingResult result, HttpSession session, Model model, HttpServletRequest request) {
+        //session user validation if user is logged in
+        Object userId = session.getAttribute("UserId");
+        if (userId == null)
+            return "redirect:/login";
+
+        User user = userService.getUserById((Long) (userId));
+        //exposing and setting standard model attributes
+        model.addAttribute("user", user);
+        Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
+        model.addAttribute("userSettings", symbols);
+
+        if (result.hasErrors()) {
+            log.debug("getBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
+            return "home";
+        }
+        //copying data so variables used internally do not share variables used externally
+        String startDate = new String(backTraderForm.startDate);
+        String endDate = new String(backTraderForm.endDate);
+        Map<String, Double> tradeResults = backtesterService.Backtrade(
+                startDate,
+                endDate,
+                backTraderForm.smaLength,
+                backTraderForm.emaLength,
+                backTraderForm.stockTicker,
+                backTraderForm.stake,
+                backTraderForm.algorithm,
+                backTraderForm.commission
+        );
+        model.addAttribute("backtrader", tradeResults);
+        return "home";
+    }
+
+    /**
+     * GetTickerData takes a StockDataRequestForm and displays the data on the displayData page
+     * will return user to /user/home if any data validates bad
+     *
+     * @param backTraderOptimizeForm {@link StockDataRequestForm}
+     * @param result               {@link BindingResult}
+     * @param session              {@link HttpSession}
+     * @return previous url the user had, after it adds ticker data to their session
+     */
+    @Transactional
+    @PostMapping("/user/home/backtradeOpt")
+    public String getOptBacktrade(@Valid @ModelAttribute BackTraderOptimizeForm backTraderOptimizeForm, BindingResult result, HttpSession session, Model model, HttpServletRequest request) {
+        //session user validation if user is logged in
+        Object userId = session.getAttribute("UserId");
+        if (userId == null)
+            return "redirect:/login";
+
+        User user = userService.getUserById((Long) (userId));
+        //exposing and setting standard model attributes
+        model.addAttribute("user", user);
+        Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
+        model.addAttribute("userSettings", symbols);
+
+        if (result.hasErrors()) {
+            log.debug("getOptBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
+            return "home";
+        }
+
+        //copying data so variables used internally do not share variables used externally
+        String startDate = new String(backTraderOptimizeForm.startDate);
+        String endDate = new String(backTraderOptimizeForm.endDate);
+        Map<String, Double> tradeResults = backtesterService.Backtrade(
+                startDate,
+                endDate,
+                backTraderOptimizeForm.smaOptChange,
+                backTraderOptimizeForm.emaOptChange,
+                backTraderOptimizeForm.stockTicker,
+                backTraderOptimizeForm.stake,
+                backTraderOptimizeForm.algorithm,
+                backTraderOptimizeForm.commission
+        );
+        model.addAttribute("backtraderOpt", tradeResults);
+        return "home";
     }
 }
