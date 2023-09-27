@@ -20,23 +20,21 @@ public class BackTraderForm {
     public StockTicker stockTicker;
     @NotNull
     public Algorithm algorithm;
-    @NotNull
-    @NotBlank(message = "Please enter stake in decimal form (3% -> .03)")
-    public double stake;
-    @NotNull
+    @NotNull(message = "Please enter stake in decimal form (3% -> .03)")
     @Min(0)
     @Max(1)
-    @NotBlank(message = "Please enter commission in decimal form (3% -> .03)")
+    public double stake;
+    @NotNull(message = "Please enter commission in decimal form (3% -> .03)")
+    @Min(0)
+    @Max(1)
     public double commission;
-    @NotNull
+    @NotNull(message = "Please enter sma length, 1 < 100")
     @Max(100)
     @Min(1)
-    @NotBlank(message = "Please enter sma length, 1 < 100")
     public int smaLength;
-    @NotNull
+    @NotNull(message = "Please enter ema length, 1 < 100")
     @Max(100)
     @Min(1)
-    @NotBlank(message = "Please enter ema length, 1 < 100")
     public int emaLength;
 
     public BackTraderForm() {
