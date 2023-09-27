@@ -10,7 +10,7 @@
 <div th:replace="fragments/header.html :: header">&nbsp;</div>
 <body class="container">
 <div class="row">
-    <div class="col-5 border">
+    <div class="col-5 border" >
         <p class="display-4">Financial Search</p>
         <p>Previous tickers searched</p>
         <div class="bg-dark text-white m-1 col-2 text-center" th:each="symbol: ${userSettings}">
@@ -29,7 +29,7 @@
     </div>
 </div>
 <div class="row pt-4">
-    <div class="col-5 border">
+    <div class="col-5 border" th:if="${backTraderForm != null}">
         <p class="display-4">BackTester</p>
         <form action="#" method="post" th:action="@{/user/home/backtrade}" th:object="${backTraderForm}">
             <span class="text-danger" th:if="${#fields.hasGlobalErrors()}">Global error</span><br/>
@@ -60,9 +60,12 @@
             <button class="btn m-1" type="submit">Test Params</button>
         </form>
     </div>
+    <div th:if="${backtrader != null}">
+        <p th:each="*{backtrader}" th:valuetype="*{backtrader.keySet()}" th:value="*{backtrader.values()}"></p>
+    </div>
 </div>
 <div class="row pt-4">
-    <div class="col-5 border">
+    <div class="col-5 border" th:if="${backTraderOptimizeForm != null}">
         <p class="display-4">Optimizer</p>
         <form action="#" method="post" th:action="@{/user/home/backtradeOpt}" th:object="${backTraderOptimizeForm}">
             <span class="text-danger" th:if="${#fields.hasGlobalErrors()}">Global error</span><br/>
@@ -72,12 +75,17 @@
             <input class="m-1 text-center" placeholder="9/21/2023" th:field="*{endDate}" type="text"/>
             <span class="text-danger" th:errors="*{endDate}"
                   th:if="${#fields.hasErrors('endDate')}">End Date Error</span><br/>
-            <input class="m-1 text-center" placeholder="Ticker 'EOG'" th:field="*{stockTicker}" type="text"/>
-            <span class="text-danger" th:errors="*{stockTicker}"
-                  th:if="${#fields.hasErrors('stockTicker')}">Ticker error</span><br/>
-            <input class="m-1 text-center" placeholder="SMAEMACross" th:field="*{algorithm}" type="text"/>
-            <span class="text-danger" th:errors="*{algorithm}"
-                  th:if="${#fields.hasErrors('algorithm')}">Algorithm error</span><br/>
+
+            <label for="stockTicker">Choose a ticker:</label>
+            <select class="form-control" id="stockTicker" name="selectedStockTicker">
+                <option th:each="stockTicker :${StockTicker.getEnumConstants()}" th:value="${stockTicker}" th:text="${stockTicker}">Option</option>
+            </select>
+
+            <label for="algorithm">Choose an Algorithm:</label>
+            <select class="form-control" id="algorithm" name="selectedAlgorithm">
+                <option th:each="algorithm :${Algorithm.getEnumConstants()}" th:value="${algorithm}" th:text="${algorithm}">Option</option>
+            </select>
+
             <input class="m-1 text-center" placeholder=".3" th:field="*{stake}" type="text"/>
             <span class="text-danger" th:errors="*{stake}"
                   th:if="${#fields.hasErrors('stake')}">Stake error</span><br/>
@@ -92,6 +100,9 @@
                   th:if="${#fields.hasErrors('emaOptChange')}">Ema difference error</span><br/>
             <button class="btn m-1" type="submit">Optimize Params</button>
         </form>
+    </div>
+    <div th:if="${backtraderOpt != null}">
+        <p th:each="*{backtraderOpt}" th:valuetype="*{backtraderOpt.keySet()}" th:value="*{backtraderOpt.values()}"></p>
     </div>
 </div>
 </body>
