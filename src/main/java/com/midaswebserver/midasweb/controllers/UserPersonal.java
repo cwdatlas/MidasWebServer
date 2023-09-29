@@ -83,8 +83,6 @@ public class UserPersonal {
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         model.addAttribute("backTraderForm", new BackTraderForm());
         model.addAttribute("backTraderOptimizeForm", new BackTraderOptimizeForm());
-        model.addAttribute("Algorithm", Algorithm.class);
-        model.addAttribute("StockTicker", StockTicker.class);
 
         //Checking if optimizeBacktrade or backtrade is in the session
         if (session.getAttribute("backtrade") != null) {
@@ -103,11 +101,12 @@ public class UserPersonal {
             );
             log.debug("home: User '{}', returned backtrade params: '{}'", session.getAttribute("UserId"), tradeResults);
             model.addAttribute("backtrader", tradeResults);
+            return "home";
         }
-        if (session.getAttribute("optimizeBacktrade") != null) {
-            Map<String, Object> backtrade = (Map<String, Object>) session.getAttribute("optimizeBacktrade");
+        Map<String, Object> backtrade = (Map<String, Object>) session.getAttribute("optimizeBacktrade");
+        if ( backtrade !=null) {
             log.debug("home: User '{}', optimizeBacktrade params collected from session", session.getAttribute("UserId"));
-            Map<String, Double> tradeResults = backtesterService.Optimize(
+            Map<String, Double> formParams = backtesterService.Optimize(
                     (String) backtrade.get("startDate"),
                     (String) backtrade.get("endDate"),
                     (Integer) backtrade.get("smaOptChange"),
@@ -117,8 +116,8 @@ public class UserPersonal {
                     (Algorithm) backtrade.get("algorithm"),
                     (Double) backtrade.get("commission")
             );
-            log.debug("home: User '{}', returned optimizeBacktrade params: '{}'", session.getAttribute("UserId"), tradeResults);
-            model.addAttribute("backtraderOpt", tradeResults);
+            log.debug("home: User '{}', returned optimizeBacktrade params: '{}'", session.getAttribute("UserId"), formParams);
+            model.addAttribute("backtraderOpt", formParams);
         }
 
         return "home";
@@ -262,7 +261,8 @@ public class UserPersonal {
         optimizeBacktrade.put("commission", backTraderOptimizeForm.commission);
         //adding backtrade information to the form, so it can be gathered and used in the get method
         session.setAttribute("optimizeBacktrade", optimizeBacktrade);
+        log.debug("getOptBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), optimizeBacktrade);
 
-        return "redirect:/home";
+        return "redirect:/user/home";
     }
 }

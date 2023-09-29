@@ -10,7 +10,7 @@
 <div th:replace="fragments/header.html :: header">&nbsp;</div>
 <body class="container">
 <div class="row">
-    <div class="col-5 border" >
+    <div class="col-5 border">
         <p class="display-4">Financial Search</p>
         <p>Previous tickers searched</p>
         <div class="bg-dark text-white m-1 col-2 text-center" th:each="symbol: ${userSettings}">
@@ -77,13 +77,17 @@
                   th:if="${#fields.hasErrors('endDate')}">End Date Error</span><br/>
 
             <label for="stockTicker">Choose a ticker:</label>
-            <select class="form-control" id="stockTicker" name="selectedStockTicker">
-                <option th:each="stockTicker :${StockTicker.getEnumConstants()}" th:value="${stockTicker}" th:text="${stockTicker}">Option</option>
+            <select class="form-control" id="stockTicker" name="selectedStockTicker" th:field="*{stockTicker}">
+                <option th:each="stockTicker :${T(com.midaswebserver.midasweb.models.trader.StockTicker).values()}"
+                        th:value="${stockTicker}" th:text="${stockTicker}">Option
+                </option>
             </select>
 
             <label for="algorithm">Choose an Algorithm:</label>
-            <select class="form-control" id="algorithm" name="selectedAlgorithm">
-                <option th:each="algorithm :${Algorithm.getEnumConstants()}" th:value="${algorithm}" th:text="${algorithm}">Option</option>
+            <select class="form-control" id="algorithm" name="selectedAlgorithm" th:field="*{algorithm}">
+                <option th:each="algorithm : ${T(com.midaswebserver.midasweb.models.trader.Algorithm).values()}"
+                        th:value="${algorithm}" th:text="${algorithm}">Option
+                </option>
             </select>
 
             <input class="m-1 text-center" placeholder=".3" th:field="*{stake}" type="text"/>
@@ -101,8 +105,21 @@
             <button class="btn m-1" type="submit">Optimize Params</button>
         </form>
     </div>
-    <div th:if="${backtraderOpt != null}">
-        <p th:each="*{backtraderOpt}" th:valuetype="*{backtraderOpt.keySet()}" th:value="*{backtraderOpt.values()}"></p>
+    <div class="col-5 border" th:if="${backtraderOpt != null}">
+        <table>
+            <thead>
+            <tr>
+                <th>Param</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${backtraderOpt}">
+                <td th:text="${entry.key}">Key</td>
+                <td th:text="${entry.value}">Value</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 </body>
