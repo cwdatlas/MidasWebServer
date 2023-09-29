@@ -10,7 +10,7 @@
 <div th:replace="fragments/header.html :: header">&nbsp;</div>
 <body class="container">
 <div class="row">
-    <div class="col-5 border">
+    <div class="col-5 border" th:if="${stockDataRequestForm != null}">
         <p class="display-4">Financial Search</p>
         <p>Previous tickers searched</p>
         <div class="bg-dark text-white m-1 col-2 text-center" th:each="symbol: ${userSettings}">
@@ -53,14 +53,19 @@
                         th:value="${algorithm}" th:text="${algorithm}">Option
                 </option>
             </select>
+            <span>Stake</span>
+            <input class="m-1 text-center" placeholder=".01" th:field="*{stake}" type="text"/>
             <span class="text-danger" th:errors="*{stake}"
                   th:if="${#fields.hasErrors('stake')}">Stake error</span><br/>
+            <span>Commission</span>
             <input class="m-1 text-center" placeholder=".01" th:field="*{commission}" type="text"/>
             <span class="text-danger" th:errors="*{commission}"
                   th:if="${#fields.hasErrors('commission')}">Commission error</span><br/>
+            <span>SMA length</span>
             <input class="m-1 text-center" placeholder="30" th:field="*{smaLength}" type="text"/>
             <span class="text-danger" th:errors="*{smaLength}"
                   th:if="${#fields.hasErrors('smaLength')}">SmaLength error</span><br/>
+            <span>EMA length</span>
             <input class="m-1 text-center" placeholder="15" th:field="*{emaLength}" type="text"/>
             <span class="text-danger" th:errors="*{emaLength}"
                   th:if="${#fields.hasErrors('emaLength')}">EmaLength error</span><br/>
@@ -111,15 +116,19 @@
                 </option>
             </select>
 
+            <span>Stake</span>
             <input class="m-1 text-center" placeholder=".3" th:field="*{stake}" type="text"/>
             <span class="text-danger" th:errors="*{stake}"
                   th:if="${#fields.hasErrors('stake')}">Stake error</span><br/>
+            <span>Commission</span>
             <input class="m-1 text-center" placeholder=".01" th:field="*{commission}" type="text"/>
             <span class="text-danger" th:errors="*{commission}"
                   th:if="${#fields.hasErrors('commission')}">Commission error</span><br/>
+            <span>SMA change (starts at 0)</span>
             <input class="m-1 text-center" placeholder="40" th:field="*{smaOptChange}" type="text"/>
             <span class="text-danger" th:errors="*{smaOptChange}"
                   th:if="${#fields.hasErrors('smaOptChange')}">Sma difference error</span><br/>
+            <span>EMA change (starts at 0)</span>
             <input class="m-1 text-center" placeholder="30" th:field="*{emaOptChange}" type="text"/>
             <span class="text-danger" th:errors="*{emaOptChange}"
                   th:if="${#fields.hasErrors('emaOptChange')}">Ema difference error</span><br/>

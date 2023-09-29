@@ -148,7 +148,7 @@ public class UserPersonal {
 
         if (result.hasErrors()) {
             log.debug("getTickerData:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
-            return "home";
+            return "redirect:/user/home";
         }
 
         Ticker ticker = tickerService.getTimeSeriesInfo(stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval(), OutputSize.COMPACT);
@@ -232,16 +232,16 @@ public class UserPersonal {
         if (userId == null)
             return "redirect:/login";
 
-        if (result.hasErrors()) {
-            log.debug("getOptBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
-            return "home";
-        }
-
         User user = userService.getUserById((Long) (userId));
         //exposing and setting standard model attributes
         model.addAttribute("user", user);
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
+
+        if (result.hasErrors()) {
+            log.debug("getOptBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
+            return "home";
+        }
 
         //copying data so variables used internally do not share variables used externally
         Map<String, Object> optimizeBacktrade = new HashMap<>();
