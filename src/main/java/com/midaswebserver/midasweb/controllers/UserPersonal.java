@@ -85,9 +85,9 @@ public class UserPersonal {
         model.addAttribute("backTraderOptimizeForm", new BackTraderOptimizeForm());
 
         //Checking if optimizeBacktrade or backtrade is in the session
-        if (session.getAttribute("backtrade") != null) {
-            //notnull is checked in the if statement before this line, so it shouldnt break
-            Map<String, Object> backtrade = (Map<String, Object>) session.getAttribute("backtrade");
+        Map<String, Object> backtrade = (Map<String, Object>) session.getAttribute("backtrade");
+        if (backtrade != null) {
+            //notnull is checked in the if statement before this line, so it shouldn't break
             log.debug("home: User '{}', Backtrade params collected from session", session.getAttribute("UserId"));
             Map<String, Double> tradeResults = backtesterService.Backtrade(
                     (String) backtrade.get("startDate"),
@@ -103,7 +103,7 @@ public class UserPersonal {
             model.addAttribute("backtrader", tradeResults);
             return "home";
         }
-        Map<String, Object> backtrade = (Map<String, Object>) session.getAttribute("optimizeBacktrade");
+        backtrade = (Map<String, Object>) session.getAttribute("optimizeBacktrade");
         if ( backtrade !=null) {
             log.debug("home: User '{}', optimizeBacktrade params collected from session", session.getAttribute("UserId"));
             Map<String, Double> formParams = backtesterService.Optimize(
@@ -146,13 +146,6 @@ public class UserPersonal {
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
 
-        //TODO Get rid of this section and make sure it doesnt break anything because it is covered by the annotations in the forms
-        if (stockDataRequestForm.getTicker().equals("") || stockDataRequestForm.getInterval() == null) {
-            result.addError(new ObjectError("globalError", "Make sure to fill all fields"));
-            log.debug("getTickerData: Attempted submitting of at least one blank field. Fields: ticker, '{}' interval '{}'",
-                    stockDataRequestForm.getTicker(), stockDataRequestForm.getInterval());
-            return "home";
-        }
         if (result.hasErrors()) {
             log.debug("getTickerData:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
@@ -218,8 +211,9 @@ public class UserPersonal {
         backtrade.put("commission", backTraderForm.commission);
         //adding backtrade information to the form, so it can be gathered and used in the get method
         session.setAttribute("backtrade", backtrade);
+        log.debug("getBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtrade);
 
-        return "redirect:/home";
+        return "redirect:/user/home";
     }
 
     /**

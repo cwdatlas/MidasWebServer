@@ -39,13 +39,20 @@
             <input class="m-1 text-center" placeholder="9/21/2023" th:field="*{endDate}" type="text"/>
             <span class="text-danger" th:errors="*{endDate}"
                   th:if="${#fields.hasErrors('endDate')}">End Date Error</span><br/>
-            <input class="m-1 text-center" placeholder="Ticker 'EOG'" th:field="*{stockTicker}" type="text"/>
-            <span class="text-danger" th:errors="*{stockTicker}"
-                  th:if="${#fields.hasErrors('stockTicker')}">Ticker error</span><br/>
-            <input class="m-1 text-center" placeholder="SMAEMACross" th:field="*{algorithm}" type="text"/>
-            <span class="text-danger" th:errors="*{algorithm}"
-                  th:if="${#fields.hasErrors('algorithm')}">Algorithm error</span><br/>
-            <input class="m-1 text-center" placeholder=".3" th:field="*{stake}" type="text"/>
+            <label for="stockTicker">Choose a ticker:</label>
+
+            <select class="form-control" id="stockTicker" name="selectedStockTicker" th:field="*{stockTicker}">
+                <option th:each="stockTicker :${T(com.midaswebserver.midasweb.models.trader.StockTicker).values()}"
+                        th:value="${stockTicker}" th:text="${stockTicker}">Option
+                </option>
+            </select>
+
+            <label for="algorithm">Choose an Algorithm:</label>
+            <select class="form-control" id="algorithm" name="selectedAlgorithm" th:field="*{algorithm}">
+                <option th:each="algorithm : ${T(com.midaswebserver.midasweb.models.trader.Algorithm).values()}"
+                        th:value="${algorithm}" th:text="${algorithm}">Option
+                </option>
+            </select>
             <span class="text-danger" th:errors="*{stake}"
                   th:if="${#fields.hasErrors('stake')}">Stake error</span><br/>
             <input class="m-1 text-center" placeholder=".01" th:field="*{commission}" type="text"/>
@@ -60,9 +67,23 @@
             <button class="btn m-1" type="submit">Test Params</button>
         </form>
     </div>
-    <div th:if="${backtrader != null}">
-        <p th:each="*{backtrader}" th:valuetype="*{backtrader.keySet()}" th:value="*{backtrader.values()}"></p>
+    <div class="col-5 border" th:if="${backtrader != null}">
+        <table>
+            <thead>
+            <tr>
+                <th>Param</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${backtrader}">
+                <td th:text="${entry.key}">Key</td>
+                <td th:text="${entry.value}">Value</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+</div>
 </div>
 <div class="row pt-4">
     <div class="col-5 border" th:if="${backTraderOptimizeForm != null}">
@@ -76,15 +97,15 @@
             <span class="text-danger" th:errors="*{endDate}"
                   th:if="${#fields.hasErrors('endDate')}">End Date Error</span><br/>
 
-            <label for="stockTicker">Choose a ticker:</label>
-            <select class="form-control" id="stockTicker" name="selectedStockTicker" th:field="*{stockTicker}">
+            <label for="OptstockTicker">Choose a ticker:</label>
+            <select class="form-control" id="OptstockTicker" name="selectedStockTicker" th:field="*{stockTicker}">
                 <option th:each="stockTicker :${T(com.midaswebserver.midasweb.models.trader.StockTicker).values()}"
                         th:value="${stockTicker}" th:text="${stockTicker}">Option
                 </option>
             </select>
 
-            <label for="algorithm">Choose an Algorithm:</label>
-            <select class="form-control" id="algorithm" name="selectedAlgorithm" th:field="*{algorithm}">
+            <label for="Optalgorithm">Choose an Algorithm:</label>
+            <select class="form-control" id="Optalgorithm" name="selectedAlgorithm" th:field="*{algorithm}">
                 <option th:each="algorithm : ${T(com.midaswebserver.midasweb.models.trader.Algorithm).values()}"
                         th:value="${algorithm}" th:text="${algorithm}">Option
                 </option>
