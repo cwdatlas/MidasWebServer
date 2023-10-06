@@ -14,6 +14,6 @@ public interface BackTesterService{
 
     Map<String, Double> Backtrade(String startDate, String endDate, int smaOptChange, int emaOptChange,
                                   StockTicker stockticker, double stake, Algorithm algorithm, double commission);
-    Map<String, Double> Optimize(String startDate, String endDate, int sma, int ema,
-                              StockTicker stockticker, double stake, Algorithm algorithm, double commission);
+    Map<String, Double> optimize(String startDate, String endDate, int sma, int ema,
+                                 StockTicker stockticker, double stake, Algorithm algorithm, double commission);
 }

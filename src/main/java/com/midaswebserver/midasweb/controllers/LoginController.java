@@ -92,7 +92,7 @@ public class LoginController {
         session.setAttribute("UserId", userService.getIdByUsername(loginForm.getUsername()));
         log.info("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByUsername(loginForm.getUsername()), session.getId());
         //Redirecting user to correct location
-        if (preLoginUri == null) {
+        if (preLoginUri == null || preLoginUri.isEmpty()) {
             log.debug("getTickerData:'{}', no address found in preLoginUri, redirect failed", userService.getClientIp(request));
             return "redirect:/user/home";
         }

@@ -55,7 +55,7 @@ public class BackTesterServiceImp implements BackTesterService{
      * @return [optSMA, optEMA, optVolume, endBalance]
      */
     @Override
-    public Map<String, Double> Optimize(String startDate, String endDate, int sma, int ema, StockTicker stockticker, double stake, Algorithm algorithm, double commission) {
+    public Map<String, Double> optimize(String startDate, String endDate, int sma, int ema, StockTicker stockticker, double stake, Algorithm algorithm, double commission) {
         Map<String, Double> optParams = new HashMap<>();
         double balance = 400.90;
         double optSMA = 30;

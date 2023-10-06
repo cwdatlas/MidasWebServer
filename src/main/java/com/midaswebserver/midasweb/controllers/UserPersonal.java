@@ -21,7 +21,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,7 +105,7 @@ public class UserPersonal {
         backtrade = (Map<String, Object>) session.getAttribute("optimizeBacktrade");
         if ( backtrade !=null) {
             log.debug("home: User '{}', optimizeBacktrade params collected from session", session.getAttribute("UserId"));
-            Map<String, Double> formParams = backtesterService.Optimize(
+            Map<String, Double> formParams = backtesterService.optimize(
                     (String) backtrade.get("startDate"),
                     (String) backtrade.get("endDate"),
                     (Integer) backtrade.get("smaOptChange"),
