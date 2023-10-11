@@ -3,26 +3,26 @@ package com.midaswebserver.midasweb.apiModels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class BacktradeTest extends BacktradeData{
-    public double sma;
-    public double ema;
+    public int sma;
+    public int ema;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public double getSma() {
+    public int getSma() {
         return sma;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setSma(double sma) {
+    public void setSma(int sma) {
         this.sma = sma;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public double getEma() {
+    public int getEma() {
         return ema;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setEma(double ema) {
+    public void setEma(int ema) {
         this.ema = ema;
     }
 

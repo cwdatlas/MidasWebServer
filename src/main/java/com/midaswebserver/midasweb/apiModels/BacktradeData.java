@@ -13,6 +13,17 @@ public class BacktradeData {
     public double commission;
     public String backtradeType;
     public double stake;
+    public double endValue;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public double getEndValue() {
+        return endValue;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public void setEndValue(double endValue) {
+        this.endValue = endValue;
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public double getStake() {
@@ -35,9 +46,7 @@ public class BacktradeData {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public String getStartDate() {
-        return startDate;
-    }
+    public String getStartDate() {return startDate;}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public void setStartDate(String startDate) {
