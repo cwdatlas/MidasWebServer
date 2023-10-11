@@ -29,7 +29,6 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-
 }
 tasks.named("jar")  {
 	enabled = false
