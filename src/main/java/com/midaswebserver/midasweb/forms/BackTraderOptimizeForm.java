@@ -35,11 +35,19 @@ public class BackTraderOptimizeForm {
     @NotNull(message = "Please enter sma length, 1 < 100")
     @Max(100)
     @Min(1)
-    public int smaOptChange;
+    public int startSma;
+    @NotNull(message = "Please enter sma length, 1 < 100")
+    @Max(100)
+    @Min(1)
+    public int endSma;
     @NotNull(message = "Please enter ema length, 1 < 100")
     @Max(100)
     @Min(1)
-    public int emaOptChange;
+    public int startEma;
+    @NotNull(message = "Please enter ema length, 1 < 100")
+    @Max(100)
+    @Min(1)
+    public int endEma;
     public BackTraderOptimizeForm(){
     }
 
@@ -91,20 +99,36 @@ public class BackTraderOptimizeForm {
         this.commission = commission;
     }
 
-    public int getSmaOptChange() {
-        return smaOptChange;
+    public int getStartSma() {
+        return startSma;
     }
 
-    public void setSmaOptChange(int smaOptChange) {
-        this.smaOptChange = smaOptChange;
+    public void setStartSma(int startSma) {
+        this.startSma = startSma;
     }
 
-    public int getEmaOptChange() {
-        return emaOptChange;
+    public int getEndSma() {
+        return endSma;
     }
 
-    public void setEmaOptChange(int emaOptChange) {
-        this.emaOptChange = emaOptChange;
+    public void setEndSma(int endSma) {
+        this.endSma = endSma;
+    }
+
+    public int getStartEma() {
+        return startEma;
+    }
+
+    public void setStartEma(int startEma) {
+        this.startEma = startEma;
+    }
+
+    public int getEndEma() {
+        return endEma;
+    }
+
+    public void setEndEma(int endEma) {
+        this.endEma = endEma;
     }
 
     @Override
@@ -116,8 +140,10 @@ public class BackTraderOptimizeForm {
                 ", algorithm=" + algorithm +
                 ", stake=" + stake +
                 ", commission=" + commission +
-                ", smaOptChange=" + smaOptChange +
-                ", emaOptChange=" + emaOptChange +
+                ", startSma=" + startSma +
+                ", endSma=" + endSma +
+                ", startEma=" + startEma +
+                ", endEma=" + endEma +
                 '}';
     }
 }
