@@ -1,13 +1,13 @@
 package com.midaswebserver.midasweb.services;
 
-import com.midaswebserver.midasweb.models.trader.Algorithm;
-import com.midaswebserver.midasweb.models.trader.StockTicker;
+import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
+import com.midaswebserver.midasweb.apiModels.BacktradeTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
+;
 
 /**
  * @Author Aidan Scott
@@ -15,56 +15,72 @@ import java.util.Map;
  * Webull will be queried in the future for realtime stock data
  */
 @Service
-public class BackTesterServiceImp implements BackTesterService{
+public class BackTesterServiceImp implements BackTesterService {
     private static final Logger log = LoggerFactory.getLogger(com.midaswebserver.midasweb.services.BackTesterServiceImp.class);
-
-    /**
-     * Backtrade consumes a variables, checks how profitable they are trading them in the past, then returns the ending balance
-     * @param startDate
-     * @param endDate
-     * @param smaOptChange
-     * @param emaOptChange
-     * @param stockticker
-     * @param stake
-     * @param algorithm
-     * @param commission
-     * @return [endBalance]
-     */
-    @Override
-    public Map<String, Double> Backtrade(String startDate, String endDate, int smaOptChange, int emaOptChange, StockTicker stockticker, double stake, Algorithm algorithm, double commission) {
-        Map<String, Double> optParams = new HashMap<>();
-        double balance = 300.90;
-        optParams.put("endBalance", balance);
-        return optParams;
-
-
-    }
 
     /**
      * Optimize takes variables and checks how profitable they would be while varying some variables each test. It will return
      * with the most profitable changing variables. If you plug the output into the Backtrade function, you will get the same
      * balance as you got from this function.
-     * @param startDate
-     * @param endDate
-     * @param sma
-     * @param ema
-     * @param stockticker
-     * @param stake
-     * @param algorithm
-     * @param commission
+     * @param opimization_params
      * @return [optSMA, optEMA, optVolume, endBalance]
      */
+
+    //TODO move data to a custom object for easy data movement (IMPORTANT)
+
+    /**
+     * @param params
+     * @return
+     */
     @Override
-    public Map<String, Double> optimize(String startDate, String endDate, int sma, int ema, StockTicker stockticker, double stake, Algorithm algorithm, double commission) {
-        Map<String, Double> optParams = new HashMap<>();
-        double balance = 400.90;
-        double optSMA = 30;
-        double optEMA = 20;
-        double optVolume = 1000; //TODO get opt trading volume. add changing volume feature
-        optParams.put("optSMA", optSMA);
-        optParams.put("optEMA", optEMA);
-        optParams.put("optVolume", optVolume);
-        optParams.put("endBalance", balance);
-        return optParams;
+    public BacktradeTest backtrade(BacktradeTest params) {
+        if (params != null) {
+            String url =
+                    "http://localhost:5000/backtrade?" +
+                            " endDate= " + params.getEndDate() +
+                            " startDate= " + params.getStartDate() +
+                            " &sma= " + params.getSma() +
+                            " &ema= " + params.getEma() +
+                            " &stockticker= " + params.getStockTicker().toString() +
+                            " &stake= " + params.getStake() +
+                            " &algorithm= " + params.getAlgorithm().toString() +
+                            " &commission= " + params.getCommission();
+
+            RestTemplate restTemplate = new RestTemplate();
+            BacktradeTest result = restTemplate.getForObject(url, BacktradeTest.class);
+            log.info("BacktradeTest: returned object '{}'", result);
+            params.endValue = result.getEndValue();
+            return params;
+        }
+        return params;
     }
+
+    /**
+     * @param params
+     * @return
+     */
+
+    public BacktradeOptimize optimize(BacktradeOptimize params) {
+        if (params != null) {
+            String url =
+                    "http://localhost:5000/optimize?" +
+                            "endDate= " + params.getEndDate() +
+                            "startDate= " + params.getStartDate() +
+                            "&startSma= " + params.getStartSma() +
+                            "&endSma= " + params.getEndSma() +
+                            "&startEma= " + params.getStartEma() +
+                            "&endEma= " + params.getEndEma() +
+                            "&stockticker= " + params.getStockTicker().toString() +
+                            "&stake= " + params.getStake() +
+                            "&algorithm= " + params.getAlgorithm().toString() +
+                            "&commission= " + params.getCommission();
+
+            RestTemplate restTemplate = new RestTemplate();
+            BacktradeOptimize result = restTemplate.getForObject(url, BacktradeOptimize.class);
+            log.info("BacktradeOptimize: returned object '{}'", result);
+            return result;
+        }
+        return params;
+    }
+
 }

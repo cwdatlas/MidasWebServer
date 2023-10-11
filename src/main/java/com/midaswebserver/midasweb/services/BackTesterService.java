@@ -1,7 +1,7 @@
 package com.midaswebserver.midasweb.services;
 
-import com.midaswebserver.midasweb.models.trader.Algorithm;
-import com.midaswebserver.midasweb.models.trader.StockTicker;
+import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
+import com.midaswebserver.midasweb.apiModels.BacktradeTest;
 
 import java.util.Map;
 
@@ -12,8 +12,6 @@ import java.util.Map;
  */
 public interface BackTesterService{
 
-    Map<String, Double> Backtrade(String startDate, String endDate, int smaOptChange, int emaOptChange,
-                                  StockTicker stockticker, double stake, Algorithm algorithm, double commission);
-    Map<String, Double> optimize(String startDate, String endDate, int sma, int ema,
-                                 StockTicker stockticker, double stake, Algorithm algorithm, double commission);
+    BacktradeTest backtrade(BacktradeTest backtest);
+    BacktradeOptimize optimize(BacktradeOptimize optTest);
 }
