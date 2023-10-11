@@ -72,7 +72,7 @@
             <button class="btn m-1" type="submit">Test Params</button>
         </form>
     </div>
-    <div class="col-5 border" th:if="${backtrader != null}">
+    <div class="col-5 border" th:if="${backtrader.endValue != null}">
         <table>
             <thead>
             <tr>
@@ -81,9 +81,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="entry : ${backtrader}">
-                <td th:text="${entry.key}">Key</td>
-                <td th:text="${entry.value}">Value</td>
+            <tr>
+                <td th:text="${backtrader.sma}">Key</td>
+                <td th:text="${backtrader.ema}">Key</td>
+                <td th:text="${backtrader.endValue}">Value</td>
             </tr>
             </tbody>
         </table>
@@ -124,18 +125,26 @@
             <input class="m-1 text-center" placeholder=".01" th:field="*{commission}" type="text"/>
             <span class="text-danger" th:errors="*{commission}"
                   th:if="${#fields.hasErrors('commission')}">Commission error</span><br/>
-            <span>SMA change (starts at 0)</span>
-            <input class="m-1 text-center" placeholder="40" th:field="*{smaOptChange}" type="text"/>
-            <span class="text-danger" th:errors="*{smaOptChange}"
-                  th:if="${#fields.hasErrors('smaOptChange')}">Sma difference error</span><br/>
-            <span>EMA change (starts at 0)</span>
-            <input class="m-1 text-center" placeholder="30" th:field="*{emaOptChange}" type="text"/>
-            <span class="text-danger" th:errors="*{emaOptChange}"
-                  th:if="${#fields.hasErrors('emaOptChange')}">Ema difference error</span><br/>
+            <span>SMA Range Start</span>
+            <input class="m-1 text-center" placeholder="40" th:field="*{startSma}" type="text"/>
+            <span class="text-danger" th:errors="*{startSma}"
+                  th:if="${#fields.hasErrors('startSma')}">Sma Range Start Error</span><br/>
+            <span>SMA Range End</span>
+            <input class="m-1 text-center" placeholder="40" th:field="*{endSma}" type="text"/>
+            <span class="text-danger" th:errors="*{endSma}"
+                  th:if="${#fields.hasErrors('endSma')}">Sma Range End Error</span><br/>
+            <span>EMA Range Start</span>
+            <input class="m-1 text-center" placeholder="30" th:field="*{startEma}" type="text"/>
+            <span class="text-danger" th:errors="*{startEma}"
+                  th:if="${#fields.hasErrors('startEma')}">Ema Range Start error</span><br/>
+            <span>EMA Range End</span>
+            <input class="m-1 text-center" placeholder="30" th:field="*{endEma}" type="text"/>
+            <span class="text-danger" th:errors="*{endEma}"
+                  th:if="${#fields.hasErrors('endEma')}">Ema Range End error</span><br/>
             <button class="btn m-1" type="submit">Optimize Params</button>
         </form>
     </div>
-    <div class="col-5 border" th:if="${backtraderOpt != null}">
+    <div class="col-5 border" th:if="${backtraderOpt!= null}">
         <table>
             <thead>
             <tr>
