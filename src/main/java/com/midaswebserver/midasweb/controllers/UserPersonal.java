@@ -1,6 +1,8 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.crazzyghost.alphavantage.parameters.OutputSize;
+import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
+import com.midaswebserver.midasweb.apiModels.BacktradeTest;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 import com.midaswebserver.midasweb.forms.BackTraderForm;
 import com.midaswebserver.midasweb.forms.BackTraderOptimizeForm;
@@ -65,7 +67,7 @@ public class UserPersonal {
      * @return the "home" template
      */
     @Transactional
-    @GetMapping("/user/home")
+    @GetMapping("/user/home") //TODO get home page look and feel (log out) shouldnt be on page if logged in and vise versa
     public String home(HttpSession session, Model model) {
         //session/user validation if user is logged in
         Object userId = session.getAttribute("UserId");
@@ -84,41 +86,25 @@ public class UserPersonal {
         model.addAttribute("backTraderOptimizeForm", new BackTraderOptimizeForm());
 
         //Checking if optimizeBacktrade or backtrade is in the session
-        Map<String, Object> backtrade = (Map<String, Object>) session.getAttribute("backtrade");
+        BacktradeTest backtrade = (BacktradeTest) session.getAttribute("backtrade");
         if (backtrade != null) {
+            //TODO make sure that only results are logged
             //notnull is checked in the if statement before this line, so it shouldn't break
             log.debug("home: User '{}', Backtrade params collected from session", session.getAttribute("UserId"));
-            Map<String, Double> tradeResults = backtesterService.Backtrade(
-                    (String) backtrade.get("startDate"),
-                    (String) backtrade.get("endDate"),
-                    (Integer) backtrade.get("smaLength"),
-                    (Integer) backtrade.get("emaLength"),
-                    (StockTicker) backtrade.get("StockTicker"),
-                    (Double) backtrade.get("stake"),
-                    (Algorithm) backtrade.get("algorithm"),
-                    (Double) backtrade.get("commission")
-            );
-            log.debug("home: User '{}', returned backtrade params: '{}'", session.getAttribute("UserId"), tradeResults);
-            model.addAttribute("backtrader", tradeResults);
+            backtrade = backtesterService.backtrade(backtrade);
+            log.debug("home: User '{}', returned backtrade params: '{}'", session.getAttribute("UserId"), backtrade);
+            model.addAttribute("backtrader", backtrade);
             return "home";
         }
-        backtrade = (Map<String, Object>) session.getAttribute("optimizeBacktrade");
-        if ( backtrade !=null) {
+        //Optimize Section
+        BacktradeOptimize backtradeOptimize = (BacktradeOptimize) session.getAttribute("optimizeBacktrade");
+        if ( backtradeOptimize !=null) {
+            //TODO make sure that only results are logged
             log.debug("home: User '{}', optimizeBacktrade params collected from session", session.getAttribute("UserId"));
-            Map<String, Double> formParams = backtesterService.optimize(
-                    (String) backtrade.get("startDate"),
-                    (String) backtrade.get("endDate"),
-                    (Integer) backtrade.get("smaOptChange"),
-                    (Integer) backtrade.get("emaOptChange"),
-                    (StockTicker) backtrade.get("StockTicker"),
-                    (Double) backtrade.get("stake"),
-                    (Algorithm) backtrade.get("algorithm"),
-                    (Double) backtrade.get("commission")
-            );
-            log.debug("home: User '{}', returned optimizeBacktrade params: '{}'", session.getAttribute("UserId"), formParams);
-            model.addAttribute("backtraderOpt", formParams);
+            backtradeOptimize = backtesterService.optimize(backtradeOptimize);
+            log.debug("home: User '{}', returned optimizeBacktrade params: '{}'", session.getAttribute("UserId"), backtradeOptimize);
+            model.addAttribute("backtraderOpt", backtradeOptimize);
         }
-
         return "home";
     }
 
@@ -199,15 +185,16 @@ public class UserPersonal {
             log.debug("getBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
         }
-        Map<String, Object> backtrade = new HashMap<>();
-        backtrade.put("startDate", backTraderForm.startDate);
-        backtrade.put("endDate", backTraderForm.endDate);
-        backtrade.put("smaLength", backTraderForm.smaLength);
-        backtrade.put("emaLength",backTraderForm.emaLength);
-        backtrade.put("stockTicker", backTraderForm.stockTicker);
-        backtrade.put("stake", backTraderForm.stake);
-        backtrade.put("algorithm", backTraderForm.algorithm);
-        backtrade.put("commission", backTraderForm.commission);
+        //TODO make sure that all data will be given to the form. Add fields in thymleaf
+        BacktradeTest backtrade = new BacktradeTest();
+        backtrade.setStartDate(backTraderForm.getStartDate());
+        backtrade.setEndDate(backTraderForm.getEndDate());
+        backtrade.setSma(backTraderForm.getSmaLength());
+        backtrade.setEma(backTraderForm.getEmaLength());
+        backtrade.setStockTicker(backTraderForm.getStockTicker());
+        backtrade.setStake(backTraderForm.getStake());
+        backtrade.setAlgorithm(backTraderForm.getAlgorithm());
+        backtrade.setCommission(backTraderForm.getCommission());
         //adding backtrade information to the form, so it can be gathered and used in the get method
         session.setAttribute("backtrade", backtrade);
         log.debug("getBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtrade);
@@ -241,20 +228,22 @@ public class UserPersonal {
             log.debug("getOptBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
         }
-
+        //TODO make sure that all data will be given to the form. Add fields in thymleaf
         //copying data so variables used internally do not share variables used externally
-        Map<String, Object> optimizeBacktrade = new HashMap<>();
-        optimizeBacktrade.put("startDate", backTraderOptimizeForm.startDate);
-        optimizeBacktrade.put("endDate", backTraderOptimizeForm.endDate);
-        optimizeBacktrade.put("smaOptChange", backTraderOptimizeForm.smaOptChange);
-        optimizeBacktrade.put("emaOptChange", backTraderOptimizeForm.emaOptChange);
-        optimizeBacktrade.put("stockTicker", backTraderOptimizeForm.stockTicker);
-        optimizeBacktrade.put("stake", backTraderOptimizeForm.stake);
-        optimizeBacktrade.put("algorithm", backTraderOptimizeForm.algorithm);
-        optimizeBacktrade.put("commission", backTraderOptimizeForm.commission);
+        BacktradeOptimize backtradeOptimize = new BacktradeOptimize();
+        backtradeOptimize.setStartDate(backTraderOptimizeForm.getStartDate());
+        backtradeOptimize.setEndDate(backTraderOptimizeForm.getEndDate());
+        backtradeOptimize.setStartSma(backTraderOptimizeForm.getStartSma());
+        backtradeOptimize.setEndSma(backTraderOptimizeForm.getEndSma());
+        backtradeOptimize.setStartEma(backTraderOptimizeForm.getStartEma());
+        backtradeOptimize.setEndEma(backTraderOptimizeForm.getEndEma());
+        backtradeOptimize.setStockTicker(backTraderOptimizeForm.getStockTicker());
+        backtradeOptimize.setStake(backTraderOptimizeForm.getStake());
+        backtradeOptimize.setAlgorithm(backTraderOptimizeForm.getAlgorithm());
+        backtradeOptimize.setCommission(backTraderOptimizeForm.getCommission());
         //adding backtrade information to the form, so it can be gathered and used in the get method
-        session.setAttribute("optimizeBacktrade", optimizeBacktrade);
-        log.debug("getOptBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), optimizeBacktrade);
+        session.setAttribute("optimizeBacktrade", backtradeOptimize);
+        log.debug("getOptBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtradeOptimize);
 
         return "redirect:/user/home";
     }
