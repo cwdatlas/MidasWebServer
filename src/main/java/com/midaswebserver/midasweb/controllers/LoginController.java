@@ -109,8 +109,9 @@ public class LoginController {
      */
     @GetMapping("/logout")
     public String logout(HttpSession session, HttpServletRequest request) {
-        log.debug("logout: User '{}', session ID '{}', location '{}', logged out",
-                userService.getUserById((long) session.getAttribute("UserId")), session.getId(), userService.getClientIp(request));
+        if (session.getAttribute("UserId") != null)
+            log.debug("logout: User '{}', session ID '{}', location '{}', logged out",
+                    userService.getUserById((long) session.getAttribute("UserId")), session.getId(), userService.getClientIp(request));
         session.invalidate();
         return "redirect:/";
     }
