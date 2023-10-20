@@ -93,6 +93,7 @@ public class UserHomeController {
             log.debug("home: User '{}', returned backtrade params: '{}'", session.getAttribute("UserId"), backtrade);
             //model.addAttribute("backtrader", backtrade);
             model.addAttribute("tradeReturn", results);
+            session.removeAttribute("backtrade");
             return "home";
         }
         //Optimize Section
@@ -104,6 +105,7 @@ public class UserHomeController {
             log.debug("home: User '{}', returned optimizeBacktrade params: '{}'", session.getAttribute("UserId"), backtradeOptimize);
             //model.addAttribute("backtraderOpt", backtradeOptimize);
             model.addAttribute("optimizeReturn", results);
+            session.removeAttribute("optimizeBacktrade");
         }
         return "home";
     }
