@@ -2,6 +2,7 @@ package com.midaswebserver.midasweb.controllers;
 
 import com.crazzyghost.alphavantage.parameters.OutputSize;
 import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
+import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
 import com.midaswebserver.midasweb.apiModels.BacktradeTest;
 import com.midaswebserver.midasweb.apiModels.Ticker;
 import com.midaswebserver.midasweb.forms.BackTraderForm;
@@ -9,8 +10,6 @@ import com.midaswebserver.midasweb.forms.BackTraderOptimizeForm;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
 import com.midaswebserver.midasweb.models.User.Symbol;
 import com.midaswebserver.midasweb.models.User.User;
-import com.midaswebserver.midasweb.models.trader.Algorithm;
-import com.midaswebserver.midasweb.models.trader.StockTicker;
 import com.midaswebserver.midasweb.services.BackTesterService;
 import com.midaswebserver.midasweb.services.TickerService;
 import com.midaswebserver.midasweb.services.UserService;
@@ -27,20 +26,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
-  * UserPersonal manages the endpoints for general locations
+  * UserHomeController manages the endpoints for general locations
  * This includes the index page and the user/home page
  * In the future general endpoints can be split up into more specific areas (admin, management, and so on)
  * Uses {@link UserService} heavily to get userdata used in logs and sessions
  * @Author Aidan Scott
  */
 @Controller
-public class UserPersonal {
-    private static final Logger log = LoggerFactory.getLogger(UserPersonal.class);
+public class UserHomeController {
+    private static final Logger log = LoggerFactory.getLogger(UserHomeController.class);
     private final UserService userService;
     private final TickerService tickerService;
     private final BackTesterService backtesterService;
@@ -52,7 +50,7 @@ public class UserPersonal {
      * @param tickerService
      * @param backtesterService
      */
-    public UserPersonal(UserService userService, TickerService tickerService, BackTesterService backtesterService) {
+    public UserHomeController(UserService userService, TickerService tickerService, BackTesterService backtesterService) {
         this.userService = userService;
         this.tickerService = tickerService;
         this.backtesterService = backtesterService;
@@ -91,9 +89,10 @@ public class UserPersonal {
             //TODO make sure that only results are logged
             //notnull is checked in the if statement before this line, so it shouldn't break
             log.debug("home: User '{}', Backtrade params collected from session", session.getAttribute("UserId"));
-            backtrade = backtesterService.backtrade(backtrade);
+            BacktradeReturn results = backtesterService.backtrade(backtrade);
             log.debug("home: User '{}', returned backtrade params: '{}'", session.getAttribute("UserId"), backtrade);
-            model.addAttribute("backtrader", backtrade);
+            //model.addAttribute("backtrader", backtrade);
+            model.addAttribute("tradeReturn", results);
             return "home";
         }
         //Optimize Section
@@ -101,9 +100,10 @@ public class UserPersonal {
         if ( backtradeOptimize !=null) {
             //TODO make sure that only results are logged
             log.debug("home: User '{}', optimizeBacktrade params collected from session", session.getAttribute("UserId"));
-            backtradeOptimize = backtesterService.optimize(backtradeOptimize);
+            BacktradeReturn results = backtesterService.optimize(backtradeOptimize);
             log.debug("home: User '{}', returned optimizeBacktrade params: '{}'", session.getAttribute("UserId"), backtradeOptimize);
-            model.addAttribute("backtraderOpt", backtradeOptimize);
+            //model.addAttribute("backtraderOpt", backtradeOptimize);
+            model.addAttribute("optimizeReturn", results);
         }
         return "home";
     }

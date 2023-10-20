@@ -2,6 +2,8 @@ package com.midaswebserver.midasweb.apiModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
+
 public class BacktradeOptimize extends BacktradeData {
     public double startSma;
     public double endSma;
