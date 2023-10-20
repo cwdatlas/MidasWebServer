@@ -72,19 +72,20 @@
             <button class="btn m-1" type="submit">Test Params</button>
         </form>
     </div>
-    <div class="col-5 border" th:if="${backtrader.endValue != null}">
+    <div class="col-5 border" th:if="${tradeReturn != null}">
         <table>
             <thead>
             <tr>
-                <th>Param</th>
-                <th>Value</th>
+                <th>sma</th>
+                <th>ema</th>
+                <th>Ending Value</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td th:text="${backtrader.sma}">Key</td>
-                <td th:text="${backtrader.ema}">Key</td>
-                <td th:text="${backtrader.endValue}">Value</td>
+                <td th:text="${tradeReturn.sma}">sma</td>
+                <td th:text="${tradeReturn.ema}">ema</td>
+                <td th:text="${tradeReturn.endingValue}">ending value</td>
             </tr>
             </tbody>
         </table>
@@ -144,18 +145,21 @@
             <button class="btn m-1" type="submit">Optimize Params</button>
         </form>
     </div>
-    <div class="col-5 border" th:if="${backtraderOpt!= null}">
+    <div class="col-5 border" th:if="${optimizeReturn != null}">
         <table>
             <thead>
             <tr>
-                <th>Param</th>
-                <th>Value</th>
+                <th>sma</th>
+                <th>ema</th>
+                <th>Ending Value</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="entry : ${backtraderOpt}">
-                <td th:text="${entry.key}">Key</td>
-                <td th:text="${entry.value}">Value</td>
+            <tr>
+                <td th:text="${optimizeReturn.sma}">Value</td>
+                <td th:text="${optimizeReturn.ema}">Value</td>
+                <td th:text="${optimizeReturn.endingValue}">ending value</td>
+            </tr>
             </tr>
             </tbody>
         </table>
