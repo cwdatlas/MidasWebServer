@@ -9,10 +9,10 @@
             <li class="mx-3 col-8 text-left">
                 <p class="text-white" th:text="'Welcome ' + ${user.getUsername()}"></p>
             </li>
-            <li class="nav-item mx-2 col-1 text-center">
+            <li class="nav-item mx-2 col-1 text-center" th:if="${user.getPhoneNumber()== null}">
                 <a class="btn-dark nav-link text-white" href="/login">Login</a>
             </li>
-            <li class="nav-item mx-2 col-1 text-center">
+            <li class="nav-item mx-2 col-1 text-center" th:if="${user.getPhoneNumber() != null}">
                 <a class="btn-dark nav-link text-white" href="/logout">Logout</a>
             </li>
             <li class="nav-item mx-2 col-1 text-center">
