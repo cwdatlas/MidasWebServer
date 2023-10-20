@@ -2,6 +2,7 @@ package com.midaswebserver.midasweb.services;
 
 import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
 import com.midaswebserver.midasweb.apiModels.BacktradeTest;
+import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
 
 import java.util.Map;
 
@@ -12,6 +13,6 @@ import java.util.Map;
  */
 public interface BackTesterService{
 
-    BacktradeTest backtrade(BacktradeTest backtest);
-    BacktradeOptimize optimize(BacktradeOptimize optTest);
+    BacktradeReturn backtrade(BacktradeTest backtest);
+    BacktradeReturn optimize(BacktradeOptimize optTest);
 }

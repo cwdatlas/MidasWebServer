@@ -1,6 +1,7 @@
 package com.midaswebserver.midasweb.services;
 
 import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
+import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
 import com.midaswebserver.midasweb.apiModels.BacktradeTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,8 @@ public class BackTesterServiceImp implements BackTesterService {
      * @return
      */
     @Override
-    public BacktradeTest backtrade(BacktradeTest params) {
+    public BacktradeReturn backtrade(BacktradeTest params) {
+        BacktradeReturn results = null;
         if (params != null) {
             String url =
                     "http://localhost:5000/backtrade?" +
@@ -47,12 +49,10 @@ public class BackTesterServiceImp implements BackTesterService {
                             " &commission= " + params.getCommission();
 
             RestTemplate restTemplate = new RestTemplate();
-            BacktradeTest result = restTemplate.getForObject(url, BacktradeTest.class);
-            log.info("BacktradeTest: returned object '{}'", result);
-            params.endValue = result.getEndValue();
-            return params;
+            results = restTemplate.getForObject(url, BacktradeReturn.class);
+            log.info("BacktradeTest: returned object '{}'", results);
         }
-        return params;
+        return results;
     }
 
     /**
@@ -60,7 +60,8 @@ public class BackTesterServiceImp implements BackTesterService {
      * @return
      */
 
-    public BacktradeOptimize optimize(BacktradeOptimize params) {
+    public BacktradeReturn optimize(BacktradeOptimize params) {
+        BacktradeReturn results = null;
         if (params != null) {
             String url =
                     "http://localhost:5000/optimize?" +
@@ -76,11 +77,11 @@ public class BackTesterServiceImp implements BackTesterService {
                             "&commission= " + params.getCommission();
 
             RestTemplate restTemplate = new RestTemplate();
-            BacktradeOptimize result = restTemplate.getForObject(url, BacktradeOptimize.class);
-            log.info("BacktradeOptimize: returned object '{}'", result);
-            return result;
+            results = restTemplate.getForObject(url, BacktradeReturn.class);
+            log.info("BacktradeOptimize: returned object '{}'", results);
+
         }
-        return params;
+        return results;
     }
 
 }
