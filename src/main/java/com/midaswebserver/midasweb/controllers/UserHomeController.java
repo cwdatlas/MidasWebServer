@@ -1,10 +1,7 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.crazzyghost.alphavantage.parameters.OutputSize;
-import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
-import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
-import com.midaswebserver.midasweb.apiModels.BacktradeTest;
-import com.midaswebserver.midasweb.apiModels.Ticker;
+import com.midaswebserver.midasweb.apiModels.*;
 import com.midaswebserver.midasweb.forms.BackTraderForm;
 import com.midaswebserver.midasweb.forms.BackTraderOptimizeForm;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
@@ -189,8 +186,20 @@ public class UserHomeController {
         }
         //TODO make sure that all data will be given to the form. Add fields in thymleaf
         BacktradeTest backtrade = new BacktradeTest();
-        backtrade.setStartDate(backTraderForm.getStartDate());
-        backtrade.setEndDate(backTraderForm.getEndDate());
+        //setting up start date object
+        BacktradeDate start_date = new BacktradeDate();
+        String[] dateData = backTraderForm.getStartDate().split("/");
+        start_date.setYear(dateData[2]);
+        start_date.setMonth(dateData[0]);
+        start_date.setDay(dateData[1]);
+        backtrade.setStartDate(start_date);
+        //setting up date end date object
+        BacktradeDate end_date = new BacktradeDate();
+        dateData = backTraderForm.getEndDate().split("/");
+        end_date.setYear(dateData[2]);
+        end_date.setMonth(dateData[0]);
+        end_date.setDay(dateData[1]);
+        backtrade.setEndDate(end_date);
         backtrade.setSma(backTraderForm.getSmaLength());
         backtrade.setEma(backTraderForm.getEmaLength());
         backtrade.setStockTicker(backTraderForm.getStockTicker());
@@ -233,8 +242,20 @@ public class UserHomeController {
         //TODO make sure that all data will be given to the form. Add fields in thymleaf
         //copying data so variables used internally do not share variables used externally
         BacktradeOptimize backtradeOptimize = new BacktradeOptimize();
-        backtradeOptimize.setStartDate(backTraderOptimizeForm.getStartDate());
-        backtradeOptimize.setEndDate(backTraderOptimizeForm.getEndDate());
+        //setting up start date object
+        BacktradeDate start_date = new BacktradeDate();
+        String[] dateData = backTraderOptimizeForm.getStartDate().split("/");
+        start_date.setYear(dateData[2]);
+        start_date.setMonth(dateData[0]);
+        start_date.setDay(dateData[1]);
+        backtradeOptimize.setStartDate(start_date);
+        //setting up date end date object
+        BacktradeDate end_date = new BacktradeDate();
+        dateData = backTraderOptimizeForm.getEndDate().split("/");
+        end_date.setYear(dateData[2]);
+        end_date.setMonth(dateData[0]);
+        end_date.setDay(dateData[1]);
+        backtradeOptimize.setEndDate(end_date);
         backtradeOptimize.setStartSma(backTraderOptimizeForm.getStartSma());
         backtradeOptimize.setEndSma(backTraderOptimizeForm.getEndSma());
         backtradeOptimize.setStartEma(backTraderOptimizeForm.getStartEma());
