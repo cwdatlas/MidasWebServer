@@ -22,15 +22,16 @@ import reactor.core.publisher.Mono;
 @Service
 public class BackTesterServiceImp implements BackTesterService {
     private static final Logger log = LoggerFactory.getLogger(com.midaswebserver.midasweb.services.BackTesterServiceImp.class);
-    private final WebClient.Builder webClientBuilder; //I think this is not working because a bean is not provided to the environment
+    private final WebClient webclient; //I think this is not working because a bean is not provided to the environment
 
     /**
      * Inject Dependencies
      *
      * @param webClientBuilder
+     * @param webclient
      */
-    public BackTesterServiceImp(WebClient.Builder webClientBuilder) {
-        this.webClientBuilder = webClientBuilder;
+    public BackTesterServiceImp(WebClient.Builder webClientBuilder, WebClient webclient) {
+        this.webclient = webclient;
     }
 
     /**
@@ -45,9 +46,8 @@ public class BackTesterServiceImp implements BackTesterService {
     public BacktradeReturn backtrade(BacktradeTest params) {
         BacktradeReturn results = null;
         if (params != null) {
-            WebClient webclient = webClientBuilder.build();
             Mono<BacktradeReturn> mono = webclient.post()
-                    .uri("http://localhost:5000/backtrade")
+                    .uri("/backtrade")
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Mono.just(params), BacktradeTest.class)
                     .retrieve()
@@ -65,20 +65,7 @@ public class BackTesterServiceImp implements BackTesterService {
                     })
                     .bodyToMono(BacktradeReturn.class)
                     //configure return with correct data based on error
-                    .onErrorResume(e -> {
-                        BacktradeReturn errorResponse = new BacktradeReturn();
-                        if (e instanceof ApiClientException) {
-                            errorResponse.setErrorCode("4xx");
-                            errorResponse.setMessage(e.getMessage());
-                        } else if (e instanceof ApiServerException) {
-                            errorResponse.setErrorCode("5xx");
-                            errorResponse.setMessage(e.getMessage());
-                        } else {
-                            errorResponse.setErrorCode("UNKNOWN_ERROR");
-                            errorResponse.setMessage("Unknown Error: " + e.getMessage());
-                        }
-                        return Mono.just(errorResponse);
-                    });
+                    .onErrorResume(this::errorHandler);
 
             results = mono.block();//I need to switch this to an asynchronous method
         }
@@ -93,28 +80,44 @@ public class BackTesterServiceImp implements BackTesterService {
     public BacktradeReturn optimize(BacktradeOptimize params) {
         BacktradeReturn results = null;
         if (params != null) {
-            String url =
-                    "http://localhost:5000/optimize" +
-                            "?endDate=" + params.getEndDate() +
-                            "&startDate=" + params.getStartDate() +
-                            "&startSma=" + params.getStartSma() +
-                            "&endSma=" + params.getEndSma() +
-                            "&startEma=" + params.getStartEma() +
-                            "&endEma=" + params.getEndEma() +
-                            "&stockticker=" + params.getStockTicker().toString() +
-                            "&stake=" + params.getStake() +
-                            "&algorithm=" + params.getAlgorithm().toString() +
-                            "&commission=" + params.getCommission();
-            try {
-                RestTemplate restTemplate = new RestTemplate();
-                results = restTemplate.getForObject(url, BacktradeReturn.class);
-            } catch (Exception e) {
-                log.error("BacktradeOptimize: query failed due to error:", e);
-            }
-            log.info("BacktradeOptimize: returned object '{}'", results);
+            Mono<BacktradeReturn> mono = webclient.post()
+                    .uri("/optimize")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(params), BacktradeOptimize.class)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
+                        //Handle 4xx errors here
+                        return clientResponse.bodyToMono(String.class)
+                                .flatMap(errorDetails ->
+                                        Mono.error(new ApiClientException("Client Error: " + errorDetails)));
+                    })
+                    .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
+                        //Handle 5xx errors here
+                        return clientResponse.bodyToMono(String.class)
+                                .flatMap(errorDetails ->
+                                        Mono.error(new ApiServerException("Server Error: " + errorDetails)));
+                    })
+                    .bodyToMono(BacktradeReturn.class)
+                    //configure return with correct data based on error
+                    .onErrorResume(this::errorHandler);
 
+            results = mono.block();//I need to switch this to an asynchronous method
         }
         return results;
     }
 
+    private Mono<BacktradeReturn> errorHandler(Throwable e) {
+        BacktradeReturn errorResponse = new BacktradeReturn();
+        if (e instanceof ApiClientException) {
+            errorResponse.setErrorCode("4xx");
+            errorResponse.setMessage(e.getMessage());
+        } else if (e instanceof ApiServerException) {
+            errorResponse.setErrorCode("5xx");
+            errorResponse.setMessage(e.getMessage());
+        } else {
+            errorResponse.setErrorCode("UNKNOWN_ERROR");
+            errorResponse.setMessage("Unknown Error: " + e.getMessage());
+        }
+        return Mono.just(errorResponse);
+    }
 }
