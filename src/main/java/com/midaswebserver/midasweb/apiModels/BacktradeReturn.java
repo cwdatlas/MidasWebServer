@@ -1,21 +1,24 @@
 package com.midaswebserver.midasweb.apiModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BacktradeReturn {
 
-    public int sma;
-    public int ema;
-    public double endingValue;
-
+    @JsonProperty
+    private int sma;
+    @JsonProperty
+    private int ema;
+    @JsonProperty("ending_value")
+    private float endingValue;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public double getEndingValue() {
+    public float getEndingValue() {
         return endingValue;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setEndingValue(double endingValue) {
+    public void setEndingValue(float endingValue) {
         this.endingValue = endingValue;
     }
 
@@ -44,7 +47,6 @@ public class BacktradeReturn {
         return "BacktradeReturn{" +
                 "sma=" + sma +
                 ", ema=" + ema +
-                ", endingValue=" + endingValue +
                 '}';
     }
 }

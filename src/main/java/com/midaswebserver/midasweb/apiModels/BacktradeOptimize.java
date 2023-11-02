@@ -1,14 +1,19 @@
 package com.midaswebserver.midasweb.apiModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 
 public class BacktradeOptimize extends BacktradeData {
-    public double startSma;
-    public double endSma;
-    public double startEma;
-    public double endEma;
+    @JsonProperty("start_sma")
+    private double startSma;
+    @JsonProperty("end_sma")
+    private double endSma;
+    @JsonProperty("start_ema")
+    private double startEma;
+    @JsonProperty("end_ema")
+    private double endEma;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public double getStartSma() {
@@ -57,12 +62,11 @@ public class BacktradeOptimize extends BacktradeData {
                 ", endSma=" + endSma +
                 ", startEma=" + startEma +
                 ", endEma=" + endEma +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
-                ", stockTicker=" + stockTicker +
-                ", algorithm=" + algorithm +
-                ", commission=" + commission +
-                ", backtradeType='" + backtradeType + '\'' +
+                ", startDate='" + getStartDate() + '\'' +
+                ", endDate='" + getEndDate() + '\'' +
+                ", stockTicker=" + getStockTicker() +
+                ", algorithm=" + getAlgorithm() +
+                ", commission=" + getCommission() +
                 '}';
     }
 }

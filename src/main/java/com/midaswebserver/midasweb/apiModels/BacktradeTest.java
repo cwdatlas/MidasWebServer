@@ -3,8 +3,8 @@ package com.midaswebserver.midasweb.apiModels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class BacktradeTest extends BacktradeData{
-    public int sma;
-    public int ema;
+    private int sma;
+    private int ema;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public int getSma() {
@@ -31,13 +31,12 @@ public class BacktradeTest extends BacktradeData{
         return "BacktradeTest{" +
                 "sma=" + sma +
                 ", ema=" + ema +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
-                ", stockTicker=" + stockTicker +
-                ", algorithm=" + algorithm +
-                ", commission=" + commission +
-                ", backtradeType='" + backtradeType + '\'' +
-                ", stake=" + stake +
+                ", startDate='" + getStartDate() + '\'' +
+                ", endDate='" + getEndDate() + '\'' +
+                ", stockTicker=" + getStockTicker()+
+                ", algorithm=" + getAlgorithm() +
+                ", commission=" + getCommission() +
+                ", stake=" + getStake() +
                 '}';
     }
 }

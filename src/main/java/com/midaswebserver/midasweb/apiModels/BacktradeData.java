@@ -1,29 +1,25 @@
 package com.midaswebserver.midasweb.apiModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.midaswebserver.midasweb.models.trader.Algorithm;
 import com.midaswebserver.midasweb.models.trader.StockTicker;
+import com.midaswebserver.midasweb.apiModels.BacktradeDate;
 
 public class BacktradeData {
 
-    public String startDate;
-    public String endDate;
-    public com.midaswebserver.midasweb.models.trader.StockTicker stockTicker;
-    public com.midaswebserver.midasweb.models.trader.Algorithm algorithm;
-    public double commission;
-    public String backtradeType;
-    public double stake;
-    public double endValue;
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public double getEndValue() {
-        return endValue;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setEndValue(double endValue) {
-        this.endValue = endValue;
-    }
+    @JsonProperty("start_date")
+    private BacktradeDate startDate;
+    @JsonProperty("end_date")
+    private BacktradeDate endDate;
+    @JsonProperty("stock_ticker")
+    private StockTicker stockTicker;
+    @JsonProperty
+    private Algorithm algorithm;
+    @JsonProperty
+    private double commission;
+    @JsonProperty
+    private double stake;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public double getStake() {
@@ -36,30 +32,22 @@ public class BacktradeData {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public String getBacktradeType() {
-        return backtradeType;
+    public BacktradeDate getStartDate() {
+        return startDate;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setBacktradeType(String backtradeType) {
-        this.backtradeType = backtradeType;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public String getStartDate() {return startDate;}
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setStartDate(String startDate) {
+    public void setStartDate(BacktradeDate startDate) {
         this.startDate = startDate;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public String getEndDate() {
+    public BacktradeDate getEndDate() {
         return endDate;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setEndDate(String endDate) {
+    public void setEndDate(BacktradeDate endDate) {
         this.endDate = endDate;
     }
 
@@ -101,7 +89,6 @@ public class BacktradeData {
                 ", stockTicker=" + stockTicker +
                 ", algorithm=" + algorithm +
                 ", commission=" + commission +
-                ", backtradeType='" + backtradeType + '\'' +
                 ", stake=" + stake +
                 '}';
     }
