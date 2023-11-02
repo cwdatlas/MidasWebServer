@@ -12,6 +12,28 @@ public class BacktradeReturn {
     @JsonProperty("ending_value")
     private float endingValue;
 
+    private String errorCode;
+    private String message;
+
+    public boolean hasErrors(){
+        return (errorCode == null);
+    }
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public float getEndingValue() {
         return endingValue;

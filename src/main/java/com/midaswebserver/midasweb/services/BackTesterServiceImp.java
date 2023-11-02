@@ -3,15 +3,16 @@ package com.midaswebserver.midasweb.services;
 import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
 import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
 import com.midaswebserver.midasweb.apiModels.BacktradeTest;
+import com.midaswebserver.midasweb.exceptions.ApiClientException;
+import com.midaswebserver.midasweb.exceptions.ApiServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-;
 
 /**
  * @Author Aidan Scott
@@ -25,15 +26,18 @@ public class BackTesterServiceImp implements BackTesterService {
 
     /**
      * Inject Dependencies
+     *
      * @param webClientBuilder
      */
-    public BackTesterServiceImp(WebClient.Builder webClientBuilder){
+    public BackTesterServiceImp(WebClient.Builder webClientBuilder) {
         this.webClientBuilder = webClientBuilder;
     }
+
     /**
      * Optimize takes variables and checks how profitable they would be while varying some variables each test. It will return
      * with the most profitable changing variables. If you plug the output into the Backtrade function, you will get the same
      * balance as you got from this function.
+     *
      * @param params
      * @return [optSMA, optEMA, optVolume, endBalance]
      */
@@ -42,19 +46,41 @@ public class BackTesterServiceImp implements BackTesterService {
         BacktradeReturn results = null;
         if (params != null) {
             WebClient webclient = webClientBuilder.build();
-            try{
-                results = webclient.post()
-                        .uri("http://localhost:5000/backtrade")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(Mono.just(params), BacktradeTest.class)
-                        .retrieve()
-                        .bodyToMono(BacktradeReturn.class)//this is what is received, so we use this to specify what object needs to be received
-                        .block();
-            }
-            catch(Exception e){
-                log.error("BacktradeTest: query failed due to error:", e);
-            }
-            //log.info("BacktradeTest: returned object '{}'", results);
+            Mono<BacktradeReturn> mono = webclient.post()
+                    .uri("http://localhost:5000/backtrade")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(params), BacktradeTest.class)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
+                        //Handle 4xx errors here
+                        return clientResponse.bodyToMono(String.class)
+                                .flatMap(errorDetails ->
+                                        Mono.error(new ApiClientException("Client Error: " + errorDetails)));
+                    })
+                    .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
+                        //Handle 5xx errors here
+                        return clientResponse.bodyToMono(String.class)
+                                .flatMap(errorDetails ->
+                                        Mono.error(new ApiServerException("Server Error: " + errorDetails)));
+                    })
+                    .bodyToMono(BacktradeReturn.class)
+                    //configure return with correct data based on error
+                    .onErrorResume(e -> {
+                        BacktradeReturn errorResponse = new BacktradeReturn();
+                        if (e instanceof ApiClientException) {
+                            errorResponse.setErrorCode("4xx");
+                            errorResponse.setMessage(e.getMessage());
+                        } else if (e instanceof ApiServerException) {
+                            errorResponse.setErrorCode("5xx");
+                            errorResponse.setMessage(e.getMessage());
+                        } else {
+                            errorResponse.setErrorCode("UNKNOWN_ERROR");
+                            errorResponse.setMessage("Unknown Error: " + e.getMessage());
+                        }
+                        return Mono.just(errorResponse);
+                    });
+
+            results = mono.block();//I need to switch this to an asynchronous method
         }
         return results;
     }
@@ -79,10 +105,10 @@ public class BackTesterServiceImp implements BackTesterService {
                             "&stake=" + params.getStake() +
                             "&algorithm=" + params.getAlgorithm().toString() +
                             "&commission=" + params.getCommission();
-            try{
+            try {
                 RestTemplate restTemplate = new RestTemplate();
                 results = restTemplate.getForObject(url, BacktradeReturn.class);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 log.error("BacktradeOptimize: query failed due to error:", e);
             }
             log.info("BacktradeOptimize: returned object '{}'", results);
