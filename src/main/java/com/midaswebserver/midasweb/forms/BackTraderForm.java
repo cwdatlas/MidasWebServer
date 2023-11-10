@@ -9,11 +9,11 @@ public class BackTraderForm {
 
 //TODO get date annotation
     @NotNull
-    @DateTimeFormat
+    @DateTimeFormat(style = "mm-dd-yyyy")
     @NotBlank(message = "Please Enter a time series start date")
     public String startDate;
     @NotNull
-    @DateTimeFormat
+    @DateTimeFormat(style = "mm-dd-yyyy")
     @NotBlank(message = "Please enter a time series end date")
     public String endDate;
     @NotNull
