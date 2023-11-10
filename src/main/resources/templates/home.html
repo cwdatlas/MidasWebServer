@@ -33,10 +33,10 @@
         <p class="display-4">BackTester</p>
         <form action="#" method="post" th:action="@{/user/home/backtrade}" th:object="${backTraderForm}">
             <span class="text-danger" th:if="${#fields.hasGlobalErrors()}">Global error</span><br/>
-            <input class="m-1 text-center" placeholder="9/21/2007" th:field="*{startDate}" type="text"/>
+            <input class="m-1 text-center" placeholder="yyyy-mm-dd" th:field="*{startDate}" type="text"/>
             <span class="text-danger" th:errors="*{startDate}"
                   th:if="${#fields.hasErrors('startDate')}">Start Date Error</span><br/>
-            <input class="m-1 text-center" placeholder="9/21/2023" th:field="*{endDate}" type="text"/>
+            <input class="m-1 text-center" placeholder="yyyy-mm-dd" th:field="*{endDate}" type="text"/>
             <span class="text-danger" th:errors="*{endDate}"
                   th:if="${#fields.hasErrors('endDate')}">End Date Error</span><br/>
             <label for="stockTicker">Choose a ticker:</label>
@@ -72,7 +72,7 @@
             <button class="btn m-1" type="submit">Test Params</button>
         </form>
     </div>
-    <div class="col-5 border" th:if="${tradeReturn != null}">
+    <div class="col-5 border" th:if="${tradeReturn != null && tradeReturn.errorCode == null}">
         <table>
             <thead>
             <tr>
@@ -87,7 +87,21 @@
                 <td th:text="${tradeReturn.ema}">ema</td>
                 <td th:text="${tradeReturn.endingValue}">ending value</td>
             </tr>
-            </tbody>
+        </table>
+    </div>
+    <div class="col-5 border" th:if="${tradeReturn != null && tradeReturn != null}">
+        <table>
+            <thead>
+            <tr>
+                <th>Error Code</th>
+                <th>Error Message</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${tradeReturn.errorCode}">Error Code</td>
+                <td th:text="${tradeReturn.message}">Error Message</td>
+            </tr>
         </table>
     </div>
 </div>
@@ -97,10 +111,10 @@
         <p class="display-4">Optimizer</p>
         <form action="#" method="post" th:action="@{/user/home/backtradeOpt}" th:object="${backTraderOptimizeForm}">
             <span class="text-danger" th:if="${#fields.hasGlobalErrors()}">Global error</span><br/>
-            <input class="m-1 text-center" placeholder="9/21/2007" th:field="*{startDate}" type="text"/>
+            <input class="m-1 text-center" placeholder="yyyy-mm-dd" th:field="*{startDate}" type="text"/>
             <span class="text-danger" th:errors="*{startDate}"
                   th:if="${#fields.hasErrors('startDate')}">Start Date Error</span><br/>
-            <input class="m-1 text-center" placeholder="9/21/2023" th:field="*{endDate}" type="text"/>
+            <input class="m-1 text-center" placeholder="yyyy-mm-dd" th:field="*{endDate}" type="text"/>
             <span class="text-danger" th:errors="*{endDate}"
                   th:if="${#fields.hasErrors('endDate')}">End Date Error</span><br/>
 
@@ -145,7 +159,7 @@
             <button class="btn m-1" type="submit">Optimize Params</button>
         </form>
     </div>
-    <div class="col-5 border" th:if="${optimizeReturn != null}">
+    <div class="col-5 border" th:if="${optimizeReturn != null && optimizeReturn.errorCode == null}">
         <table>
             <thead>
             <tr>
@@ -156,12 +170,25 @@
             </thead>
             <tbody>
             <tr>
-                <td th:text="${optimizeReturn.sma}">Value</td>
-                <td th:text="${optimizeReturn.ema}">Value</td>
+                <td th:text="${optimizeReturn.sma}">sma</td>
+                <td th:text="${optimizeReturn.ema}">ema</td>
                 <td th:text="${optimizeReturn.endingValue}">ending value</td>
             </tr>
+        </table>
+    </div>
+    <div class="col-5 border" th:if="${optimizeReturn != null && optimizeReturn != null}">
+        <table>
+            <thead>
+            <tr>
+                <th>Error Code</th>
+                <th>Error Message</th>
             </tr>
-            </tbody>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${optimizeReturn.errorCode}">Error Code</td>
+                <td th:text="${optimizeReturn.message}">Error Message</td>
+            </tr>
         </table>
     </div>
 </div>
