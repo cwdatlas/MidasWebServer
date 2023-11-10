@@ -69,6 +69,9 @@ public class BacktradeReturn {
         return "BacktradeReturn{" +
                 "sma=" + sma +
                 ", ema=" + ema +
+                ", endingValue=" + endingValue +
+                ", errorCode='" + errorCode + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 }

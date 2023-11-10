@@ -1,6 +1,5 @@
 package com.midaswebserver.midasweb.apiModels;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BacktradeDate{
     private String year;
@@ -31,3 +30,4 @@ public class BacktradeDate{
         this.day = day;
     }
 }
+

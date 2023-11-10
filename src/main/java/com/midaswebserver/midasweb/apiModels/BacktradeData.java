@@ -1,17 +1,20 @@
 package com.midaswebserver.midasweb.apiModels;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.midaswebserver.midasweb.models.trader.Algorithm;
 import com.midaswebserver.midasweb.models.trader.StockTicker;
-import com.midaswebserver.midasweb.apiModels.BacktradeDate;
+import java.time.LocalDate;
 
 public class BacktradeData {
 
     @JsonProperty("start_date")
-    private BacktradeDate startDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
     @JsonProperty("end_date")
-    private BacktradeDate endDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
     @JsonProperty("stock_ticker")
     private StockTicker stockTicker;
     @JsonProperty
@@ -32,25 +35,24 @@ public class BacktradeData {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public BacktradeDate getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setStartDate(BacktradeDate startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public BacktradeDate getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setEndDate(BacktradeDate endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     public StockTicker getStockTicker() {
         return stockTicker;
