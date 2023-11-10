@@ -7,10 +7,10 @@ import com.midaswebserver.midasweb.exceptions.ApiClientException;
 import com.midaswebserver.midasweb.exceptions.ApiServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -21,26 +21,22 @@ import reactor.core.publisher.Mono;
  */
 @Service
 public class BackTesterServiceImp implements BackTesterService {
-    private static final Logger log = LoggerFactory.getLogger(com.midaswebserver.midasweb.services.BackTesterServiceImp.class);
+    private static final Logger log = LoggerFactory.getLogger(BackTesterServiceImp.class);
     private final WebClient webclient; //I think this is not working because a bean is not provided to the environment
 
     /**
      * Inject Dependencies
      *
-     * @param webClientBuilder
      * @param webclient
      */
-    public BackTesterServiceImp(WebClient.Builder webClientBuilder, WebClient webclient) {
+    public BackTesterServiceImp(WebClient webclient) {
         this.webclient = webclient;
     }
 
     /**
-     * Optimize takes variables and checks how profitable they would be while varying some variables each test. It will return
-     * with the most profitable changing variables. If you plug the output into the Backtrade function, you will get the same
-     * balance as you got from this function.
-     *
-     * @param params
-     * @return [optSMA, optEMA, optVolume, endBalance]
+     * backtrade will consume a BacktradeTest object and check to see the ending value of a trade with those parameters
+     * errors will be included in the returned object
+     * @return BacktradeReturn (if there are any errors this object will persist them
      */
     @Override
     public BacktradeReturn backtrade(BacktradeTest params) {
@@ -73,8 +69,10 @@ public class BackTesterServiceImp implements BackTesterService {
     }
 
     /**
-     * @param params
-     * @return
+     * optimize will consume a BacktradeOptimize object and check to see the ending value of a trade with the those parameters
+     * The best preforming trade parameters will be returned.
+     * errors will be included in the returned object
+     * @return BacktradeReturn
      */
 
     public BacktradeReturn optimize(BacktradeOptimize params) {
@@ -106,6 +104,12 @@ public class BackTesterServiceImp implements BackTesterService {
         return results;
     }
 
+    /**
+     * errorHandler is a redundancy decreasing function that packages known common errors for use in webclient
+     * error handling
+     * @param e
+     * @return error injected Mono
+     */
     private Mono<BacktradeReturn> errorHandler(Throwable e) {
         BacktradeReturn errorResponse = new BacktradeReturn();
         if (e instanceof ApiClientException) {
