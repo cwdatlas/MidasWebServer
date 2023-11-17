@@ -5,15 +5,16 @@ import com.midaswebserver.midasweb.models.trader.StockTicker;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class BackTraderForm {
+public class BacktraderForm {
 
-//TODO get date annotation
     @NotNull
-    @DateTimeFormat(style = "mm-dd-yyyy")
+    @Past
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
     @NotBlank(message = "Please Enter a time series start date")
     public String startDate;
     @NotNull
-    @DateTimeFormat(style = "mm-dd-yyyy")
+    @Past
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
     @NotBlank(message = "Please enter a time series end date")
     public String endDate;
     @NotNull
@@ -37,7 +38,7 @@ public class BackTraderForm {
     @Min(1)
     public int emaLength;
 
-    public BackTraderForm() {
+    public BacktraderForm() {
     }
 
     public String getStartDate() {
@@ -106,7 +107,7 @@ public class BackTraderForm {
 
     @Override
     public String toString() {
-        return "BackTraderForm{" +
+        return "BacktraderForm{" +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 ", stockTicker=" + stockTicker +
