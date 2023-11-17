@@ -18,6 +18,7 @@ public class StockDataRequestForm {
     public String ticker;
     @NotNull(message = "Must add an interval")
     public Interval interval;
+
     public StockDataRequestForm() {
     }
 

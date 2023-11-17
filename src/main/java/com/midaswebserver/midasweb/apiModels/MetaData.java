@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
  * MetaData is used to store symbol and other information from a stock query
  * This class is a custom implementation of {@link com.crazzyghost.alphavantage.timeseries.response.MetaData crazzyghost MetaData}
  * Most of the subsequent code is from <a href="https://github.com/crazzyghost">crazzyghost</a> using the alphavantage library
+ *
  * @Author Aidan Scott
  */
 public class MetaData {

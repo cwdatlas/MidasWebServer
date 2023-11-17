@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 
 /**
  * loginForm is used to move user login data
+ *
  * @Author Aidan Scott
  * @since 0.0.1
  */

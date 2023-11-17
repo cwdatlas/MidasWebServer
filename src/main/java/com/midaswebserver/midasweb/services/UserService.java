@@ -94,9 +94,9 @@ public interface UserService {
      * Takes User and raw password, hashes the password then adds the password to the user object
      *
      * @param rawPass unhashed password
-     * @param user corresponding user for the password
+     * @param user    corresponding user for the password
      * @return user with added hashed password
      */
     User hashPass(User user, String rawPass);
 
-    }
+}

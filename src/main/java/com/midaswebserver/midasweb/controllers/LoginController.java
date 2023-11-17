@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * The LoginController works with all interactions by the client regarding logging in, logging out
  * uses {@link LoginService} and {@link UserService} heavily to interact with user repository and for business logic
+ *
  * @Author Aidan Scott
  */
 @Controller

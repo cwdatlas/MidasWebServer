@@ -15,9 +15,10 @@ public class BacktradeReturn {
     private String errorCode;
     private String message;
 
-    public boolean hasErrors(){
+    public boolean hasErrors() {
         return (errorCode == null);
     }
+
     public String getErrorCode() {
         return errorCode;
     }

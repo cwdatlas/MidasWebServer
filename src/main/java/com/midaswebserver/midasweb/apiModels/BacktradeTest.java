@@ -2,7 +2,7 @@ package com.midaswebserver.midasweb.apiModels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public class BacktradeTest extends BacktradeData{
+public class BacktradeTest extends BacktradeData {
     private int sma;
     private int ema;
 
@@ -33,7 +33,7 @@ public class BacktradeTest extends BacktradeData{
                 ", ema=" + ema +
                 ", startDate='" + getStartDate() + '\'' +
                 ", endDate='" + getEndDate() + '\'' +
-                ", stockTicker=" + getStockTicker()+
+                ", stockTicker=" + getStockTicker() +
                 ", algorithm=" + getAlgorithm() +
                 ", commission=" + getCommission() +
                 ", stake=" + getStake() +

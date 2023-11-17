@@ -7,7 +7,6 @@ import com.midaswebserver.midasweb.exceptions.ApiClientException;
 import com.midaswebserver.midasweb.exceptions.ApiServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,7 @@ public class BackTesterServiceImp implements BackTesterService {
     /**
      * backtrade will consume a BacktradeTest object and check to see the ending value of a trade with those parameters
      * errors will be included in the returned object
+     *
      * @return BacktradeReturn (if there are any errors this object will persist them
      */
     @Override
@@ -72,6 +72,7 @@ public class BackTesterServiceImp implements BackTesterService {
      * optimize will consume a BacktradeOptimize object and check to see the ending value of a trade with the those parameters
      * The best preforming trade parameters will be returned.
      * errors will be included in the returned object
+     *
      * @return BacktradeReturn
      */
 
@@ -107,6 +108,7 @@ public class BackTesterServiceImp implements BackTesterService {
     /**
      * errorHandler is a redundancy decreasing function that packages known common errors for use in webclient
      * error handling
+     *
      * @param e
      * @return error injected Mono
      */

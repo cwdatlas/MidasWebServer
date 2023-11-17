@@ -12,11 +12,11 @@ import java.time.LocalDate;
 
 public class BacktradeData {
 
-    @DateTimeFormat(pattern="MM/dd/yyyy")
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
     @NotNull
     @Past
     private LocalDate startDate;
-    @DateTimeFormat(pattern="MM/dd/yyyy")
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
     @NotNull
     @Past
     private LocalDate endDate;
@@ -58,6 +58,7 @@ public class BacktradeData {
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public StockTicker getStockTicker() {
         return stockTicker;
