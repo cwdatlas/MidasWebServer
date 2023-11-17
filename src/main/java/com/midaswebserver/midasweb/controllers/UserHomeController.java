@@ -1,9 +1,12 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.crazzyghost.alphavantage.parameters.OutputSize;
-import com.midaswebserver.midasweb.apiModels.*;
-import com.midaswebserver.midasweb.forms.BackTraderForm;
-import com.midaswebserver.midasweb.forms.BackTraderOptimizeForm;
+import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
+import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
+import com.midaswebserver.midasweb.apiModels.BacktradeTest;
+import com.midaswebserver.midasweb.apiModels.Ticker;
+import com.midaswebserver.midasweb.forms.BacktraderForm;
+import com.midaswebserver.midasweb.forms.BacktraderOptimizeForm;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
 import com.midaswebserver.midasweb.models.User.Symbol;
 import com.midaswebserver.midasweb.models.User.User;
@@ -23,14 +26,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 
 /**
-  * UserHomeController manages the endpoints for general locations
+ * UserHomeController manages the endpoints for general locations
  * This includes the index page and the user/home page
  * In the future general endpoints can be split up into more specific areas (admin, management, and so on)
  * Uses {@link UserService} heavily to get userdata used in logs and sessions
+ *
  * @Author Aidan Scott
  */
 @Controller
@@ -62,7 +68,8 @@ public class UserHomeController {
      * @return the "home" template
      */
     @Transactional
-    @GetMapping("/user/home") //TODO get home page look and feel (log out) shouldnt be on page if logged in and vise versa
+    @GetMapping("/user/home")
+    //TODO get home page look and feel (log out) shouldnt be on page if logged in and vise versa
     public String home(HttpSession session, Model model) {
         //session/user validation if user is logged in
         Object userId = session.getAttribute("UserId");
@@ -77,8 +84,8 @@ public class UserHomeController {
         model.addAttribute("userSettings", symbols);
         log.debug("home: User '{}', symbols: '{}' added to form", session.getAttribute("UserId"), symbols);
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
-        model.addAttribute("backTraderForm", new BackTraderForm());
-        model.addAttribute("backTraderOptimizeForm", new BackTraderOptimizeForm());
+        model.addAttribute("backTraderForm", new BacktraderForm());
+        model.addAttribute("backTraderOptimizeForm", new BacktraderOptimizeForm());
 
         //Checking if optimizeBacktrade or backtrade is in the session
         BacktradeTest backtrade = (BacktradeTest) session.getAttribute("backtrade");
@@ -95,7 +102,7 @@ public class UserHomeController {
         }
         //Optimize Section
         BacktradeOptimize backtradeOptimize = (BacktradeOptimize) session.getAttribute("optimizeBacktrade");
-        if ( backtradeOptimize !=null) {
+        if (backtradeOptimize != null) {
             //TODO make sure that only results are logged
             log.debug("home: User '{}', optimizeBacktrade params collected from session", session.getAttribute("UserId"));
             BacktradeReturn results = backtesterService.optimize(backtradeOptimize);
@@ -158,17 +165,18 @@ public class UserHomeController {
         model.addAttribute("data", data);
         return "dataDisplay";
     }
+
     /**
      * GetTickerData takes a StockDataRequestForm and displays the data on the displayData page
      * will return user to /user/home if any data validates bad
      *
      * @param backTraderForm {@link StockDataRequestForm}
-     * @param result               {@link BindingResult}
-     * @param session              {@link HttpSession}
+     * @param result         {@link BindingResult}
+     * @param session        {@link HttpSession}
      * @return previous url the user had, after it adds ticker data to their session
      */
     @PostMapping("/user/home/backtrade")
-    public String getBacktrade(@Valid @ModelAttribute("backTraderForm") BackTraderForm backTraderForm, BindingResult result, HttpSession session, Model model, HttpServletRequest request) {
+    public String getBacktrade(@Valid @ModelAttribute("backTraderForm") BacktraderForm backTraderForm, BindingResult result, HttpSession session, Model model, HttpServletRequest request) {
         //session user validation if user is logged in
         Object userId = session.getAttribute("UserId");
         if (userId == null)
@@ -184,22 +192,22 @@ public class UserHomeController {
             log.debug("getBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
         }
-        //TODO make sure that all data will be given to the form. Add fields in thymleaf
+        //TODO make sure that all data will be given to the form. Add fields in thymeleaf
         BacktradeTest backtrade = new BacktradeTest();
-        //setting up start date object
-        BacktradeDate start_date = new BacktradeDate();
-        String[] dateData = backTraderForm.getStartDate().split("/");
-        start_date.setYear(dateData[2]);
-        start_date.setMonth(dateData[0]);
-        start_date.setDay(dateData[1]);
-        backtrade.setStartDate(start_date);
-        //setting up date end date object
-        BacktradeDate end_date = new BacktradeDate();
-        dateData = backTraderForm.getEndDate().split("/");
-        end_date.setYear(dateData[2]);
-        end_date.setMonth(dateData[0]);
-        end_date.setDay(dateData[1]);
-        backtrade.setEndDate(end_date);
+        try {
+            backtrade.setStartDate(LocalDate.parse(backTraderForm.getStartDate()));
+        } catch (DateTimeParseException e) {
+            log.error(String.valueOf(e));
+            backTraderForm.setStartDate("invalid");
+            return "home";
+        }
+        try {
+            backtrade.setEndDate(LocalDate.parse(backTraderForm.getEndDate()));
+        } catch (DateTimeParseException e) {
+            log.error(String.valueOf(e));
+            backTraderForm.setEndDate("invalid");
+            return "home";
+        }
         backtrade.setSma(backTraderForm.getSmaLength());
         backtrade.setEma(backTraderForm.getEmaLength());
         backtrade.setStockTicker(backTraderForm.getStockTicker());
@@ -218,12 +226,12 @@ public class UserHomeController {
      * will return user to /user/home if any data validates bad
      *
      * @param backTraderOptimizeForm {@link StockDataRequestForm}
-     * @param result               {@link BindingResult}
-     * @param session              {@link HttpSession}
+     * @param result                 {@link BindingResult}
+     * @param session                {@link HttpSession}
      * @return previous url the user had, after it adds ticker data to their session
      */
     @PostMapping("/user/home/backtradeOpt")
-    public String getOptBacktrade(@Valid @ModelAttribute("backTraderOptimizeForm") BackTraderOptimizeForm backTraderOptimizeForm, BindingResult result, HttpSession session, Model model, HttpServletRequest request) {
+    public String getOptBacktrade(@Valid @ModelAttribute("backTraderOptimizeForm") BacktraderOptimizeForm backTraderOptimizeForm, BindingResult result, HttpSession session, Model model, HttpServletRequest request) {
         //session user validation if user is logged in
         Object userId = session.getAttribute("UserId");
         if (userId == null)
@@ -243,19 +251,20 @@ public class UserHomeController {
         //copying data so variables used internally do not share variables used externally
         BacktradeOptimize backtradeOptimize = new BacktradeOptimize();
         //setting up start date object
-        BacktradeDate start_date = new BacktradeDate();
-        String[] dateData = backTraderOptimizeForm.getStartDate().split("/");
-        start_date.setYear(dateData[2]);
-        start_date.setMonth(dateData[0]);
-        start_date.setDay(dateData[1]);
-        backtradeOptimize.setStartDate(start_date);
-        //setting up date end date object
-        BacktradeDate end_date = new BacktradeDate();
-        dateData = backTraderOptimizeForm.getEndDate().split("/");
-        end_date.setYear(dateData[2]);
-        end_date.setMonth(dateData[0]);
-        end_date.setDay(dateData[1]);
-        backtradeOptimize.setEndDate(end_date);
+        try {
+            backtradeOptimize.setStartDate(LocalDate.parse(backTraderOptimizeForm.getStartDate()));
+        } catch (DateTimeParseException e) {
+            log.error(String.valueOf(e));
+            backTraderOptimizeForm.setStartDate("invalid");
+            return "home";
+        }
+        try {
+            backtradeOptimize.setEndDate(LocalDate.parse(backTraderOptimizeForm.getEndDate()));
+        } catch (DateTimeParseException e) {
+            log.error(String.valueOf(e));
+            backTraderOptimizeForm.setEndDate("invalid");
+            return "home";
+        }
         backtradeOptimize.setStartSma(backTraderOptimizeForm.getStartSma());
         backtradeOptimize.setEndSma(backTraderOptimizeForm.getEndSma());
         backtradeOptimize.setStartEma(backTraderOptimizeForm.getStartEma());
