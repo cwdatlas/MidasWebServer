@@ -8,16 +8,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Arrays;
-
-public class BackTraderOptimizeForm {
+public class BacktraderOptimizeForm {
     //TODO get date annotation
     @NotNull
-    @DateTimeFormat(style = "mm-dd-yyyy")
+    @DateTimeFormat(style = "yyyy-mm-dd")
     @NotBlank(message = "Please Enter a time series start date")
     public String startDate;
     @NotNull
-    @DateTimeFormat(style = "mm-dd-yyyy")
+    @DateTimeFormat(style = "yyyy-mm-dd")
     @NotBlank(message = "Please enter a time series end date")
     public String endDate;
     @NotNull
@@ -48,7 +46,8 @@ public class BackTraderOptimizeForm {
     @Max(100)
     @Min(1)
     public int endEma;
-    public BackTraderOptimizeForm(){
+
+    public BacktraderOptimizeForm() {
     }
 
     public String getStartDate() {
@@ -133,7 +132,7 @@ public class BackTraderOptimizeForm {
 
     @Override
     public String toString() {
-        return "BackTraderOptimizeForm{" +
+        return "BacktraderOptimizeForm{" +
                 "startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 ", stockTicker=" + stockTicker +
