@@ -9,22 +9,21 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class BacktraderOptimizeForm {
-    //TODO get date annotation
     @NotNull
-    @DateTimeFormat(style = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotBlank(message = "Please Enter a time series start date")
     public String startDate;
     @NotNull
-    @DateTimeFormat(style = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotBlank(message = "Please enter a time series end date")
     public String endDate;
     @NotNull
     public StockTicker stockTicker;
     @NotNull
     public Algorithm algorithm;
-    @NotNull(message = "Please enter stake in decimal form (3% -> .03)")
+    @NotNull(message = "Please enter stake in percentage form (.03 -> 3%)")
     @Min(0)
-    @Max(1)
+    @Max(100)
     public double stake;
     @NotNull(message = "Please enter commission in decimal form (3% -> .03)")
     @Min(0)
