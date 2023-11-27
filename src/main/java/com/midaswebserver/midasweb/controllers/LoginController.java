@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * The LoginController works with all interactions by the client regarding logging in, logging out
  * uses {@link LoginService} and {@link UserService} heavily to interact with user repository and for business logic
+ *
  * @Author Aidan Scott
  */
 @Controller
@@ -92,7 +93,7 @@ public class LoginController {
         session.setAttribute("UserId", userService.getIdByUsername(loginForm.getUsername()));
         log.info("loginSuccess: User '{}' was given session of ID '{}'", userService.getUserByUsername(loginForm.getUsername()), session.getId());
         //Redirecting user to correct location
-        if (preLoginUri == null) {
+        if (preLoginUri == null || preLoginUri.isEmpty()) {
             log.debug("getTickerData:'{}', no address found in preLoginUri, redirect failed", userService.getClientIp(request));
             return "redirect:/user/home";
         }
@@ -109,8 +110,9 @@ public class LoginController {
      */
     @GetMapping("/logout")
     public String logout(HttpSession session, HttpServletRequest request) {
-        log.debug("logout: User '{}', session ID '{}', location '{}', logged out",
-                userService.getUserById((long) session.getAttribute("UserId")), session.getId(), userService.getClientIp(request));
+        if (session.getAttribute("UserId") != null)
+            log.debug("logout: User '{}', session ID '{}', location '{}', logged out",
+                    userService.getUserById((long) session.getAttribute("UserId")), session.getId(), userService.getClientIp(request));
         session.invalidate();
         return "redirect:/";
     }

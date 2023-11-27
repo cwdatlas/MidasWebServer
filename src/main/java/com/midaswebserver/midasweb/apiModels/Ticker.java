@@ -10,6 +10,7 @@ import java.util.List;
  * Ticker is the object used to house all the information from a ticker query
  * This class is a custom implementation of {@link com.crazzyghost.alphavantage crazzyghost alphabantage}
  * All of the subsequent code is from <a href="https://github.com/crazzyghost">crazzyghost</a> using the alphavantage library
+ *
  * @Author crazzyghost
  */
 public class Ticker {
