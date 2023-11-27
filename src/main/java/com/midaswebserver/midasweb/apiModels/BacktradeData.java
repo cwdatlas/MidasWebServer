@@ -1,24 +1,24 @@
 package com.midaswebserver.midasweb.apiModels;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.midaswebserver.midasweb.models.trader.Algorithm;
 import com.midaswebserver.midasweb.models.trader.StockTicker;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 public class BacktradeData {
 
-    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("start_date")
     @NotNull
-    @Past
     private LocalDate startDate;
-    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("end_date")
     @NotNull
-    @Past
     private LocalDate endDate;
     @JsonProperty("stock_ticker")
     private StockTicker stockTicker;
