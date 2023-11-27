@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -188,26 +189,27 @@ public class UserHomeController {
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
 
+        LocalDate startDate = null;
+        try {
+            startDate = LocalDate.parse(backTraderForm.getStartDate());
+        } catch (DateTimeParseException e) {
+            log.error("getOptBacktrade: StartDate invalid", e);
+            result.addError(new ObjectError("startDate", "Invalid"));
+        }
+        LocalDate endDate = null;
+        try {
+            endDate = LocalDate.parse(backTraderForm.getEndDate());
+        } catch (DateTimeParseException e) {
+            log.error("getOptBacktrade: EndDate invalid", e);
+            result.addError(new ObjectError("endDate", "Invalid"));
+        }
         if (result.hasErrors()) {
             log.debug("getBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
         }
-        //TODO make sure that all data will be given to the form. Add fields in thymeleaf
         BacktradeTest backtrade = new BacktradeTest();
-        try {
-            backtrade.setStartDate(LocalDate.parse(backTraderForm.getStartDate()));
-        } catch (DateTimeParseException e) {
-            log.error(String.valueOf(e));
-            backTraderForm.setStartDate("invalid");
-            return "home";
-        }
-        try {
-            backtrade.setEndDate(LocalDate.parse(backTraderForm.getEndDate()));
-        } catch (DateTimeParseException e) {
-            log.error(String.valueOf(e));
-            backTraderForm.setEndDate("invalid");
-            return "home";
-        }
+        backtrade.setStartDate(startDate);
+        backtrade.setStartDate(endDate);
         backtrade.setSma(backTraderForm.getSmaLength());
         backtrade.setEma(backTraderForm.getEmaLength());
         backtrade.setStockTicker(backTraderForm.getStockTicker());
@@ -243,28 +245,30 @@ public class UserHomeController {
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
 
+        LocalDate startDate = null;
+        try {
+            startDate = LocalDate.parse(backTraderOptimizeForm.getStartDate());
+        } catch (DateTimeParseException e) {
+            log.error("getOptBacktrade: StartDate invalid", e);
+            result.addError(new ObjectError("startDate", "Invalid"));
+        }
+        LocalDate endDate = null;
+        try {
+            endDate = LocalDate.parse(backTraderOptimizeForm.getEndDate());
+        } catch (DateTimeParseException e) {
+            log.error("getOptBacktrade: EndDate invalid", e);
+            result.addError(new ObjectError("endDate", "Invalid"));
+        }
+
         if (result.hasErrors()) {
             log.debug("getOptBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
         }
-        //TODO make sure that all data will be given to the form. Add fields in thymleaf
         //copying data so variables used internally do not share variables used externally
         BacktradeOptimize backtradeOptimize = new BacktradeOptimize();
         //setting up start date object
-        try {
-            backtradeOptimize.setStartDate(LocalDate.parse(backTraderOptimizeForm.getStartDate()));
-        } catch (DateTimeParseException e) {
-            log.error(String.valueOf(e));
-            backTraderOptimizeForm.setStartDate("invalid");
-            return "home";
-        }
-        try {
-            backtradeOptimize.setEndDate(LocalDate.parse(backTraderOptimizeForm.getEndDate()));
-        } catch (DateTimeParseException e) {
-            log.error(String.valueOf(e));
-            backTraderOptimizeForm.setEndDate("invalid");
-            return "home";
-        }
+        backtradeOptimize.setStartDate(startDate);
+        backtradeOptimize.setEndDate(endDate);
         backtradeOptimize.setStartSma(backTraderOptimizeForm.getStartSma());
         backtradeOptimize.setEndSma(backTraderOptimizeForm.getEndSma());
         backtradeOptimize.setStartEma(backTraderOptimizeForm.getStartEma());
