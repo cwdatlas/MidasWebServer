@@ -48,7 +48,7 @@ public class BackTesterServiceImp implements BackTesterService {
         BacktradeReturn results = null;
         if (params != null) {
             Mono<BacktradeReturn> mono = webclient.post()
-                    .uri("/backtrade")
+                    .uri("/backtrade")//addition to the default webclient url
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Mono.just(params), BacktradeTest.class)
                     .retrieve()
@@ -89,7 +89,7 @@ public class BackTesterServiceImp implements BackTesterService {
         BacktradeReturn results = null;
         if (params != null) {
             Mono<BacktradeReturn> mono = webclient.post()
-                    .uri("/optimize")
+                    .uri("/optimize")//addition to the default webclient url
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Mono.just(params), BacktradeOptimize.class)
                     .retrieve()
@@ -129,6 +129,7 @@ public class BackTesterServiceImp implements BackTesterService {
         Gson gson = new Gson();
         BacktradeReturn errorResponse = new BacktradeReturn();
         if (e instanceof  BadDataException){
+            //if error is of type 400, then it will be decoded and stored in a mono of type BacktradeReturn
             log.warn("errorHandler: 400 error occurred: '{}'", e.getMessage());
             errorResponse = gson.fromJson(((BadDataException) e).getErrorBody(), BacktradeReturn.class);
             errorResponse.setErrorCode("400");

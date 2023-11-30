@@ -2,9 +2,17 @@ package com.midaswebserver.midasweb.forms;
 
 import com.midaswebserver.midasweb.models.trader.Algorithm;
 import com.midaswebserver.midasweb.models.trader.StockTicker;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
+/**
+ * BacktarderForm validates the majority of incoming backtesting variables
+ *
+ * @Author Aidan Scott
+ */
 public class BacktraderForm {
 
     @NotNull
