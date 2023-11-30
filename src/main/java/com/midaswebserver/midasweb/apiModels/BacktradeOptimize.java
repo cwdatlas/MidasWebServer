@@ -1,55 +1,56 @@
 package com.midaswebserver.midasweb.apiModels;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * BacktradeOptimize is the child class of BacktradeData
+ * it is used to send optimization data to the microservice
+ *
+ * @Author Aidan Scott
+ */
 public class BacktradeOptimize extends BacktradeData {
     @JsonProperty("start_sma")
-    private double startSma;
+    //startSma specifies the first part of the sma range to be tested with
+    private int startSma;
     @JsonProperty("end_sma")
-    private double endSma;
+    //endSma specifies the last part of the sma range to be tested with
+    private int endSma;
     @JsonProperty("start_ema")
-    private double startEma;
+    //startEma specifies the first part of the ema range to be tested with
+    private int startEma;
     @JsonProperty("end_ema")
-    private double endEma;
+    //endEma specifies the last part of the ema range to be tested with
+    private int endEma;
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public double getStartSma() {
+    public int getStartSma() {
         return startSma;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setStartSma(double startSma) {
+    public void setStartSma(int startSma) {
         this.startSma = startSma;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public double getEndSma() {
+    public int getEndSma() {
         return endSma;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setEndSma(double endSma) {
+    public void setEndSma(int endSma) {
         this.endSma = endSma;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public double getStartEma() {
+    public int getStartEma() {
         return startEma;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setStartEma(double startEma) {
+    public void setStartEma(int startEma) {
         this.startEma = startEma;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public double getEndEma() {
+    public int getEndEma() {
         return endEma;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public void setEndEma(double endEma) {
+    public void setEndEma(int endEma) {
         this.endEma = endEma;
     }
 
