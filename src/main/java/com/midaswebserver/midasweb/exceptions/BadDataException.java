@@ -7,6 +7,7 @@ public class BadDataException extends Exception {
     private static final Logger log = LoggerFactory.getLogger(BadDataException.class);
 
     private String errorBody;
+
     public BadDataException(String message, String errorBody) {
         super(message);
         log.info("BadDataException: 400 exception occurred with message: '{}'", message);

@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
-
 /**
  * @Author Aidan Scott
  * BackTesterService manages api requests and logic for backtesting activities
@@ -128,7 +126,7 @@ public class BackTesterServiceImp implements BackTesterService {
     private Mono<BacktradeReturn> errorHandler(Throwable e) {
         Gson gson = new Gson();
         BacktradeReturn errorResponse = new BacktradeReturn();
-        if (e instanceof  BadDataException){
+        if (e instanceof BadDataException) {
             //if error is of type 400, then it will be decoded and stored in a mono of type BacktradeReturn
             log.warn("errorHandler: 400 error occurred: '{}'", e.getMessage());
             errorResponse = gson.fromJson(((BadDataException) e).getErrorBody(), BacktradeReturn.class);

@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +40,7 @@ import java.util.Map;
  * Uses {@link UserService} heavily to get userdata used in logs and sessions
  * check out the microservice that makes backtesting work at
  * <a href="https://github.com/cwdatlas/backtraderMicroservice">midas microservice</a>
+ *
  * @Author Aidan Scott
  */
 @Controller
@@ -94,11 +94,11 @@ public class UserHomeController {
         model.addAttribute("backTraderOptimizeForm", new BacktraderOptimizeForm());
 
         //adding backtradeData to the model and removing it from the session
-        model.addAttribute("tradeReturn", (BacktradeReturn) session.getAttribute("backtradeData"));
+        model.addAttribute("tradeReturn", session.getAttribute("backtradeData"));
         session.removeAttribute("backtradeData");
 
         //adding backtradeOptimizeData to the model and removing it from the session
-        model.addAttribute("optimizeReturn", (BacktradeReturn) session.getAttribute("optimizeBacktradeData"));
+        model.addAttribute("optimizeReturn", session.getAttribute("optimizeBacktradeData"));
         session.removeAttribute("optimizeBacktradeData");
 
         return "home";
@@ -192,7 +192,7 @@ public class UserHomeController {
         }
         //copying data so variables used internally do not share variables used externally
         //Only runs if no errors have been previously found, highest chance to return valid date
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             BacktradeTest backtrade = new BacktradeTest();
             backtrade.setStartDate(startDate);
             backtrade.setEndDate(endDate);
@@ -211,7 +211,7 @@ public class UserHomeController {
              *   end_date = endDate
              *   stock_ticker = stockTicker
              * */
-            if (tradeData.getErrorCode() != null && tradeData.getErrorCode().equals("400")){
+            if (tradeData.getErrorCode() != null && tradeData.getErrorCode().equals("400")) {
                 String validator = switch (tradeData.getInvalidators()) {
                     case "start_date" -> "startDate";
                     case "end_date" -> "end_date";
@@ -220,7 +220,7 @@ public class UserHomeController {
                 };
                 log.debug("getBacktrade: '{}'", tradeData.getMessage());
                 result.addError(new FieldError(validator, validator, tradeData.getMessage()));
-            }else {
+            } else {
                 session.setAttribute("backtradeData", tradeData);
                 log.debug("getBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtrade);
             }
@@ -267,7 +267,7 @@ public class UserHomeController {
             endDate = LocalDate.parse(backTraderOptimizeForm.getEndDate());
         } catch (DateTimeParseException e) {
             log.error("getOptBacktrade: EndDate invalid", e);
-            result.addError(new FieldError("endDate","endDate", "Incorrect Format"));
+            result.addError(new FieldError("endDate", "endDate", "Incorrect Format"));
         }
         //copying data so variables used internally do not share variables used externally
         //Only runs if no errors have been previously found, highest chance to return valid date
@@ -287,16 +287,16 @@ public class UserHomeController {
             //querying checking if the optimization returns an error, and save return if it doesn't
             BacktradeReturn tradeData = backtesterService.optimize(backtradeOptimize);
             /* Errors are not in java camel case, so a translation must be done to make sure that incoming
-            *  invalidators match form values
-            *   start_date = startDate
-            *   end_date = endDate
-            *   stock_ticker = stockTicker
-            *   start_sma = startSma
-            *   end_sma = endSma
-            *   start_ema = startEma
-            *   end_ema = endEma
-            * */
-            if (tradeData.getErrorCode() != null && tradeData.getErrorCode().equals("400")){
+             *  invalidators match form values
+             *   start_date = startDate
+             *   end_date = endDate
+             *   stock_ticker = stockTicker
+             *   start_sma = startSma
+             *   end_sma = endSma
+             *   start_ema = startEma
+             *   end_ema = endEma
+             * */
+            if (tradeData.getErrorCode() != null && tradeData.getErrorCode().equals("400")) {
                 String validator = switch (tradeData.getInvalidators()) {
                     case "start_date" -> "startDate";
                     case "end_date" -> "endDate";
@@ -309,7 +309,7 @@ public class UserHomeController {
                 };
                 log.error("getOptBacktrade: '{}', validator: '{}'", tradeData.getMessage(), validator);
                 result.addError(new FieldError(validator, validator, tradeData.getMessage()));
-            }else {
+            } else {
                 session.setAttribute("optimizeBacktradeData", tradeData);
                 log.debug("getOptBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtradeOptimize);
             }
