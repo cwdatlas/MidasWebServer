@@ -1,13 +1,21 @@
 package com.midaswebserver.midasweb.services;
 
-import com.midaswebserver.midasweb.models.trader.Algorithm;
-import com.midaswebserver.midasweb.models.trader.StockTicker;
+import com.google.gson.Gson;
+import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
+import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
+import com.midaswebserver.midasweb.apiModels.BacktradeTest;
+import com.midaswebserver.midasweb.exceptions.ApiClientException;
+import com.midaswebserver.midasweb.exceptions.ApiServerException;
+import com.midaswebserver.midasweb.exceptions.BadDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 /**
  * @Author Aidan Scott
@@ -15,56 +23,135 @@ import java.util.Map;
  * Webull will be queried in the future for realtime stock data
  */
 @Service
-public class BackTesterServiceImp implements BackTesterService{
-    private static final Logger log = LoggerFactory.getLogger(com.midaswebserver.midasweb.services.BackTesterServiceImp.class);
+public class BackTesterServiceImp implements BackTesterService {
+    private static final Logger log = LoggerFactory.getLogger(BackTesterServiceImp.class);
+    private final WebClient webclient; //I think this is not working because a bean is not provided to the environment
 
     /**
-     * Backtrade consumes a variables, checks how profitable they are trading them in the past, then returns the ending balance
-     * @param startDate
-     * @param endDate
-     * @param smaOptChange
-     * @param emaOptChange
-     * @param stockticker
-     * @param stake
-     * @param algorithm
-     * @param commission
-     * @return [endBalance]
+     * Inject Dependencies
+     *
+     * @param webclient
+     */
+    public BackTesterServiceImp(WebClient webclient) {
+        this.webclient = webclient;
+    }
+
+    /**
+     * backtrade will consume a BacktradeTest object and check to see the ending value of a trade with those parameters
+     * errors will be included in the returned object
+     *
+     * @return BacktradeReturn (if there are any errors this object will persist them
      */
     @Override
-    public Map<String, Double> Backtrade(String startDate, String endDate, int smaOptChange, int emaOptChange, StockTicker stockticker, double stake, Algorithm algorithm, double commission) {
-        Map<String, Double> optParams = new HashMap<>();
-        double balance = 300.90;
-        optParams.put("endBalance", balance);
-        return optParams;
+    public BacktradeReturn backtrade(BacktradeTest params) {
+        BacktradeReturn results = null;
+        if (params != null) {
+            Mono<BacktradeReturn> mono = webclient.post()
+                    .uri("/backtrade")//addition to the default webclient url
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(params), BacktradeTest.class)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, this::fourHttpHandler)
+                    .onStatus(HttpStatusCode::is5xxServerError, this::fiveHttpHandler)
+                    .bodyToMono(BacktradeReturn.class)
+                    //configure return with correct data based on error
+                    .onErrorResume(this::errorHandler);
 
+            results = mono.block();//I need to switch this to an asynchronous method
+        }
+        return results;
+    }
+
+    /**
+     * optimize will consume a BacktradeOptimize object and check to see the ending value of a trade with the those parameters
+     * The best preforming trade parameters will be returned.
+     * errors will be included in the returned object
+     *
+     * @return BacktradeReturn
+     */
+
+    public BacktradeReturn optimize(BacktradeOptimize params) {
+        BacktradeReturn results = null;
+        if (params != null) {
+            Mono<BacktradeReturn> mono = webclient.post()
+                    .uri("/optimize")//addition to the default webclient url
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(params), BacktradeOptimize.class)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, this::fourHttpHandler)
+                    .onStatus(HttpStatusCode::is5xxServerError, this::fiveHttpHandler)
+                    .bodyToMono(BacktradeReturn.class)
+                    //configure return with correct data based on error
+                    .onErrorResume(this::errorHandler);
+
+            results = mono.block();//I need to switch this to an asynchronous method
+        }
+        return results;
+    }
+
+    /**
+     * Central location to handle 4xx errors
+     *
+     * @param clientResponse
+     * @return
+     */
+    private Mono<java.lang.Throwable> fourHttpHandler(ClientResponse clientResponse) {
+        //Handle 4xx errors here
+        return clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
+            if (clientResponse.statusCode().equals(HttpStatus.BAD_REQUEST)) {
+                return Mono.error(new BadDataException("Bad Data Error", errorBody));
+            } else {
+                return Mono.error(new ApiServerException("Client Error: " + errorBody));
+            }
+        });
+    }
+
+    /**
+     * Central location to handle 5xx errors
+     *
+     * @param clientResponse
+     * @return
+     */
+    private Mono<java.lang.Throwable> fiveHttpHandler(ClientResponse clientResponse) {
+        //Handle 5xx errors here
+        return clientResponse.bodyToMono(String.class)
+                .flatMap(errorDetails ->
+                        Mono.error(new ApiServerException("Server Error: " + errorDetails)));
 
     }
 
     /**
-     * Optimize takes variables and checks how profitable they would be while varying some variables each test. It will return
-     * with the most profitable changing variables. If you plug the output into the Backtrade function, you will get the same
-     * balance as you got from this function.
-     * @param startDate
-     * @param endDate
-     * @param sma
-     * @param ema
-     * @param stockticker
-     * @param stake
-     * @param algorithm
-     * @param commission
-     * @return [optSMA, optEMA, optVolume, endBalance]
+     * errorHandler is a redundancy decreasing function that packages known common errors for use in webclient
+     * error handling
+     *
+     * @param e
+     * @return error injected Mono
      */
-    @Override
-    public Map<String, Double> Optimize(String startDate, String endDate, int sma, int ema, StockTicker stockticker, double stake, Algorithm algorithm, double commission) {
-        Map<String, Double> optParams = new HashMap<>();
-        double balance = 400.90;
-        double optSMA = 30;
-        double optEMA = 20;
-        double optVolume = 1000; //TODO get opt trading volume. add changing volume feature
-        optParams.put("optSMA", optSMA);
-        optParams.put("optEMA", optEMA);
-        optParams.put("optVolume", optVolume);
-        optParams.put("endBalance", balance);
-        return optParams;
+    private Mono<BacktradeReturn> errorHandler(Throwable e) {
+        Gson gson = new Gson();
+        BacktradeReturn errorResponse = new BacktradeReturn();
+        if (e instanceof BadDataException) {
+            //if error is of type 400, then it will be decoded and stored in a mono of type BacktradeReturn
+            log.debug("errorHandler: 400 error occurred: '{}'", e.getMessage());
+            errorResponse = gson.fromJson(((BadDataException) e).getErrorBody(), BacktradeReturn.class);
+            errorResponse.setErrorCode("400");
+        } else if (e instanceof ApiClientException) {
+            errorResponse.setErrorCode("4xx");
+            log.info("errorHandler: 4xx error occurred: '{}'", e.getMessage());
+            errorResponse.setError("internal Error");
+            errorResponse.setMessage("Internal Error");
+        } else if (e instanceof ApiServerException) {
+            //5xx errors aren't useful for the user, so propagating data which is simple and able to make decisions on
+            errorResponse.setErrorCode("5xx");
+            log.error("errorHandler: 5xx error occurred: '{}'", e.getMessage());
+            errorResponse.setError("internal Error");
+            errorResponse.setMessage("Internal Error");
+        } else {
+            //unknown errors aren't useful for the user, so propagating data which is simple and able to make decisions on
+            errorResponse.setErrorCode("UNKNOWN_ERROR");
+            log.error("errorHandler: Unknown Error occurred: '{}'", e.getMessage());
+            errorResponse.setMessage(e.getMessage());
+        }
+        return Mono.just(errorResponse);
     }
 }

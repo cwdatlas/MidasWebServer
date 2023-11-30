@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
-<div th:replace="fragments/header.html :: header">&nbsp;</div>
+<div th:replace="~{fragments/header :: header}"></div>
 <body class="container">
 <div class="row">
     <div class="col-5 border" th:if="${stockDataRequestForm != null}">
@@ -33,122 +33,135 @@
         <p class="display-4">BackTester</p>
         <form action="#" method="post" th:action="@{/user/home/backtrade}" th:object="${backTraderForm}">
             <span class="text-danger" th:if="${#fields.hasGlobalErrors()}">Global error</span><br/>
-            <input class="m-1 text-center" placeholder="9/21/2007" th:field="*{startDate}" type="text"/>
+            <span>Start Date</span>
+            <input class="m-1 text-center" placeholder="yyyy-mm-dd" th:field="*{startDate}" type="text"/>
             <span class="text-danger" th:errors="*{startDate}"
                   th:if="${#fields.hasErrors('startDate')}">Start Date Error</span><br/>
-            <input class="m-1 text-center" placeholder="9/21/2023" th:field="*{endDate}" type="text"/>
+            <span>End Date</span>
+            <input class="m-1 text-center" placeholder="yyyy-mm-dd" th:field="*{endDate}" type="text"/>
             <span class="text-danger" th:errors="*{endDate}"
                   th:if="${#fields.hasErrors('endDate')}">End Date Error</span><br/>
             <label for="stockTicker">Choose a ticker:</label>
 
             <select class="form-control" id="stockTicker" name="selectedStockTicker" th:field="*{stockTicker}">
                 <option th:each="stockTicker :${T(com.midaswebserver.midasweb.models.trader.StockTicker).values()}"
-                        th:value="${stockTicker}" th:text="${stockTicker}">Option
+                        th:text="${stockTicker}" th:value="${stockTicker}">Option
                 </option>
             </select>
 
             <label for="algorithm">Choose an Algorithm:</label>
             <select class="form-control" id="algorithm" name="selectedAlgorithm" th:field="*{algorithm}">
                 <option th:each="algorithm : ${T(com.midaswebserver.midasweb.models.trader.Algorithm).values()}"
-                        th:value="${algorithm}" th:text="${algorithm}">Option
+                        th:text="${algorithm}" th:value="${algorithm}">Option
                 </option>
             </select>
             <span>Stake</span>
-            <input class="m-1 text-center" placeholder=".01" th:field="*{stake}" type="text"/>
+            <input class="m-1 text-center" th:field="*{stake}" type="text"/>
             <span class="text-danger" th:errors="*{stake}"
                   th:if="${#fields.hasErrors('stake')}">Stake error</span><br/>
             <span>Commission</span>
-            <input class="m-1 text-center" placeholder=".01" th:field="*{commission}" type="text"/>
+            <input class="m-1 text-center" th:field="*{commission}" type="text"/>
             <span class="text-danger" th:errors="*{commission}"
                   th:if="${#fields.hasErrors('commission')}">Commission error</span><br/>
             <span>SMA length</span>
-            <input class="m-1 text-center" placeholder="30" th:field="*{smaLength}" type="text"/>
-            <span class="text-danger" th:errors="*{smaLength}"
-                  th:if="${#fields.hasErrors('smaLength')}">SmaLength error</span><br/>
+            <input class="m-1 text-center" th:field="*{sma}" type="text"/>
+            <span class="text-danger" th:errors="*{sma}"
+                  th:if="${#fields.hasErrors('sma')}">SmaLength error</span><br/>
             <span>EMA length</span>
-            <input class="m-1 text-center" placeholder="15" th:field="*{emaLength}" type="text"/>
-            <span class="text-danger" th:errors="*{emaLength}"
-                  th:if="${#fields.hasErrors('emaLength')}">EmaLength error</span><br/>
+            <input class="m-1 text-center" th:field="*{ema}" type="text"/>
+            <span class="text-danger" th:errors="*{ema}"
+                  th:if="${#fields.hasErrors('ema')}">EmaLength error</span><br/>
             <button class="btn m-1" type="submit">Test Params</button>
         </form>
     </div>
-    <div class="col-5 border" th:if="${backtrader != null}">
+    <div class="col-5 border" th:if="${tradeReturn != null && tradeReturn.errorCode == null}">
         <table>
             <thead>
             <tr>
-                <th>Param</th>
-                <th>Value</th>
+                <th>sma</th>
+                <th>ema</th>
+                <th>Ending Value</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="entry : ${backtrader}">
-                <td th:text="${entry.key}">Key</td>
-                <td th:text="${entry.value}">Value</td>
+            <tr>
+                <td th:text="${tradeReturn.sma}">sma</td>
+                <td th:text="${tradeReturn.ema}">ema</td>
+                <td th:text="${tradeReturn.endingValue}">ending value</td>
             </tr>
-            </tbody>
         </table>
     </div>
-</div>
 </div>
 <div class="row pt-4">
     <div class="col-5 border" th:if="${backTraderOptimizeForm != null}">
         <p class="display-4">Optimizer</p>
         <form action="#" method="post" th:action="@{/user/home/backtradeOpt}" th:object="${backTraderOptimizeForm}">
             <span class="text-danger" th:if="${#fields.hasGlobalErrors()}">Global error</span><br/>
-            <input class="m-1 text-center" placeholder="9/21/2007" th:field="*{startDate}" type="text"/>
+            <span>Start Date</span>
+            <input class="m-1 text-center" placeholder="yyyy-mm-dd" th:field="*{startDate}" type="text"/>
             <span class="text-danger" th:errors="*{startDate}"
                   th:if="${#fields.hasErrors('startDate')}">Start Date Error</span><br/>
-            <input class="m-1 text-center" placeholder="9/21/2023" th:field="*{endDate}" type="text"/>
+            <span>End Date</span>
+            <input class="m-1 text-center" placeholder="yyyy-mm-dd" th:field="*{endDate}" type="text"/>
             <span class="text-danger" th:errors="*{endDate}"
                   th:if="${#fields.hasErrors('endDate')}">End Date Error</span><br/>
 
             <label for="OptstockTicker">Choose a ticker:</label>
             <select class="form-control" id="OptstockTicker" name="selectedStockTicker" th:field="*{stockTicker}">
                 <option th:each="stockTicker :${T(com.midaswebserver.midasweb.models.trader.StockTicker).values()}"
-                        th:value="${stockTicker}" th:text="${stockTicker}">Option
+                        th:text="${stockTicker}" th:value="${stockTicker}">Option
                 </option>
             </select>
 
             <label for="Optalgorithm">Choose an Algorithm:</label>
             <select class="form-control" id="Optalgorithm" name="selectedAlgorithm" th:field="*{algorithm}">
                 <option th:each="algorithm : ${T(com.midaswebserver.midasweb.models.trader.Algorithm).values()}"
-                        th:value="${algorithm}" th:text="${algorithm}">Option
+                        th:text="${algorithm}" th:value="${algorithm}">Option
                 </option>
             </select>
 
             <span>Stake</span>
-            <input class="m-1 text-center" placeholder=".3" th:field="*{stake}" type="text"/>
+            <input class="m-1 text-center" th:field="*{stake}" type="text"/>
             <span class="text-danger" th:errors="*{stake}"
                   th:if="${#fields.hasErrors('stake')}">Stake error</span><br/>
             <span>Commission</span>
-            <input class="m-1 text-center" placeholder=".01" th:field="*{commission}" type="text"/>
+            <input class="m-1 text-center" th:field="*{commission}" type="text"/>
             <span class="text-danger" th:errors="*{commission}"
                   th:if="${#fields.hasErrors('commission')}">Commission error</span><br/>
-            <span>SMA change (starts at 0)</span>
-            <input class="m-1 text-center" placeholder="40" th:field="*{smaOptChange}" type="text"/>
-            <span class="text-danger" th:errors="*{smaOptChange}"
-                  th:if="${#fields.hasErrors('smaOptChange')}">Sma difference error</span><br/>
-            <span>EMA change (starts at 0)</span>
-            <input class="m-1 text-center" placeholder="30" th:field="*{emaOptChange}" type="text"/>
-            <span class="text-danger" th:errors="*{emaOptChange}"
-                  th:if="${#fields.hasErrors('emaOptChange')}">Ema difference error</span><br/>
+            <span>SMA Range Start</span>
+            <input class="m-1 text-center" th:field="*{startSma}" type="text"/>
+            <span class="text-danger" th:errors="*{startSma}"
+                  th:if="${#fields.hasErrors('startSma')}">Sma Range Start Error</span><br/>
+            <span>SMA Range End</span>
+            <input class="m-1 text-center" th:field="*{endSma}" type="text"/>
+            <span class="text-danger" th:errors="*{endSma}"
+                  th:if="${#fields.hasErrors('endSma')}">Sma Range End Error</span><br/>
+            <span>EMA Range Start</span>
+            <input class="m-1 text-center" th:field="*{startEma}" type="text"/>
+            <span class="text-danger" th:errors="*{startEma}"
+                  th:if="${#fields.hasErrors('startEma')}">Ema Range Start error</span><br/>
+            <span>EMA Range End</span>
+            <input class="m-1 text-center" th:field="*{endEma}" type="text"/>
+            <span class="text-danger" th:errors="*{endEma}"
+                  th:if="${#fields.hasErrors('endEma')}">Ema Range End error</span><br/>
             <button class="btn m-1" type="submit">Optimize Params</button>
         </form>
     </div>
-    <div class="col-5 border" th:if="${backtraderOpt != null}">
+    <div class="col-5 border" th:if="${optimizeReturn != null && optimizeReturn.errorCode == null}">
         <table>
             <thead>
             <tr>
-                <th>Param</th>
-                <th>Value</th>
+                <th>sma</th>
+                <th>ema</th>
+                <th>Ending Value</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="entry : ${backtraderOpt}">
-                <td th:text="${entry.key}">Key</td>
-                <td th:text="${entry.value}">Value</td>
+            <tr>
+                <td th:text="${optimizeReturn.sma}">sma</td>
+                <td th:text="${optimizeReturn.ema}">ema</td>
+                <td th:text="${optimizeReturn.endingValue}">ending value</td>
             </tr>
-            </tbody>
         </table>
     </div>
 </div>

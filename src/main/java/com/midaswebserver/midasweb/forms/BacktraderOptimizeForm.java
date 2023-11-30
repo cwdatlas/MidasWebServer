@@ -8,6 +8,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
+/**
+ * BacktraderOptimizeForm validates the majority of incoming optimization variables
+ *
+ * @Author Aidan Scott
+ */
 public class BacktraderOptimizeForm {
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")

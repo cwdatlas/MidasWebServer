@@ -6,27 +6,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.midaswebserver.midasweb.models.trader.Algorithm;
 import com.midaswebserver.midasweb.models.trader.StockTicker;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+/**
+ * BacktradeData is the parent class to store and encode into json
+ *
+ * @Author Aidan Scott
+ */
 public class BacktradeData {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("start_date")
     @NotNull
+    //start date is used to set the start date to trade from in the midas microservice
     private LocalDate startDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("end_date")
     @NotNull
+    // end date is used to set the end date to trade to in the midas microservice
     private LocalDate endDate;
     @JsonProperty("stock_ticker")
+    //ticker symbol used to specify which stock data will be tested
     private StockTicker stockTicker;
     @JsonProperty
+    //algorithm is used to specify the specific algorithm used during testing
     private Algorithm algorithm;
     @JsonProperty
+    //commission is used to specify how much commission each trade incurs, indecimal form
     private double commission;
     @JsonProperty
+    //stake is the percentage of total buying power each trade uses, in percentage form
     private double stake;
 
     @JsonIgnoreProperties(ignoreUnknown = true)

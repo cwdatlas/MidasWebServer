@@ -11,9 +11,34 @@ public class BacktradeReturn {
     private int ema;
     @JsonProperty("ending_value")
     private float endingValue;
-
     private String errorCode;
+    private String error;
     private String message;
+    private String invalidators;
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getInvalidators() {
+        return invalidators;
+    }
+
+    public void setInvalidators(String invalidators) {
+        this.invalidators = invalidators;
+    }
 
     public boolean hasErrors() {
         return (errorCode == null);
@@ -25,14 +50,6 @@ public class BacktradeReturn {
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
