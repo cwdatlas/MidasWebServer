@@ -30,11 +30,11 @@ public class BacktraderForm {
     @NotNull(message = "Please enter sma length, 1 < 100")
     @Max(100)
     @Min(1)
-    public int smaLength;
+    public int sma;
     @NotNull(message = "Please enter ema length, 1 < 100")
     @Max(100)
     @Min(1)
-    public int emaLength;
+    public int ema;
 
     public BacktraderForm() {
     }
@@ -87,20 +87,20 @@ public class BacktraderForm {
         this.commission = commission;
     }
 
-    public int getSmaLength() {
-        return smaLength;
+    public int getSma() {
+        return sma;
     }
 
-    public void setSmaLength(int smaLength) {
-        this.smaLength = smaLength;
+    public void setSma(int sma) {
+        this.sma = sma;
     }
 
-    public int getEmaLength() {
-        return emaLength;
+    public int getEma() {
+        return ema;
     }
 
-    public void setEmaLength(int emaLength) {
-        this.emaLength = emaLength;
+    public void setEma(int ema) {
+        this.ema = ema;
     }
 
     @Override
@@ -112,8 +112,8 @@ public class BacktraderForm {
                 ", algorithm=" + algorithm +
                 ", stake=" + stake +
                 ", commission=" + commission +
-                ", smaLength=" + smaLength +
-                ", emaLength=" + emaLength +
+                ", smaLength=" + sma +
+                ", emaLength=" + ema +
                 '}';
     }
 }
