@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -50,22 +51,8 @@ public class BackTesterServiceImp implements BackTesterService {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Mono.just(params), BacktradeTest.class)
                     .retrieve()
-                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
-                        //Handle 4xx errors here
-                        return clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                            if (clientResponse.statusCode().equals(HttpStatus.BAD_REQUEST)) {
-                                return Mono.error(new BadDataException("Bad Data Error", errorBody));
-                            } else {
-                                return Mono.error(new ApiServerException("Client Error: " + errorBody));
-                            }
-                        });
-                    })
-                    .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
-                        //Handle 5xx errors here
-                        return clientResponse.bodyToMono(String.class)
-                                .flatMap(errorDetails ->
-                                        Mono.error(new ApiServerException("Server Error: " + errorDetails)));
-                    })
+                    .onStatus(HttpStatusCode::is4xxClientError, this::fourHttpHandler)
+                    .onStatus(HttpStatusCode::is5xxServerError, this::fiveHttpHandler)
                     .bodyToMono(BacktradeReturn.class)
                     //configure return with correct data based on error
                     .onErrorResume(this::errorHandler);
@@ -91,22 +78,8 @@ public class BackTesterServiceImp implements BackTesterService {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Mono.just(params), BacktradeOptimize.class)
                     .retrieve()
-                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
-                        //Handle 4xx errors here
-                        return clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                            if (clientResponse.statusCode().equals(HttpStatus.BAD_REQUEST)) {
-                                return Mono.error(new BadDataException("Bad Data Error", errorBody));
-                            } else {
-                                return Mono.error(new ApiServerException("Client Error: " + errorBody));
-                            }
-                        });
-                    })
-                    .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
-                        //Handle 5xx errors here
-                        return clientResponse.bodyToMono(String.class)
-                                .flatMap(errorDetails ->
-                                        Mono.error(new ApiServerException("Server Error: " + errorDetails)));
-                    })
+                    .onStatus(HttpStatusCode::is4xxClientError, this::fourHttpHandler)
+                    .onStatus(HttpStatusCode::is5xxServerError, this::fiveHttpHandler)
                     .bodyToMono(BacktradeReturn.class)
                     //configure return with correct data based on error
                     .onErrorResume(this::errorHandler);
@@ -114,6 +87,37 @@ public class BackTesterServiceImp implements BackTesterService {
             results = mono.block();//I need to switch this to an asynchronous method
         }
         return results;
+    }
+
+    /**
+     * Central location to handle 4xx errors
+     *
+     * @param clientResponse
+     * @return
+     */
+    private Mono<java.lang.Throwable> fourHttpHandler(ClientResponse clientResponse) {
+        //Handle 4xx errors here
+        return clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
+            if (clientResponse.statusCode().equals(HttpStatus.BAD_REQUEST)) {
+                return Mono.error(new BadDataException("Bad Data Error", errorBody));
+            } else {
+                return Mono.error(new ApiServerException("Client Error: " + errorBody));
+            }
+        });
+    }
+
+    /**
+     * Central location to handle 5xx errors
+     *
+     * @param clientResponse
+     * @return
+     */
+    private Mono<java.lang.Throwable> fiveHttpHandler(ClientResponse clientResponse) {
+        //Handle 5xx errors here
+        return clientResponse.bodyToMono(String.class)
+                .flatMap(errorDetails ->
+                        Mono.error(new ApiServerException("Server Error: " + errorDetails)));
+
     }
 
     /**
@@ -128,24 +132,24 @@ public class BackTesterServiceImp implements BackTesterService {
         BacktradeReturn errorResponse = new BacktradeReturn();
         if (e instanceof BadDataException) {
             //if error is of type 400, then it will be decoded and stored in a mono of type BacktradeReturn
-            log.warn("errorHandler: 400 error occurred: '{}'", e.getMessage());
+            log.debug("errorHandler: 400 error occurred: '{}'", e.getMessage());
             errorResponse = gson.fromJson(((BadDataException) e).getErrorBody(), BacktradeReturn.class);
             errorResponse.setErrorCode("400");
         } else if (e instanceof ApiClientException) {
             errorResponse.setErrorCode("4xx");
-            log.warn("errorHandler: 4xx error occurred: '{}'", e.getMessage());
+            log.info("errorHandler: 4xx error occurred: '{}'", e.getMessage());
             errorResponse.setError("internal Error");
             errorResponse.setMessage("Internal Error");
         } else if (e instanceof ApiServerException) {
             //5xx errors aren't useful for the user, so propagating data which is simple and able to make decisions on
             errorResponse.setErrorCode("5xx");
-            log.warn("errorHandler: 5xx error occurred: '{}'", e.getMessage());
+            log.error("errorHandler: 5xx error occurred: '{}'", e.getMessage());
             errorResponse.setError("internal Error");
             errorResponse.setMessage("Internal Error");
         } else {
             //unknown errors aren't useful for the user, so propagating data which is simple and able to make decisions on
             errorResponse.setErrorCode("UNKNOWN_ERROR");
-            log.warn("errorHandler: Unknown Error occurred: '{}'", e.getMessage());
+            log.error("errorHandler: Unknown Error occurred: '{}'", e.getMessage());
             errorResponse.setMessage(e.getMessage());
         }
         return Mono.just(errorResponse);
