@@ -1,10 +1,7 @@
 package com.midaswebserver.midasweb.controllers;
 
 import com.crazzyghost.alphavantage.parameters.OutputSize;
-import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
-import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
-import com.midaswebserver.midasweb.apiModels.BacktradeTest;
-import com.midaswebserver.midasweb.apiModels.Ticker;
+import com.midaswebserver.midasweb.apiModels.*;
 import com.midaswebserver.midasweb.forms.BacktraderForm;
 import com.midaswebserver.midasweb.forms.BacktraderOptimizeForm;
 import com.midaswebserver.midasweb.forms.StockDataRequestForm;
@@ -35,10 +32,15 @@ import java.util.Map;
 
 /**
  * UserHomeController manages the endpoints for general locations
- * This includes the index page and the user/home page
+ * This includes the user/home page
  * In the future general endpoints can be split up into more specific areas (admin, management, and so on)
+ * Features of this page include stock price searches and backtesting and optimization of
+ * stock trading.
+ * Backtesting is the act of using an old time series and using it to test metrics, stocks, and algorithms to check
+ * their validity.
  * Uses {@link UserService} heavily to get userdata used in logs and sessions
- *
+ * check out the microservice that makes backtesting work at
+ * <a href="https://github.com/cwdatlas/backtraderMicroservice">midas microservice</a>
  * @Author Aidan Scott
  */
 @Controller
@@ -63,7 +65,7 @@ public class UserHomeController {
 
     /**
      * Routs the user to their home. Uses sessions to provide a custom experience
-     * Adds the {@link User} and {@link Symbol} to the model
+     * Adds the {@link User} and {@link Symbol} and {@link BacktradeData} to the model
      *
      * @param session {@link HttpSession}
      * @param model
@@ -82,9 +84,11 @@ public class UserHomeController {
         User user = userService.getUserById((Long) (userId));
         model.addAttribute("user", user);
         //other attributes
+        //saved symbols to be displayed like UEC, or APPL
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
         log.debug("home: User '{}', symbols: '{}' added to form", session.getAttribute("UserId"), symbols);
+        //adding forms
         model.addAttribute("stockDataRequestForm", new StockDataRequestForm());
         model.addAttribute("backTraderForm", new BacktraderForm());
         model.addAttribute("backTraderOptimizeForm", new BacktraderOptimizeForm());
@@ -137,8 +141,6 @@ public class UserHomeController {
         if (ticker.getMetaData() != null || ticker.getMetaData().getSymbol() != null) {
             String symbol = ticker.getMetaData().getSymbol();
             boolean addedTicker = userService.addSymbolToUser(user, symbol);
-            //TODO fix this debug log so it doesnt error out
-            //log.debug("getTickerData:'{}', Searched Ticker: '{}', added ticker, '{}'", session.getAttribute("UserId"), symbol, addedTicker);
         } else { // this is if the incoming data isnt valid, this is probably because the wrong ticker was sent to the api
             log.warn("getTickerData:'{}', Searched for ticker, '{}', bad ticker or interval, received bad data", session.getAttribute("UserId"), stockDataRequestForm.getTicker());
             stockDataRequestForm.setTicker("invalid");//I dont know if they will be able to see this
@@ -153,8 +155,7 @@ public class UserHomeController {
     }
 
     /**
-     * GetTickerData takes a StockDataRequestForm and displays the data on the displayData page
-     * will return user to /user/home if any data validates bad
+     * GetBacktrade receives a {@link BacktraderForm} then validates, and gets results from {@link BackTesterService}
      *
      * @param backTraderForm {@link StockDataRequestForm}
      * @param result         {@link BindingResult}
@@ -174,21 +175,23 @@ public class UserHomeController {
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
 
-        //Post form falidation
+        //Post form validation
         LocalDate startDate = null;
         try {
             startDate = LocalDate.parse(backTraderForm.getStartDate());
         } catch (DateTimeParseException e) {
-            log.error("getOptBacktrade: StartDate invalid", e);
+            log.debug("getOptBacktrade: StartDate invalid", e);
             result.addError(new FieldError("startDate", "startDate", "Incorrect Format"));
         }
         LocalDate endDate = null;
         try {
             endDate = LocalDate.parse(backTraderForm.getEndDate());
         } catch (DateTimeParseException e) {
-            log.error("getOptBacktrade: EndDate invalid", e);
+            log.debug("getOptBacktrade: EndDate invalid", e);
             result.addError(new FieldError("endDate", "endDate", "Incorrect Format"));
         }
+        //copying data so variables used internally do not share variables used externally
+        //Only runs if no errors have been previously found, highest chance to return valid date
         if(!result.hasErrors()) {
             BacktradeTest backtrade = new BacktradeTest();
             backtrade.setStartDate(startDate);
@@ -215,13 +218,14 @@ public class UserHomeController {
                     case "stock_ticker" -> "stockTicker";
                     default -> "global";
                 };
-                log.error("getBacktrade: '{}'", tradeData.getMessage());
+                log.debug("getBacktrade: '{}'", tradeData.getMessage());
                 result.addError(new FieldError(validator, validator, tradeData.getMessage()));
             }else {
                 session.setAttribute("backtradeData", tradeData);
                 log.debug("getBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtrade);
             }
         }
+        // if there are any errors update form so user can make changes to their request
         if (result.hasErrors()) {
             log.debug("getBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
@@ -230,8 +234,7 @@ public class UserHomeController {
     }
 
     /**
-     * GetTickerData takes a StockDataRequestForm and displays the data on the displayData page
-     * will return user to /user/home if any data validates bad
+     * GetOptBacktrade receives a {@link BacktraderOptimizeForm} then validates, and gets results from {@link BackTesterService}
      *
      * @param backTraderOptimizeForm {@link StockDataRequestForm}
      * @param result                 {@link BindingResult}
@@ -267,7 +270,7 @@ public class UserHomeController {
             result.addError(new FieldError("endDate","endDate", "Incorrect Format"));
         }
         //copying data so variables used internally do not share variables used externally
-        //setting up start date object
+        //Only runs if no errors have been previously found, highest chance to return valid date
         if (!result.hasErrors()) {
             BacktradeOptimize backtradeOptimize = new BacktradeOptimize();
             backtradeOptimize.setStartDate(startDate);
@@ -311,6 +314,7 @@ public class UserHomeController {
                 log.debug("getOptBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtradeOptimize);
             }
         }
+        // if there are any errors update form so user can make changes to their request
         if (result.hasErrors()) {
             log.debug("getOptBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
