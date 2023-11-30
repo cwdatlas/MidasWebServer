@@ -25,6 +25,7 @@ dependencies {
 	implementation 'com.github.crazzyghost:alphavantage-java:1.6.2'
 	implementation 'org.springframework.security:spring-security-crypto:5.6.5'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'com.google.code.gson:gson'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.h2database:h2'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
