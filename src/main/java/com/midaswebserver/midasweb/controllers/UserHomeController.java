@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -88,30 +89,14 @@ public class UserHomeController {
         model.addAttribute("backTraderForm", new BacktraderForm());
         model.addAttribute("backTraderOptimizeForm", new BacktraderOptimizeForm());
 
-        //Checking if optimizeBacktrade or backtrade is in the session
-        BacktradeTest backtrade = (BacktradeTest) session.getAttribute("backtrade");
-        if (backtrade != null) {
-            //TODO make sure that only results are logged
-            //notnull is checked in the if statement before this line, so it shouldn't break
-            log.debug("home: User '{}', Backtrade params collected from session", session.getAttribute("UserId"));
-            BacktradeReturn results = backtesterService.backtrade(backtrade);
-            log.debug("home: User '{}', returned backtrade params: '{}'", session.getAttribute("UserId"), backtrade);
-            //model.addAttribute("backtrader", backtrade);
-            model.addAttribute("tradeReturn", results);
-            session.removeAttribute("backtrade");
-            return "home";
-        }
-        //Optimize Section
-        BacktradeOptimize backtradeOptimize = (BacktradeOptimize) session.getAttribute("optimizeBacktrade");
-        if (backtradeOptimize != null) {
-            //TODO make sure that only results are logged
-            log.debug("home: User '{}', optimizeBacktrade params collected from session", session.getAttribute("UserId"));
-            BacktradeReturn results = backtesterService.optimize(backtradeOptimize);
-            log.debug("home: User '{}', returned optimizeBacktrade params: '{}'", session.getAttribute("UserId"), backtradeOptimize);
-            //model.addAttribute("backtraderOpt", backtradeOptimize);
-            model.addAttribute("optimizeReturn", results);
-            session.removeAttribute("optimizeBacktrade");
-        }
+        //adding backtradeData to the model and removing it from the session
+        model.addAttribute("tradeReturn", (BacktradeReturn) session.getAttribute("backtradeData"));
+        session.removeAttribute("backtradeData");
+
+        //adding backtradeOptimizeData to the model and removing it from the session
+        model.addAttribute("optimizeReturn", (BacktradeReturn) session.getAttribute("optimizeBacktradeData"));
+        session.removeAttribute("optimizeBacktradeData");
+
         return "home";
     }
 
@@ -189,37 +174,58 @@ public class UserHomeController {
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
 
+        //Post form falidation
         LocalDate startDate = null;
         try {
             startDate = LocalDate.parse(backTraderForm.getStartDate());
         } catch (DateTimeParseException e) {
             log.error("getOptBacktrade: StartDate invalid", e);
-            result.addError(new ObjectError("startDate", "Invalid"));
+            result.addError(new FieldError("startDate", "startDate", "Incorrect Format"));
         }
         LocalDate endDate = null;
         try {
             endDate = LocalDate.parse(backTraderForm.getEndDate());
         } catch (DateTimeParseException e) {
             log.error("getOptBacktrade: EndDate invalid", e);
-            result.addError(new ObjectError("endDate", "Invalid"));
+            result.addError(new FieldError("endDate", "endDate", "Incorrect Format"));
+        }
+        if(!result.hasErrors()) {
+            BacktradeTest backtrade = new BacktradeTest();
+            backtrade.setStartDate(startDate);
+            backtrade.setEndDate(endDate);
+            backtrade.setSma(backTraderForm.getSma());
+            backtrade.setEma(backTraderForm.getEma());
+            backtrade.setStockTicker(backTraderForm.getStockTicker());
+            backtrade.setStake(backTraderForm.getStake());
+            backtrade.setAlgorithm(backTraderForm.getAlgorithm());
+            backtrade.setCommission(backTraderForm.getCommission());
+
+            //querying checking if the optimization returns an error, and save return if it doesn't
+            BacktradeReturn tradeData = backtesterService.backtrade(backtrade);
+            /* Errors are not in java camel case, so a translation must be done to make sure that incoming
+             *  invalidators match form values
+             *   start_date = startDate
+             *   end_date = endDate
+             *   stock_ticker = stockTicker
+             * */
+            if (tradeData.getErrorCode() != null && tradeData.getErrorCode().equals("400")){
+                String validator = switch (tradeData.getInvalidators()) {
+                    case "start_date" -> "startDate";
+                    case "end_date" -> "end_date";
+                    case "stock_ticker" -> "stockTicker";
+                    default -> "global";
+                };
+                log.error("getBacktrade: '{}'", tradeData.getMessage());
+                result.addError(new FieldError(validator, validator, tradeData.getMessage()));
+            }else {
+                session.setAttribute("backtradeData", tradeData);
+                log.debug("getBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtrade);
+            }
         }
         if (result.hasErrors()) {
             log.debug("getBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
         }
-        BacktradeTest backtrade = new BacktradeTest();
-        backtrade.setStartDate(startDate);
-        backtrade.setStartDate(endDate);
-        backtrade.setSma(backTraderForm.getSmaLength());
-        backtrade.setEma(backTraderForm.getEmaLength());
-        backtrade.setStockTicker(backTraderForm.getStockTicker());
-        backtrade.setStake(backTraderForm.getStake());
-        backtrade.setAlgorithm(backTraderForm.getAlgorithm());
-        backtrade.setCommission(backTraderForm.getCommission());
-        //adding backtrade information to the form, so it can be gathered and used in the get method
-        session.setAttribute("backtrade", backtrade);
-        log.debug("getBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtrade);
-
         return "redirect:/user/home";
     }
 
@@ -245,42 +251,70 @@ public class UserHomeController {
         Symbol[] symbols = user.getSymbol().toArray(new Symbol[user.getSymbol().size()]);
         model.addAttribute("userSettings", symbols);
 
+        //Extra post form validation
         LocalDate startDate = null;
         try {
             startDate = LocalDate.parse(backTraderOptimizeForm.getStartDate());
         } catch (DateTimeParseException e) {
             log.error("getOptBacktrade: StartDate invalid", e);
-            result.addError(new ObjectError("startDate", "Invalid"));
+            result.addError(new FieldError("startDate", "startDate", "Incorrect Format"));
         }
         LocalDate endDate = null;
         try {
             endDate = LocalDate.parse(backTraderOptimizeForm.getEndDate());
         } catch (DateTimeParseException e) {
             log.error("getOptBacktrade: EndDate invalid", e);
-            result.addError(new ObjectError("endDate", "Invalid"));
+            result.addError(new FieldError("endDate","endDate", "Incorrect Format"));
         }
+        //copying data so variables used internally do not share variables used externally
+        //setting up start date object
+        if (!result.hasErrors()) {
+            BacktradeOptimize backtradeOptimize = new BacktradeOptimize();
+            backtradeOptimize.setStartDate(startDate);
+            backtradeOptimize.setEndDate(endDate);
+            backtradeOptimize.setStartSma(backTraderOptimizeForm.getStartSma());
+            backtradeOptimize.setEndSma(backTraderOptimizeForm.getEndSma());
+            backtradeOptimize.setStartEma(backTraderOptimizeForm.getStartEma());
+            backtradeOptimize.setEndEma(backTraderOptimizeForm.getEndEma());
+            backtradeOptimize.setStockTicker(backTraderOptimizeForm.getStockTicker());
+            backtradeOptimize.setStake(backTraderOptimizeForm.getStake());
+            backtradeOptimize.setAlgorithm(backTraderOptimizeForm.getAlgorithm());
+            backtradeOptimize.setCommission(backTraderOptimizeForm.getCommission());
 
+            //querying checking if the optimization returns an error, and save return if it doesn't
+            BacktradeReturn tradeData = backtesterService.optimize(backtradeOptimize);
+            /* Errors are not in java camel case, so a translation must be done to make sure that incoming
+            *  invalidators match form values
+            *   start_date = startDate
+            *   end_date = endDate
+            *   stock_ticker = stockTicker
+            *   start_sma = startSma
+            *   end_sma = endSma
+            *   start_ema = startEma
+            *   end_ema = endEma
+            * */
+            if (tradeData.getErrorCode() != null && tradeData.getErrorCode().equals("400")){
+                String validator = switch (tradeData.getInvalidators()) {
+                    case "start_date" -> "startDate";
+                    case "end_date" -> "endDate";
+                    case "stock_ticker" -> "stockTicker";
+                    case "start_sma" -> "startSma";
+                    case "end_sma" -> "endSma";
+                    case "start_ema" -> "startEma";
+                    case "end_ema" -> "endEma";
+                    default -> "global";
+                };
+                log.error("getOptBacktrade: '{}', validator: '{}'", tradeData.getMessage(), validator);
+                result.addError(new FieldError(validator, validator, tradeData.getMessage()));
+            }else {
+                session.setAttribute("optimizeBacktradeData", tradeData);
+                log.debug("getOptBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtradeOptimize);
+            }
+        }
         if (result.hasErrors()) {
             log.debug("getOptBacktrade:'{}', form had errors '{}'", session.getAttribute("UserId"), result.getAllErrors());
             return "home";
         }
-        //copying data so variables used internally do not share variables used externally
-        BacktradeOptimize backtradeOptimize = new BacktradeOptimize();
-        //setting up start date object
-        backtradeOptimize.setStartDate(startDate);
-        backtradeOptimize.setEndDate(endDate);
-        backtradeOptimize.setStartSma(backTraderOptimizeForm.getStartSma());
-        backtradeOptimize.setEndSma(backTraderOptimizeForm.getEndSma());
-        backtradeOptimize.setStartEma(backTraderOptimizeForm.getStartEma());
-        backtradeOptimize.setEndEma(backTraderOptimizeForm.getEndEma());
-        backtradeOptimize.setStockTicker(backTraderOptimizeForm.getStockTicker());
-        backtradeOptimize.setStake(backTraderOptimizeForm.getStake());
-        backtradeOptimize.setAlgorithm(backTraderOptimizeForm.getAlgorithm());
-        backtradeOptimize.setCommission(backTraderOptimizeForm.getCommission());
-        //adding backtrade information to the form, so it can be gathered and used in the get method
-        session.setAttribute("optimizeBacktrade", backtradeOptimize);
-        log.debug("getOptBacktrade:'{}', params gotten from  form '{}'", session.getAttribute("UserId"), backtradeOptimize);
-
         return "redirect:/user/home";
     }
 }
