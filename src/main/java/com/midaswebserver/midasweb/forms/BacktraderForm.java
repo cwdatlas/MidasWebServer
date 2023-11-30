@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * BacktarderForm validates the majority of incoming backtesting variables
+ * formatting validation doesnt validate.
  *
  * @Author Aidan Scott
  */

@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * BacktraderOptimizeForm validates the majority of incoming optimization variables
+ * formatting validation doesnt validate.
  *
  * @Author Aidan Scott
  */
