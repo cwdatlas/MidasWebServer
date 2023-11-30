@@ -1,17 +1,22 @@
 package com.midaswebserver.midasweb.services;
 
+import com.google.gson.Gson;
 import com.midaswebserver.midasweb.apiModels.BacktradeOptimize;
 import com.midaswebserver.midasweb.apiModels.BacktradeReturn;
 import com.midaswebserver.midasweb.apiModels.BacktradeTest;
 import com.midaswebserver.midasweb.exceptions.ApiClientException;
 import com.midaswebserver.midasweb.exceptions.ApiServerException;
+import com.midaswebserver.midasweb.exceptions.BadDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 /**
  * @Author Aidan Scott
@@ -49,9 +54,13 @@ public class BackTesterServiceImp implements BackTesterService {
                     .retrieve()
                     .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
                         //Handle 4xx errors here
-                        return clientResponse.bodyToMono(String.class)
-                                .flatMap(errorDetails ->
-                                        Mono.error(new ApiClientException("Client Error: " + errorDetails)));
+                        return clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
+                            if (clientResponse.statusCode().equals(HttpStatus.BAD_REQUEST)) {
+                                return Mono.error(new BadDataException("Bad Data Error", errorBody));
+                            } else {
+                                return Mono.error(new ApiServerException("Client Error: " + errorBody));
+                            }
+                        });
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
                         //Handle 5xx errors here
@@ -86,9 +95,13 @@ public class BackTesterServiceImp implements BackTesterService {
                     .retrieve()
                     .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
                         //Handle 4xx errors here
-                        return clientResponse.bodyToMono(String.class)
-                                .flatMap(errorDetails ->
-                                        Mono.error(new ApiClientException("Client Error: " + errorDetails)));
+                        return clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
+                            if (clientResponse.statusCode().equals(HttpStatus.BAD_REQUEST)) {
+                                return Mono.error(new BadDataException("Bad Data Error", errorBody));
+                            } else {
+                                return Mono.error(new ApiServerException("Client Error: " + errorBody));
+                            }
+                        });
                     })
                     .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
                         //Handle 5xx errors here
@@ -113,16 +126,28 @@ public class BackTesterServiceImp implements BackTesterService {
      * @return error injected Mono
      */
     private Mono<BacktradeReturn> errorHandler(Throwable e) {
+        Gson gson = new Gson();
         BacktradeReturn errorResponse = new BacktradeReturn();
-        if (e instanceof ApiClientException) {
+        if (e instanceof  BadDataException){
+            log.warn("errorHandler: 400 error occurred: '{}'", e.getMessage());
+            errorResponse = gson.fromJson(((BadDataException) e).getErrorBody(), BacktradeReturn.class);
+            errorResponse.setErrorCode("400");
+        } else if (e instanceof ApiClientException) {
             errorResponse.setErrorCode("4xx");
-            errorResponse.setMessage(e.getMessage());
+            log.warn("errorHandler: 4xx error occurred: '{}'", e.getMessage());
+            errorResponse.setError("internal Error");
+            errorResponse.setMessage("Internal Error");
         } else if (e instanceof ApiServerException) {
+            //5xx errors aren't useful for the user, so propagating data which is simple and able to make decisions on
             errorResponse.setErrorCode("5xx");
-            errorResponse.setMessage(e.getMessage());
+            log.warn("errorHandler: 5xx error occurred: '{}'", e.getMessage());
+            errorResponse.setError("internal Error");
+            errorResponse.setMessage("Internal Error");
         } else {
+            //unknown errors aren't useful for the user, so propagating data which is simple and able to make decisions on
             errorResponse.setErrorCode("UNKNOWN_ERROR");
-            errorResponse.setMessage("Unknown Error: " + e.getMessage());
+            log.warn("errorHandler: Unknown Error occurred: '{}'", e.getMessage());
+            errorResponse.setMessage(e.getMessage());
         }
         return Mono.just(errorResponse);
     }
