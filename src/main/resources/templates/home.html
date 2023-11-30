@@ -64,13 +64,13 @@
             <span class="text-danger" th:errors="*{commission}"
                   th:if="${#fields.hasErrors('commission')}">Commission error</span><br/>
             <span>SMA length</span>
-            <input class="m-1 text-center" th:field="*{smaLength}" type="text"/>
-            <span class="text-danger" th:errors="*{smaLength}"
-                  th:if="${#fields.hasErrors('smaLength')}">SmaLength error</span><br/>
+            <input class="m-1 text-center" th:field="*{sma}" type="text"/>
+            <span class="text-danger" th:errors="*{sma}"
+                  th:if="${#fields.hasErrors('sma')}">SmaLength error</span><br/>
             <span>EMA length</span>
-            <input class="m-1 text-center" th:field="*{emaLength}" type="text"/>
-            <span class="text-danger" th:errors="*{emaLength}"
-                  th:if="${#fields.hasErrors('emaLength')}">EmaLength error</span><br/>
+            <input class="m-1 text-center" th:field="*{ema}" type="text"/>
+            <span class="text-danger" th:errors="*{ema}"
+                  th:if="${#fields.hasErrors('ema')}">EmaLength error</span><br/>
             <button class="btn m-1" type="submit">Test Params</button>
         </form>
     </div>
@@ -91,22 +91,6 @@
             </tr>
         </table>
     </div>
-    <div class="col-5 border" th:if="${tradeReturn != null && tradeReturn != null}">
-        <table>
-            <thead>
-            <tr>
-                <th>Error Code</th>
-                <th>Error Message</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td th:text="${tradeReturn.errorCode}">Error Code</td>
-                <td th:text="${tradeReturn.message}">Error Message</td>
-            </tr>
-        </table>
-    </div>
-</div>
 </div>
 <div class="row pt-4">
     <div class="col-5 border" th:if="${backTraderOptimizeForm != null}">
@@ -177,21 +161,6 @@
                 <td th:text="${optimizeReturn.sma}">sma</td>
                 <td th:text="${optimizeReturn.ema}">ema</td>
                 <td th:text="${optimizeReturn.endingValue}">ending value</td>
-            </tr>
-        </table>
-    </div>
-    <div class="col-5 border" th:if="${optimizeReturn != null && optimizeReturn != null}">
-        <table>
-            <thead>
-            <tr>
-                <th>Error Code</th>
-                <th>Error Message</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td th:text="${optimizeReturn.errorCode}">Error Code</td>
-                <td th:text="${optimizeReturn.message}">Error Message</td>
             </tr>
         </table>
     </div>
