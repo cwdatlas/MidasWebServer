@@ -1,0 +1,499 @@
+[33mcommit ad13f6e4e00deacc8bf9fe07dc4c8e104cc4e085[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Nov 30 09:25:40 2023 -0700
+
+    added comment about year format
+
+[33mcommit 54a3294d5775b6878773bdc6248b4fa478e9013e[m[33m ([m[1;31morigin/main[m[33m)[m
+Merge: d1a3f0f 911f941
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 22:34:55 2023 -0700
+
+    Merged from MicroserviceUserInput Branch
+
+[33mcommit 911f941f043b1aff6faee9ab934ec4d87301bbd1[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 22:29:18 2023 -0700
+
+    Updated look and text on the index page
+
+[33mcommit 1a739bffe988f12b99bdb11aa5148f30713e33ab[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 22:09:52 2023 -0700
+
+    decreased duplicate code, made it easier to manage
+
+[33mcommit 455522cd681532602abbe01e41cdca7440c23d99[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:54:26 2023 -0700
+
+    reformatted code
+
+[33mcommit 369fdd5baa5ba8bb90294e6326a0de0848323568[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:53:09 2023 -0700
+
+    updated documentation and comments
+
+[33mcommit ee18ca1ed90118be7dd21fcbbcc1719ebfd06f21[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:42:08 2023 -0700
+
+    updated documentation and comments
+
+[33mcommit cd99bddacdf18146a75a2bcad6d3b7e7a519bdbf[m[33m ([m[1;31morigin/MicroserviceUserInput[m[33m)[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:25:51 2023 -0700
+
+    simplified get method where backtrade data is added to model and allowed for microservice errors to be persisted to front end.
+
+[33mcommit 716c0ee8c631db8267841cd7e6df0c7dae497e69[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:24:39 2023 -0700
+
+    updated sma and ema names to be more simple and consistent. also deleted error messages, instead using form errors
+
+[33mcommit 05857baf320715cd9f49428625002215e8eb24c3[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:23:10 2023 -0700
+
+    added gson dependency
+
+[33mcommit 5eb20ab4082c32a78cfb5a5874e37311ffa52e7d[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:22:52 2023 -0700
+
+    added new exception for 400 errors
+
+[33mcommit 527021c80f92fd9c55583f6108bc8860e87285ac[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:22:39 2023 -0700
+
+    changed names of sma and ema to be more simple and consistent over microservice and spring app
+
+[33mcommit 2aeba808ff7348ba36ca9d1f6ffd9a5f57b0e3b3[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:21:23 2023 -0700
+
+    increased filtering of 4xx errors to specify reaction to 400 errors. Decoded and persisted decoded json 400 errors
+
+[33mcommit d6f41b4da8bdbfbdadaaa4da65528b350283ec91[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 29 21:19:18 2023 -0700
+
+    added documentation and comments detailing what each variable means
+
+[33mcommit d1a3f0fed2d995fe80d5473942a283720273f1c8[m
+Merge: 70cadd6 d724995
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Mon Nov 27 12:42:57 2023 -0700
+
+    changed validation system to adding errors to form error list
+
+[33mcommit d724995f11dd458e94c0199920805c7f1d082f64[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Mon Nov 27 12:39:08 2023 -0700
+
+    changed validation system to adding errors to form error list
+
+[33mcommit f484836d9988b1a5c582e5a4741f6a9f4e4d22f8[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Mon Nov 27 12:38:06 2023 -0700
+
+    added labels for date fields
+
+[33mcommit 00aeafc832d56c0e7f2269b79a4f4c75db99a993[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Mon Nov 27 12:37:30 2023 -0700
+
+    Changed annotation to effectively validate dates and edited stake error message and guidelines
+
+[33mcommit 1e2db1ddf047e3f321df7d5925360336d5f66f6d[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Mon Nov 27 12:37:12 2023 -0700
+
+    Changed annotation to effectively validate dates and edited stake error message and guidelines
+
+[33mcommit 3e0c826f5c91e2bf2654af68ab466b0b9f365f7a[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Mon Nov 27 12:36:31 2023 -0700
+
+    Changed annotation to effectively validate dates
+
+[33mcommit 82d76c768edfd74f23ae597632c15b62d839a945[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 17 12:47:45 2023 -0700
+
+    formatted code
+
+[33mcommit 78926f0d167995e1562735f4a627eeea68f3c43d[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 17 12:46:39 2023 -0700
+
+    formatted code
+
+[33mcommit 6117a652093075ce94d6cd7fa9b3c459d62a29d3[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 17 12:45:50 2023 -0700
+
+    replaced date validation system
+
+[33mcommit 503fc6d8362770356051de00491a11df268b5bd6[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 17 12:45:19 2023 -0700
+
+    deleted custom date class and replaced with standard LocalDate class
+
+[33mcommit 710fadd01ce854689709bc82e5dfcf4f4d68a758[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 17 12:44:49 2023 -0700
+
+    replaced failed data validation
+
+[33mcommit 53660fbe670cd36447148ee6ba64a75cf527a17d[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 17 12:43:44 2023 -0700
+
+    updated algorithm names to match microservice implementation
+
+[33mcommit 7e1ba21013a49d20edf7084f1970c9863e819059[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 10 13:11:23 2023 -0700
+
+    updated placeholder for dates to match yyyy-mm-dd
+
+[33mcommit 03ca340d1c4c71772497e11408d3a26334823646[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 10 13:11:01 2023 -0700
+
+    changed date object types
+
+[33mcommit 907de427e88b7341fe0495e050966221de403466[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 10 13:10:41 2023 -0700
+
+    changed to more rest based communication
+
+[33mcommit 9ff34afc3e2c8e327b4c0a75231bf736d275cd31[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 10 13:10:14 2023 -0700
+
+    addited pojos to work with data better
+
+[33mcommit 5d6d1f33828cf2879ebceac3b665f2c871d81e3c[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Nov 10 13:09:31 2023 -0700
+
+    added axceptions for microservice comunication
+
+[33mcommit 924bf1328730a3e9482165a216c0df78a829864e[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Nov 2 11:04:09 2023 -0600
+
+    set base url in bean
+
+[33mcommit 980ed40e9978caba6d88da5f550a9e8faaff6bb8[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Nov 2 11:03:49 2023 -0600
+
+    minimized code
+
+[33mcommit 37258fd7273ef6dc6d5c0258d6dfb13e22f6f12b[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Nov 2 10:17:01 2023 -0600
+
+    added error handling for the webclient
+
+[33mcommit 2aa4dadc427f490e0a1ab36caa93ad45b25a9169[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Nov 2 10:16:34 2023 -0600
+
+    first commit of basic custom client and server exceptions
+
+[33mcommit c9cc2bc9ef63b90e3beed4c147cfbce1391061d9[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 1 20:16:59 2023 -0600
+
+    added webflux dependency
+
+[33mcommit f974547c370c3b007b6448c256452aae7201ed83[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 1 20:16:30 2023 -0600
+
+    changed variables to private and added new custom date variable to match requested type in the microservice
+
+[33mcommit 09b407298b0cea247e3c46490715460edbb718a3[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 1 20:14:48 2023 -0600
+
+    added new webclient implementation for more efficient communication
+
+[33mcommit 3b00b77e65a93f97692dc49a57e91301935b5339[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Nov 1 20:13:36 2023 -0600
+
+    added jakarta config to stop error durring boot
+
+[33mcommit 581ef826aaf6812f8f59a356f8ad954d28e8b12c[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Oct 20 10:49:54 2023 -0600
+
+    fixed user who isn't logged in clicking logout error
+
+[33mcommit 6f80cd7497a6348e85c14e71e6afaa85c2b946a8[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Oct 20 10:49:12 2023 -0600
+
+    fixed deprecated fragment expression
+
+[33mcommit 205c3f6073d964c6764435131cd3f6bc4861c36a[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Oct 19 23:04:08 2023 -0600
+
+    fixed bug where a query would occur when loading home page
+
+[33mcommit ed76fa7a0abae5c1a82bab727c5ea0f8d6cb21ce[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Oct 19 22:39:11 2023 -0600
+
+    unknown updates, thought I just looked at the files, probably reformat.
+
+[33mcommit fdf80309729c16a5229db07ba38799e3a4d815ec[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Oct 19 22:38:41 2023 -0600
+
+    updated templates to reflect new models added (new return object)
+
+[33mcommit 08313680292efa1e7f748cc9699d1f9d37b44d72[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Oct 19 22:37:54 2023 -0600
+
+    updated header to show login or logout depending on user status
+
+[33mcommit 186344b63c430f5574e095f4c374e0c5ca73e4bc[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Oct 19 22:37:01 2023 -0600
+
+    Updated service to output a minimal return object
+
+[33mcommit 42d3a71ba92b9796df3adc047e33ad2055e21c01[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Oct 11 15:28:07 2023 -0600
+
+    deleted implementation from build
+
+[33mcommit ec7027da22895e6ef0a3912d7b5a841b1ed780cd[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Oct 11 15:27:21 2023 -0600
+
+    Updated services to work with the new objects
+
+[33mcommit fa04bb95c73aff74c800401bce28de2549f300c2[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Oct 11 15:27:03 2023 -0600
+
+    updated home to allow for displaying data with the new objects
+
+[33mcommit b2ca87329a989833b4e9c50e6722b1f3cc41f90c[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Oct 11 15:26:39 2023 -0600
+
+    updated param movement to be contained within objects
+
+[33mcommit 8777e67bd643b2987944673ac561782e7a653410[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Oct 11 15:26:07 2023 -0600
+
+    edited to allow for effective json mapping
+
+[33mcommit 8522dfba581f1364aa5bef68539f5f8bd156630e[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Oct 11 10:25:16 2023 -0600
+
+    added getters/setts and toString()
+
+[33mcommit c878f385fb3f3f5e76697f83ffb2e069a9f65d9a[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Oct 11 10:17:33 2023 -0600
+
+    changed change in sma and ema to mins and maxes to ranges can be better selected
+
+[33mcommit 4cd3cce7c585f662c2b224cc81a40d3e806a2616[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Wed Oct 11 10:12:52 2023 -0600
+
+    built models for moving backtrading data
+
+[33mcommit 2bf048eb6c947638dd79281fccdb67c204e45f30[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Oct 6 12:25:27 2023 -0600
+
+    unknown updates for these classes
+
+[33mcommit 70cadd69a91df81441787e7a36894b646b33eec5[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 29 13:01:31 2023 -0600
+
+    Fixed error response for wrong input and added labels for input variables
+
+[33mcommit 11b4303a0e4718cfd4765ea709b3e456077b0308[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 29 10:33:53 2023 -0600
+
+    updated all parts of html and controller to reflect previous commit
+
+[33mcommit a445b0fd83a55e4d96208a9075495cbe775e4ab6[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 29 10:07:25 2023 -0600
+
+    updated template and controller to deploy output to the same page.
+
+[33mcommit 4e1f41c263d0ad57623bd4f9fdfa19429eb59f4f[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Tue Sep 26 23:31:19 2023 -0600
+
+    allowed for enumerations to effectively be shown in dropdowns. Algorithms and StockTickers had toString() methods added to allow this
+
+[33mcommit 07868b2bb23a4806bb07f7d89a5bb4643455ebe3[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Tue Sep 26 23:29:36 2023 -0600
+
+    got rid of all @notBlank annotations for all non string variables
+
+[33mcommit 49f5fd4cddff304a6f7a9b1d5fcaf8c68c5a8cc6[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Tue Sep 26 23:29:23 2023 -0600
+
+    got rid of all @notBlank annotations for all non string variables
+
+[33mcommit a6fcb888a975ac126d96f3a895587084af01d4fe[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Tue Sep 26 23:28:51 2023 -0600
+
+    moved service calls and all model setting to the get method.
+
+[33mcommit abd605c2c7762172902709706a05bba3e1c3120c[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 22 13:12:52 2023 -0600
+
+    got rid of duplicate @NotBlank and @NotBlank from custom variables
+
+[33mcommit 7fd52e03cdc3a1b5182733a531b52b3a9f876b2f[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 22:24:12 2023 -0600
+
+    added inputs for the Backtrader and BacktraderOpt forms which then post to the post methods in UserPersonal
+
+[33mcommit 9c6e8519353b895f20a19282bb8228c7a88edb94[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 22:23:22 2023 -0600
+
+    changed float variables to double variables
+
+[33mcommit 0dd35d0e4dc526fe767673abefb54cb619f28058[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 22:22:58 2023 -0600
+
+    updated backtrader post methods
+
+[33mcommit 986f0d5a46a18335afafd6c01533e340ea659f8f[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 21:03:32 2023 -0600
+
+    Added two enpoints,/user/home/backtrade, /user/home/backtradeOpt
+
+[33mcommit 18c07c3545cda027b1125752a6154ca0ba405a25[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 21:01:33 2023 -0600
+
+    updated inputs/outputs and toString
+
+[33mcommit fe56582d0b60103e387d0ca5b169b146e3f35e7c[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 19:38:44 2023 -0600
+
+    Added todo to Tester Service for adding trade volume feature
+
+[33mcommit c8bf1db47d114442aae6561637ed9c03196471e9[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 19:37:40 2023 -0600
+
+    unknown update
+
+[33mcommit 76f17348f0f6d4f75510b4c575a0724126e679a1[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 19:36:25 2023 -0600
+
+    updated annotations to limit input further. Min and max plus notblank
+
+[33mcommit d423de6c3d986c73222d78987702e004f494ede1[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Thu Sep 21 19:26:27 2023 -0600
+
+    built two dummy functions that will return the same value every time they are called. used for testing
+
+[33mcommit 11708611274571df7e01647b6dad8938a2eb7dd5[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Tue Sep 19 22:25:48 2023 -0600
+
+    Created forms for different backtesting functions and the needed enumerations
+
+[33mcommit 2b249002d6711884ea64c1776e6160869ca791d7[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Tue Sep 19 20:47:56 2023 -0600
+
+    updated small pieces of code (this was a week ago, I dont know what changed)
+
+[33mcommit 282d03a7c4bf7e5b7db607575b5d160907b888dc[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 8 10:32:09 2023 -0600
+
+    Moved hashing to the UserService rather than in the controller.
+
+[33mcommit 924655e414e8a08e14004d6160791fdef7030fba[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 8 10:31:40 2023 -0600
+
+    deleted unused imports and useless versions in javadocks.
+
+[33mcommit 7f5968f3b57dcc8954a6ed6e095be0d37e09659b[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Aug 11 10:27:07 2023 -0600
+
+    deleted unused import
+
+[33mcommit c0b26ac2d7daa7c9ade72016bfac094fbd2616b5[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Aug 11 10:26:27 2023 -0600
+
+    configured environment variables allowing for more portability
+
+[33mcommit 5c3cf65b605397b77e7bc955b8b27772b563f553[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 29 13:01:31 2023 -0600
+
+    Fixed error response for wrong input and added labels for input variables
+
+[33mcommit feab2913a89883b54a0400d5a8fd574eb402df85[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 29 10:33:53 2023 -0600
+
+    updated all parts of html and controller to reflect previous commit
+
+[33mcommit 56426dfc13e7ad664cc20d47bc4e06598c548f4e[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Fri Sep 29 10:07:25 2023 -0600
+
+    updated template and controller to deploy output to the same page.
+
+[33mcommit 05bbf394fb5d69631b70fe2c63a433ddf9f456b3[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Tue Sep 26 23:31:19 2023 -0600
+
+    allowed for enumerations to effectively be shown in dropdowns. Algorithms and StockTickers had toString() methods added to allow this
+
+[33mcommit 6cd3eee03eecca13fb66508900cffaa7ce3efaad[m
+Author: cwdatlas <ascott@carroll.edu>
+Date:   Tue Sep 26 23:29:36 2023 -0600
+
+    got rid of all @notBlank annotations for all non string variables
