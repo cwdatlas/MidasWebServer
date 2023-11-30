@@ -2,27 +2,35 @@ package com.midaswebserver.midasweb.forms;
 
 import com.midaswebserver.midasweb.models.trader.Algorithm;
 import com.midaswebserver.midasweb.models.trader.StockTicker;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class BackTraderForm {
+/**
+ * BacktarderForm validates the majority of incoming backtesting variables
+ * formatting validation doesnt validate.
+ *
+ * @Author Aidan Scott
+ */
+public class BacktraderForm {
 
-//TODO get date annotation
     @NotNull
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotBlank(message = "Please Enter a time series start date")
     public String startDate;
     @NotNull
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotBlank(message = "Please enter a time series end date")
     public String endDate;
     @NotNull
     public StockTicker stockTicker;
     @NotNull
     public Algorithm algorithm;
-    @NotNull(message = "Please enter stake in decimal form (3% -> .03)")
+    @NotNull(message = "Please enter stake in percentage form (.03 -> 3%)")
     @Min(0)
-    @Max(1)
+    @Max(100)
     public double stake;
     @NotNull(message = "Please enter commission in decimal form (3% -> .03)")
     @Min(0)
@@ -31,13 +39,13 @@ public class BackTraderForm {
     @NotNull(message = "Please enter sma length, 1 < 100")
     @Max(100)
     @Min(1)
-    public int smaLength;
+    public int sma;
     @NotNull(message = "Please enter ema length, 1 < 100")
     @Max(100)
     @Min(1)
-    public int emaLength;
+    public int ema;
 
-    public BackTraderForm() {
+    public BacktraderForm() {
     }
 
     public String getStartDate() {
@@ -88,33 +96,33 @@ public class BackTraderForm {
         this.commission = commission;
     }
 
-    public int getSmaLength() {
-        return smaLength;
+    public int getSma() {
+        return sma;
     }
 
-    public void setSmaLength(int smaLength) {
-        this.smaLength = smaLength;
+    public void setSma(int sma) {
+        this.sma = sma;
     }
 
-    public int getEmaLength() {
-        return emaLength;
+    public int getEma() {
+        return ema;
     }
 
-    public void setEmaLength(int emaLength) {
-        this.emaLength = emaLength;
+    public void setEma(int ema) {
+        this.ema = ema;
     }
 
     @Override
     public String toString() {
-        return "BackTraderForm{" +
+        return "BacktraderForm{" +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 ", stockTicker=" + stockTicker +
                 ", algorithm=" + algorithm +
                 ", stake=" + stake +
                 ", commission=" + commission +
-                ", smaLength=" + smaLength +
-                ", emaLength=" + emaLength +
+                ", smaLength=" + sma +
+                ", emaLength=" + ema +
                 '}';
     }
 }
