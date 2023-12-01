@@ -69,7 +69,6 @@ public class BackTesterServiceImp implements BackTesterService {
      *
      * @return BacktradeReturn
      */
-
     public BacktradeReturn optimize(BacktradeOptimize params) {
         BacktradeReturn results = null;
         if (params != null) {
@@ -95,7 +94,7 @@ public class BackTesterServiceImp implements BackTesterService {
      * @param clientResponse
      * @return
      */
-    private Mono<java.lang.Throwable> fourHttpHandler(ClientResponse clientResponse) {
+    private Mono<java.lang.Throwable> fourHttpHandler(ClientResponse clientResponse) { //TODO rename method name to include hundred
         //Handle 4xx errors here
         return clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
             if (clientResponse.statusCode().equals(HttpStatus.BAD_REQUEST)) {

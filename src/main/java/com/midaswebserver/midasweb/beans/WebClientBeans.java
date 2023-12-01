@@ -15,6 +15,6 @@ public class WebClientBeans {
 
     @Bean(name = "backtrader")
     public WebClient webClient() {
-        return WebClient.builder().baseUrl("http://localhost:5000").build();
+        return WebClient.builder().baseUrl("http:"+System.getenv("BACKTRADE_MICROSERVICE")).build();
     }
 }
