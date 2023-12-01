@@ -36,8 +36,8 @@ podman pull madatlas/midasweb:0.0.2
 podman pull mariadb:latest
 
 Starting the website
-1. To start maria db use this command in the command line: podman run --detach --name midas-mariadb --env MARIADB_DATABASE=midasweb --env MARIADB_USER=frontend --env MARIADB_PASSWORD=123456--env MARIADB_ROOT_PASSWORD=YourDataBase!  --network non-prod -p 3306:3306 mariadb:latest![image](https://github.com/cwdatlas/MidasWebServer/assets/89599052/e1c90e72-9ed7-4778-abab-e2a395584b37)
-2. To start the backtrader miroservice us this command: podman run --detach --name midas-backtrader --network non-prod -p 5000:8080 midasbacktrader:1.0![image](https://github.com/cwdatlas/MidasWebServer/assets/89599052/51822fb0-d6da-42f1-9cd5-39af78e3c153)
-3. To start the front end service us this command: podman run --detach --name midas-frontend --env DATABASE_LOCATION=//midas-mariadb:3306/midasweb --env DATABASE_USERNAME=frontend --env DATABASE_PASSWORD=123456 --env  BACKTRADE_MICROSERVICE=//midas-backtrader:5000 --network non-prod -p 8080:8080 midasweb:0.0.2![image](https://github.com/cwdatlas/MidasWebServer/assets/89599052/32589259-343c-4528-85e2-03f41b2608b2)
+1. To start maria db use this command in the command line: podman run --detach --name midas-mariadb --env MARIADB_DATABASE=midasweb --env MARIADB_USER=frontend --env MARIADB_PASSWORD=123456--env MARIADB_ROOT_PASSWORD=YourDataBase!  --network non-prod -p 3306:3306 mariadb:latest
+2. To start the backtrader miroservice us this command: podman run --detach --name midas-backtrader --network non-prod -p 5000:8080 midasbacktrader:1.0
+3. To start the front end service us this command: podman run --detach --name midas-frontend --env DATABASE_LOCATION=//midas-mariadb:3306/midasweb --env DATABASE_USERNAME=frontend --env DATABASE_PASSWORD=123456 --env  BACKTRADE_MICROSERVICE=//midas-backtrader:5000 --network non-prod -p 8080:8080 midasweb:0.0.2
 7. Now go to your favorite web browser and type in "localhost:8080". You should be able to connect to the website!
 8. If you want to shut down the application, podman container rm ContainerID. Find the container ID by typing in podman container list. 
