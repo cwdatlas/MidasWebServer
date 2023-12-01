@@ -1,5 +1,6 @@
 # MidasWebServer
 JavaDocs: https://cwdatlas.github.io/MidasWebServer/
+Backtrade microservice used when running app: https://github.com/cwdatlas/backtraderMicroservice
 Hello, Welcome to my project, MidasWebServer
 
 First, This project centered around consuming stock data then displaying it. 
