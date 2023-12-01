@@ -38,7 +38,6 @@ public class Ticker {
 
     /**
      * setTimeSeries takes a list of foreign objects and sets it to an internal value
-     *
      * @param timeSeries
      */
     public void setTimeSeries(List<StockUnit> timeSeries) {

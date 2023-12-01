@@ -48,11 +48,11 @@ public class UserServiceImp implements UserService {
             log.error("add: User is null");
             return false;
         }
-        if (user.getUsername() == null || user.getEmail() == null || user.getPhoneNumber() == null || user.getHashedPassword() == null) {
+        if (user.getUsername()==null ||  user.getEmail()==null || user.getPhoneNumber()==null || user.getHashedPassword()==null) {
             log.error("add: One of fields in user found to be null");
             return false;
         }
-        if (user.getUsername().isBlank() || user.getEmail().isBlank() || user.getPhoneNumber().isBlank() || user.getHashedPassword().isBlank()) {
+        if (user.getUsername().isBlank() ||  user.getEmail().isBlank() || user.getPhoneNumber().isBlank() || user.getHashedPassword().isBlank()) {
             log.error("add: One of fields in user found to be blank");
             return false;
         }
@@ -269,7 +269,7 @@ public class UserServiceImp implements UserService {
      * Takes User and raw password, hashes the password then adds the password to the user object
      *
      * @param rawPass unhashed password
-     * @param user    corresponding user for the password
+     * @param user corresponding user for the password
      * @return user with added hashed password
      */
     public User hashPass(User user, String rawPass) {

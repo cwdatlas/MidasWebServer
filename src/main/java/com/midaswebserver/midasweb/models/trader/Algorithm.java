@@ -1,9 +1,9 @@
 package com.midaswebserver.midasweb.models.trader;
 
 public enum Algorithm {
-    EmaSmaCross,
-    EmaEmaCross,
-    SmaSmaCross;
+    SMAEMACross,
+    SMAEMAVolumeCross,
+    SMAEMAVolumeCrossPlusShort;
 
     @Override
     public String toString() {
