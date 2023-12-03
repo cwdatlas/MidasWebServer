@@ -45,14 +45,14 @@
 
             <select class="form-control" id="stockTicker" name="selectedStockTicker" th:field="*{stockTicker}">
                 <option th:each="stockTicker :${T(com.midaswebserver.midasweb.models.trader.StockTicker).values()}"
-                        th:text="${stockTicker}" th:value="${stockTicker}">Option
+                        th:value="${stockTicker}" th:text="${stockTicker}">Option
                 </option>
             </select>
 
             <label for="algorithm">Choose an Algorithm:</label>
             <select class="form-control" id="algorithm" name="selectedAlgorithm" th:field="*{algorithm}">
                 <option th:each="algorithm : ${T(com.midaswebserver.midasweb.models.trader.Algorithm).values()}"
-                        th:text="${algorithm}" th:value="${algorithm}">Option
+                        th:value="${algorithm}" th:text="${algorithm}">Option
                 </option>
             </select>
             <span>Stake</span>
@@ -109,14 +109,14 @@
             <label for="OptstockTicker">Choose a ticker:</label>
             <select class="form-control" id="OptstockTicker" name="selectedStockTicker" th:field="*{stockTicker}">
                 <option th:each="stockTicker :${T(com.midaswebserver.midasweb.models.trader.StockTicker).values()}"
-                        th:text="${stockTicker}" th:value="${stockTicker}">Option
+                        th:value="${stockTicker}" th:text="${stockTicker}">Option
                 </option>
             </select>
 
             <label for="Optalgorithm">Choose an Algorithm:</label>
             <select class="form-control" id="Optalgorithm" name="selectedAlgorithm" th:field="*{algorithm}">
                 <option th:each="algorithm : ${T(com.midaswebserver.midasweb.models.trader.Algorithm).values()}"
-                        th:text="${algorithm}" th:value="${algorithm}">Option
+                        th:value="${algorithm}" th:text="${algorithm}">Option
                 </option>
             </select>
 

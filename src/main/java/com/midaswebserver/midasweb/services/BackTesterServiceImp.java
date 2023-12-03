@@ -91,7 +91,6 @@ public class BackTesterServiceImp implements BackTesterService {
     /**
      * Central location to handle 4xx errors
      *
-     * @param clientResponse
      * @return
      */
     private Mono<java.lang.Throwable> fourHttpHandler(ClientResponse clientResponse) { //TODO rename method name to include hundred
